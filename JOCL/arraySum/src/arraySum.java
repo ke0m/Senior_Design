@@ -33,7 +33,7 @@ public class arraySum {
 	public static void main(String args[]){
 
 		/*
-		 * These are the declarations of the OpenCL structures are described below:
+		 * These are the declarations of the OpenCL variables are described below:
 		 * cl_platform-id - Stores the types of platforms installed on the host.
 		 * cl_device_id - Stores the type of the device (GPU, CPU, etc.)
 		 * cl_context - Stores the context in which a command queue can be created.
@@ -237,7 +237,7 @@ public class arraySum {
 				System.exit(1);
 			}
 			
-			//Reading the Data from the Kernel
+			//Reading the Data from the device
 			err = clEnqueueReadBuffer(queue, d_zz, CL_TRUE, 0, n*Sizeof.cl_float, ph_zz.to(h_zz[i]), 0, null, null);
 			if(err < 0){
 				System.out.println("Error: Could not read the data from the kernel.");

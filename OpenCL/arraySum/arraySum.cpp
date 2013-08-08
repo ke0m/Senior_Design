@@ -157,7 +157,7 @@ int main(int argc, const char * argv[])
         exit(1);
     }
     
-	//Creates a command queue and stores it into the variable queue.
+	//Creates a command queue and stores it into the variable "queue".
     queue = clCreateCommandQueue(context, device, 0, &err);
     if(err != CL_SUCCESS){
         std::cout << "Error: Could not create the queue" << std::endl;
