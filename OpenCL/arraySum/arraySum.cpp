@@ -81,7 +81,7 @@ int main(int argc, const char * argv[])
 
 	
     
-    // Obtains the Platform information installed on the host and stores into the argument "platforms"
+    // Obtains the Platform information installed on the host and stores into the memory location of the variable "platform"
     err = clGetPlatformIDs(1, &platform, NULL);
     if(err != CL_SUCCESS){
         
@@ -89,7 +89,7 @@ int main(int argc, const char * argv[])
         exit(1);
     }
     
-	// Obtains the device information (looking for specifically GPU devices) and stores it into the argument "devices"
+	// Obtains the device information (looking for specifically GPU devices) and stores it into the memory location of the variable "device"
     err = clGetDeviceIDs(platform, CL_DEVICE_TYPE_GPU, 1, &device, NULL);
     if(err != CL_SUCCESS){
         printf("Error: Failed to locate Device.");
@@ -121,7 +121,7 @@ int main(int argc, const char * argv[])
     fread(program_buffer, sizeof(char), program_size, program_handle);
     fclose(program_handle);
     
-    // Stores the kernel code (at this point only a Java String) into a program and stores it into the "program" variable.
+    // Stores the kernel code into a program and stores it into the "program" variable.
 	program = clCreateProgramWithSource(context, 1, (const char **)&program_buffer, (const size_t *)&program_size, &err);
     if(err != CL_SUCCESS){
         std::cout << "Error: Could not create the program" << std::endl;
