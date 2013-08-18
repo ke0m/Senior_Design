@@ -1,18 +1,32 @@
 /*
- * File Name: "arraySum.cpp"
- * Kernel Code: "arraySum.cl"
+ * File Name: "flopsTestGPU.cpp"
+ * Kernel Code: "flopsTest.cl"
  * Author: Joseph Jennings
- * Date: August 07, 2013
- * Description: This code sums two 2D arrays in parallel using OpenCl.
+ * Date: August 17, 2013
+ * Description: This code uses the 2D array sum example in order to compare the performance of GPU programming
+ * 				and CPU programming. It allows us to see how many FLOPs are required in order to make
+ * 				programming the GPU useful.
  */
 
 //Include the OpenCL and the I/O header files
 #include <iostream>
 #include <OpenCL/OpenCL.h>
+#include <sys/time.h>
 
 int main(int argc, const char * argv[])
 {
-    
+ 
+
+	
+	 //First we set the variables for measuring performance.
+	 
+	 struct timeval tim1, tim2;	                
+	 uint64_t time;
+	 
+	 //Calling the function "gettimeofday" to measure the time before the program executes.
+	 gettimeofday(&tim1, NULL);
+		                
+
 	/*
 	 * These are the declarations of the OpenCL structures are described below:
 	 * cl_platform-id - Stores the types of platforms installed on the host.
@@ -48,7 +62,7 @@ int main(int argc, const char * argv[])
     size_t work_units_per_kernel;
     
 	//This value determines the size of the nxn (square) array.
-    int n = 2;
+    int n = 1000;
     
 	//Allocating the memory for the nxn arrays of floats.
     float **h_xx = (float**)malloc(sizeof(float*)*n);
@@ -108,7 +122,7 @@ int main(int argc, const char * argv[])
 	 * of the file and reads the content into the variable "program_buffer".
 	 */
 
-	program_handle = fopen("arraysum.cl", "r");
+	program_handle = fopen("flopsTest.cl", "r");
     if(!program_handle){
         std::cout << "Error: Failed to Load Kernel" << std::endl;
         exit(1);
@@ -239,18 +253,13 @@ int main(int argc, const char * argv[])
         }
         
     }
-    //The values calculated on the device are displayed on the host.
 
-	for(int i = 0; i<n; i++){
-        for(int j = 0; j<n; j++){
-            
-            std::cout << h_zz[i][j] << " ";
-            
-        }
-        std::cout << std::endl;
-    }
-    
-  
+    //Measuring the time after the OpenCL code has executed and has been copied back to the host.
+	gettimeofday(&tim2, NULL);
+	//Finding the difference between the two measured times.
+	time = tim2.tv_sec - tim1.tv_sec;
+	//Displaying the elapsed time in seconds.
+	std::cout << time + (tim2.tv_usec - tim1.tv_usec)/1000000.00 << " seconds" << std::endl;
 
     //The previously allocated memory is freed.
     clReleaseMemObject(d_xx);
