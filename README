@@ -4,9 +4,26 @@ Design Project.
 The code contained in the directory 'OpenCL' contains all of the OpenCL code written
 in C++ and the projects within that directory are:
 
-	1. arraySum: Sums two two dimensional arrays of floats.
-	2. flopsTestGPU: Used to test the performance of running a large computation on          the GPU as compared to the CPU.
-	3. flopsTestCPU: Not OpenCL code. Just C++ used to test the performance of a large computation on the CPU. Used to compare performance against the program "flopsTestGPU" which is run on the GPU.
+1. arraySum: Sums two two dimensional arrays of floats.
+
+2. flopsTestGPU: Used to test the performance of running a large computation on the GPU as 
+compared to the CPU.  When this code is run, it is important to note that the timing is very 
+oscillatory, alternating between two values after each time it is run. 
+The reason for this has yet to be discovered.
+	
+3. flopsTestCPU: Not OpenCL code. Just C++ was used to test the performance of a large 
+computation on the CPU. Used to compare performance against the program "flopsTestGPU" which 
+is run on the GPU. It is important to note that when the number of lines of 
+the array is change from 150 to 155 a drastic change in the performance occurs.
+
+4. flopsTestGPULoop: Performs the same function as "flopsTestGPU" only now instead of hardcoding
+each computation, a for loop was written within the .cl file.
+
+5. flopsTestCPULoop: Performs the same function as "flopsTestCPU" only now instead of hardcoding
+each computation, a for loop was written within the they array summation loops.
+
+6. performanceScripts: Shell Scripts written in order to test the performance of the code within
+the OpenCL directory.
 
 The code contained in the directory 'JOCL' contains all of the OpenCL code written in
 Java and the project within that directory are:

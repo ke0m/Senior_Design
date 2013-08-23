@@ -259,7 +259,7 @@ int main(int argc, const char * argv[])
 	//Finding the difference between the two measured times.
 	time = tim2.tv_sec - tim1.tv_sec;
 	//Displaying the elapsed time in seconds.
-	std::cout << time + (tim2.tv_usec - tim1.tv_usec)/1000000.00 << " seconds" << std::endl;
+	std::cout << time + (tim2.tv_usec - tim1.tv_usec)/1000000.00 << std::endl;
 
     //The previously allocated memory is freed.
     clReleaseMemObject(d_xx);
