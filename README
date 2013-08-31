@@ -22,14 +22,32 @@ each computation, a for loop was written within the .cl file.
 5. flopsTestCPULoop: Performs the same function as "flopsTestCPU" only now instead of hardcoding
 each computation, a for loop was written within the they array summation loops.
 
-6. performanceScripts: Shell Scripts written in order to test the performance of the code within
+6. perfscripts: Shell Scripts written in order to test the performance of the code within
 the OpenCL directory.
+
+7. perflogs: Log files written in order to record the performance tests of the code within
+the OpenCL directory. The perflogs directory is divided into subdirectories which contain
+the log files for the different programs within the the OpenCL directory.
+
+
 
 The code contained in the directory 'JOCL' contains all of the OpenCL code written in
 Java and the project within that directory are:
 
-	1. arraySum: Sums two two dimensional arrays of floats.
+1. arraySum: Sums two two dimensional arrays of floats.
 
-More projects are to be added in the future.
+2. flopsTestGPULoop: Used to test the performance of summing arrays on the GPU as compared
+to the CPU.
+
+3. flopsTestCPULoop: Used to test compare against the peformance of summing arrays on the GPU.
+
+4. perfscripts: Shell scripts used to run the JOCL code and test its performance.
+
+5. perflogs: Logs that capture the results of the tests run by the performance scripts.
+This directory is split into sub-directories that organize the logs according to which JOCL
+program is being tested.
+
+
+More projects are to be added in the future...
 
 
