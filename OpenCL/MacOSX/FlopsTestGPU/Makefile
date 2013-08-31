@@ -1,0 +1,61 @@
+PROJ=FlopsTestGPU
+
+CC=gcc
+CXX=g++
+
+CXXFLAGS=-Weffc++ -Wall -DUNIX -g -DDEBUG
+CFLAGS=-std=c99 -Wall -DUNIX -g -DDEBUG
+
+
+# Check for 32-bit vs 64-bit
+PROC_TYPE = $(strip $(shell uname -m | grep 64))
+ 
+# Check for Mac OS
+OS = $(shell uname -s 2>/dev/null | tr [:lower:] [:upper:])
+DARWIN = $(strip $(findstring DARWIN, $(OS)))
+
+# MacOS System
+ifneq ($(DARWIN),)
+	CXXFLAGS += -DMAC
+	LIBS=-framework OpenCL
+
+	ifeq ($(PROC_TYPE),)
+		CXXFLAGS+=-arch i386
+	else
+		CXXFLAGS+=-arch x86_64
+	endif
+else
+
+# Linux OS
+LIBS=-lOpenCL
+ifeq ($(PROC_TYPE),)
+	CXXFLAGS+=-m32
+else
+	CXXFLAGS+=-m64
+endif
+
+# Check for Linux-AMD
+ifdef AMDAPPSDKROOT
+   INC_DIRS=. $(AMDAPPSDKROOT)/include
+	ifeq ($(PROC_TYPE),)
+		LIB_DIRS=$(AMDAPPSDKROOT)/lib/x86
+	else
+		LIB_DIRS=$(AMDAPPSDKROOT)/lib/x86_64
+	endif
+else
+
+# Check for Linux-Nvidia
+ifdef NVSDKCOMPUTE_ROOT
+   INC_DIRS=. $(NVSDKCOMPUTE_ROOT)/OpenCL/common/inc
+endif
+
+endif
+endif
+
+$(PROJ): $(PROJ).cpp
+	$(CXX) $(CXXFLAGS) -o $@ $^ $(INC_DIRS:%=-I%) $(LIB_DIRS:%=-L%) $(LIBS)
+
+.PHONY: clean
+
+clean:
+	rm $(PROJ)
