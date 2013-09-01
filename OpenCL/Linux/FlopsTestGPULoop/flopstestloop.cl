@@ -7,7 +7,7 @@ __kernel void arraysum(__global const float *d_xx, __global const float *d_yy, _
 
 
     for(int j = 0; j < 100; j++){
-        d_zz[i] += d_zz[i];
+        d_zz[i] += d_yy[i];
     }
     
 			
