@@ -6,7 +6,7 @@ javac -classpath ../lib/JOCL-0.1.9.jar FlopsTestGPULoop.java
 
 echo GPU >> ../../perflogs/ArraySumLogs/JOCLlog.txt
 
-for i in {0..1}
+for i in {0..99}
 do
 	java -classpath .:../lib/JOCL-0.1.9.jar FlopsTestGPULoop >> ../../perflogs/ArraySumLogs/JOCLlog.txt
 done
@@ -16,7 +16,7 @@ javac -classpath . FlopsTestCPULoop.java
 
 echo CPU >> ../../perflogs/ArraySumLogs/Javalog.txt
 
-for i in {0..1}
+for i in {0..99}
 do
 	java -classpath . FlopsTestCPULoop >> ../../perflogs/ArraySumLogs/Javalog.txt
 done
