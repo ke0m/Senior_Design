@@ -1,13 +1,13 @@
-__kernel void arraysum(__global const float *d_aa, __global const float *d_bb, __global float *d_cc)
+__kernel void arraysum(__global const float *d_xx, __global const float *d_yy, __global float *d_zz)
 {
 
     int i = get_global_id(0);
 
-	d_cc[i] = d_aa[i] + d_bb[i];
+	d_zz[i] = d_xx[i] + d_yy[i];
 
 
-    for(int j = 0; j < 250; j++){
-        d_cc[i] += d_bb[i];
+    for(int j = 0; j < 100; j++){
+        d_zz[i] += d_zz[i];
     }
     
 			

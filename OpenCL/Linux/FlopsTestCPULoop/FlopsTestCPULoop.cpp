@@ -53,7 +53,7 @@ int main(int argc, const char * argv[])
         for(int j = 0; j<n; j++){
 
             z[i][j] = x[i][j] + y[i][j];
-			for(int k = 0; k < 250; k++){
+			for(int k = 0; k < 100; k++){
 				z[i][j] += y[i][j];
 			}
         }
