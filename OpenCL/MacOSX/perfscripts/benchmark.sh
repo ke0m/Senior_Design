@@ -14,7 +14,7 @@ else
 fi
 
 echo GPU >> ../perflogs/ArraySumLogs/GPULog.txt
-for i in {0..1}
+for i in {0..99}
 do
 	
 	
@@ -35,7 +35,7 @@ else
         make FlopsTestCPULoop
 fi
 echo CPU >> ../perflogs/ArraySumLogs/CPULog.txt
-for i in {0..1}
+for i in {0..99}
 do
 
         ./FlopsTestCPULoop >> ../perflogs/ArraySumLogs/CPULog.txt
