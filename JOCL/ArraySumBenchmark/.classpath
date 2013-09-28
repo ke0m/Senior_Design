@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src"/>
+	<classpathentry excluding="arraySumJava.java|arraySumCPU.java" kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 	<classpathentry kind="lib" path="/Users/joe/Documents/workspace/arraySum1.0/lib/JOCL-0.1.9.jar"/>
 	<classpathentry kind="lib" path="/Users/joe/Documents/workspace/arraySum1.0/lib/edu_mines_jtk.jar"/>
+	<classpathentry kind="lib" path="lib/JOCL-0.1.9.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
