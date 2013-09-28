@@ -237,35 +237,47 @@ public class GPU {
 	
 	}
 	
+	/**
+	 * Frees the memory occupied by the OpenCL device buffer
+	 * @param ddata the OpenCL device buffer
+	 */
 	public void freeDeviceMem(cl_mem ddata){
 		
 		org.jocl.CL.clReleaseMemObject(ddata);
 	}
 	
-	
+	/**
+	 * Frees the memory occupied by the kernel on the device
+	 */
 	public void freeKernel(){
 		
 		org.jocl.CL.clReleaseKernel(kernel);
 	}
 	
-	
+	/**
+	 * Frees the memory occupied by the command queue on the device
+	 */
 	public void freeCommandQueue(){
 		
 		org.jocl.CL.clReleaseCommandQueue(queue);
 	}
 	
+	/**
+	 * Frees the memory occupied by the program on the device
+	 */
 	public void freeProgram(){
 		
 		org.jocl.CL.clReleaseProgram(program);
 	}
 	
+	/**
+	 * Frees the memory occupied by the context on the device.
+	 */
 	public void freeContext(){
 		
 		org.jocl.CL.clReleaseContext(context);
 	}
 
-	
-	//TODO: Write a public method that frees the GPU/CPU device memory.
 	//TODO: Instead of passing the data dimensions parameter to many of these methods,
 	//      it might make more sense for these methods to know the size already just from reading
 	//		the size of the device buffers

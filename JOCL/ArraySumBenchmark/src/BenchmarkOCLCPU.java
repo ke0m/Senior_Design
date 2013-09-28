@@ -46,11 +46,8 @@ public static void main(String args[]){
 		
 		
 		float n1f = (float) n1;
-		
 		float n2f = (float) n2;
-		
 		float counterf = (float) counter;
-		
 		System.out.println("Number of MegaFLOPs: "+ counterf*n1f*n2f*500f*1.0e-6);
 	
 	}	
