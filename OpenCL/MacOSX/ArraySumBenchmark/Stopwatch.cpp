@@ -36,7 +36,7 @@ void Stopwatch::restart() {
     start();
 }
 
-long Stopwatch::getTime() {
+double Stopwatch::getTime() {
     if (_running) {
       time_t timer;
       timer = time(NULL);
