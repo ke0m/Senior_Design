@@ -1,4 +1,4 @@
-PROJ=main
+PROJ=BenchmarkGPU
 
 CC=gcc
 CXX=g++

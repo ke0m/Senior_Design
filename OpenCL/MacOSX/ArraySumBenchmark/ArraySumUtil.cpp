@@ -49,6 +49,9 @@ void ArraySumUtil::unPackArray(int n1, int n2, float* array1d, float** array2d){
 
 
 
+//TODO: Allow for the user to specify how many iterations he or she desires. This will require either placing
+//this specified number somehow in the file or simply instead of using a file, use a long string within c++.
+
 float **ArraySumUtil::arraySumGPU(float** array1, float** array2, int n1, int n2){
     
     GPU test("flopstestloop.cl", "arraysum", true);
@@ -159,10 +162,6 @@ float **ArraySumUtil::arraySumOCLCPU(float** array1, float** array2, int n1, int
     test.freeContext();
     
     
-    
-    
-    
-    
     return array3;
     
 }
@@ -179,7 +178,6 @@ float **ArraySumUtil::arraySumCPU(float** array1, float** array2, int n1, int n2
     
     for(int i = 0; i<n1; i++){
         for(int j = 0; j<n2; j++){
-            
             array3[i][j] = array1[i][j] + array2[i][j];
 			for(int k = 0; k < 250; k++){
 				array3[i][j] += array2[i][j];
@@ -191,17 +189,6 @@ float **ArraySumUtil::arraySumCPU(float** array1, float** array2, int n1, int n2
     
     
     
-    
     return array3;
 }
-
-
-
-
-
-
-
-
-
-
 

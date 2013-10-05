@@ -7,7 +7,6 @@
 //
 
 #include <iostream>
-
 #include "GPU.h"
 #include "ArraySumUtil.h"
 #include "Stopwatch.h"
@@ -18,21 +17,15 @@ int main(int argc, const char * argv[])
     ArraySumUtil hope;
     Stopwatch sw;
     
- 
-    //Testing the GPU class
-    
     int n1=1000;
     int n2=1001;
     
-    
     float **h_xx = (float**)malloc(sizeof(float*)*n1);
     float **h_yy = (float**)malloc(sizeof(float*)*n1);
-    float **h_zz = (float**)malloc(sizeof(float*)*n1);
     
     for(int i = 0; i<n1; i++){
         h_xx[i] = (float*)malloc(sizeof(float)*n2);
         h_yy[i] = (float*)malloc(sizeof(float)*n2);
-        h_zz[i] = (float*)malloc(sizeof(float)*n2);
         
         //Initializing the arrays.
         for(int j = 0; j<n2; j++){
@@ -43,21 +36,15 @@ int main(int argc, const char * argv[])
         }
         
     }
-    
-    
 
     int maxTime = 10;
     int count = 0;
     
     sw.start();
     while (sw.getTime() < maxTime){
-        
-        h_zz = hope.arraySumGPU(h_xx, h_yy, n1, n2);
-        //h_zz = hope.arraySumOCLCPU(h_xx, h_yy, n1, n2);
-       // h_zz = hope.arraySumCPU(h_xx, h_yy, n1, n2);
+        hope.arraySumGPU(h_xx, h_yy, n1, n2);
         count++;
         std::cout << sw.getTime() << std::endl;
-        
     }
     sw.reset();
     
@@ -65,9 +52,8 @@ int main(int argc, const char * argv[])
     float n2f = (float) n2;
     float countf = (float) count;
     
- //TODO: Calculate the FLOPS rate correctly. This number as of now is too low for the CPU calculation.   
+	//std::cout << "Number of MegaFLOPs: " << n1f*n2f*250*countf*1.0e-06 << std::endl;
     std::cout << (n1f*n2f*250*countf*1e-06/maxTime) << " MegaFLOPS" << std::endl;
-
 
 }
 
