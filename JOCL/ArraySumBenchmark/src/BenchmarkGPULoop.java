@@ -1,5 +1,4 @@
 import java.io.FileNotFoundException;
-
 /**
  * This class is used for performance benchmark testing of a summation of two 2D arrays
  * of floats on the GPU. Using Prof. Dave Hale's Stopwatch class, it runs for a specified 
@@ -9,12 +8,12 @@ import java.io.FileNotFoundException;
  *
  */
 
-public class BenchmarkGPU {
+public class BenchmarkGPULoop {
 
-	public static void main(String args[]) throws FileNotFoundException{
+	public static void main(String args[]) throws FileNotFoundException {
 		
-		int n1=1000;
-		int n2=1001;
+		int n1=3000;
+		int n2=3001;
 		
 		float[][] h_aa = new float[n1][n2];
 		float[][] h_bb = new float[n1][n2];
@@ -30,14 +29,14 @@ public class BenchmarkGPU {
 		}
 		
 		Stopwatch sw = new Stopwatch();
-		double maxTime = 10;
+		double maxTime = 2;
 		int counter = 0;
 		ArraySumUtil oclgpu = new ArraySumUtil();
 		
 
 		sw.restart();		
 		while(sw.time() < maxTime){
-			oclgpu.arraySumGPU(h_aa, h_bb);
+			oclgpu.arraySumGPULoop(h_aa, h_bb, 250);
 			System.out.println("SW Time:" + sw.time());
 			counter++;
 		}
@@ -47,7 +46,7 @@ public class BenchmarkGPU {
 		float n2f = (float) n2;
 		float counterf = (float) counter;
 		System.out.println("Number of MegaFLOPs: " + counterf*n1f*n2f*250f*1.0e-6);
-		System.out.println("FLOPS Rate: " + counterf*n1f*n2f*250f*1.0e-6/maxTime + " MFLOPS/s");	
+		System.out.println("FLOPS Rate: " + counterf*n1f*n2f*250f*1.0e-6/sw.time() + " MFLOPS/s");	
 	
 	}
 	
