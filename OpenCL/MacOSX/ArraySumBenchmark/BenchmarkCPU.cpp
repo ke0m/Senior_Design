@@ -46,21 +46,20 @@ int main(int argc, const char * argv[])
     int maxTime = 10;
     int count = 0;
     
-    sw.start();
+    sw.restart();
     while (sw.getTime() < maxTime){
         hope.arraySumCPU(h_xx, h_yy, n1, n2);
         count++;
         std::cout << sw.getTime() << std::endl;
         
     }
-    sw.reset();
+    sw.stop();
     
     float n1f = (float) n1;
     float n2f = (float) n2;
     float countf = (float) count;
-    
-    
-    std::cout << (n1f*n2f*250*countf*1e-06/maxTime) << " MegaFLOPS" << std::endl;
-    
+	
+	std::cout << "Number of MegaFLOPs: " << n1f*n2f*500*countf*1.0e-6 << std::endl;
+    std::cout << (n1f*n2f*500*countf*1.0e-06/sw.getTime()) << " MegaFLOPS" << std::endl;
     
 }

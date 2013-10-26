@@ -20,8 +20,8 @@ public:
     void unPackArray(int n1, int n2, float* array1d, float** array2d);
     float** arraySumGPU(float** array1, float** array2, int n1, int n2);
     float** arraySumOCLCPU(float** array1, float** array2, int n1, int n2);
-    float** arraySumCPU(float** array1, float** array2, int n1, int n2);
-
+    float** arraySumCPULoop(float** array1, float** array2, int n1, int n2);
+	float** arraySumCPU(float** array1, float** array2, int n1, int n2);
 };
 
 
