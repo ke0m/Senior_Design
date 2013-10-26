@@ -6,8 +6,3 @@ env.Program(target='BenchmarkGPU', source=['BenchmarkGPU.cpp', 'GPU.cpp', 'Array
 env.Append(FRAMEWORKS = ['OpenCL'])
 
 
-
-#g++ -Weffc++ -Wall -DUNIX -g -DDEBUG -DMAC -arch x86_64 -o BenchmarkGPU BenchmarkGPU.cpp GPU.cpp ArraySumUtil.cpp Stopwatch.cpp   -framework OpenCL
-
-
-
