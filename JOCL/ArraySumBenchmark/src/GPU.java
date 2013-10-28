@@ -176,7 +176,7 @@ public class GPU {
 	 * @param dataDims the dimensions of the host data to be sent to the OpenCL buffer
 	 */
 	public void writeToDevice(cl_mem ddata, float[] hdata, int dataDims){
-		err = clEnqueueWriteBuffer(queue, ddata, CL_TRUE, 0, Sizeof.cl_float*dataDims, phdata.to(hdata), 0, null, null);
+		err = clEnqueueWriteBuffer(queue, ddata, CL_FALSE, 0, Sizeof.cl_float*dataDims, phdata.to(hdata), 0, null, null);
 		if(err < 0){
 			System.out.println("Error: Could not write data to buffer");
 			System.exit(1);
@@ -204,13 +204,24 @@ public class GPU {
 	 * 					calling this function then this number will be 0. The second time
 	 * 					it will be 1, etc.
 	 */
-	public void setKernelArg(cl_mem ddata, int kernelNum){
+	public void setGlobalKernelArg(cl_mem ddata, int kernelNum){
 		err = clSetKernelArg(kernel, kernelNum, Sizeof.cl_mem, Pointer.to(ddata));
 		if(err < 0){
 			System.out.println("Error: Could not set kernel argument.");
+			System.out.println("OpenCL error code: " + err);
 			System.exit(1);	
 		}
 	}
+
+	public void setLocalKernelArg(cl_mem ddata, int kernelNum){
+		err = clSetKernelArg(kernel, kernelNum, Sizeof.cl_mem, null);
+		if(err < 0){
+			System.out.println("Error: could not set kernel argument.");
+			System.out.println("OpenCL error code: " + err);
+			System.exit(1);
+		}
+	}
+
 	
 	/**
 	 * Executes the kernel code on the device

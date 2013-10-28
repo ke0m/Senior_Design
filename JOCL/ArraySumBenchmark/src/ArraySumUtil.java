@@ -82,11 +82,25 @@ public class ArraySumUtil {
 		
 		String num = Integer.toString(iters);
 		
-		 String kernelCode = readFile("floptmem.cl");
+		//String kernelCode = readFile("floptmem.cl");
 		
+		String kernelCode = 
+		"__kernel void " +
+		"arraysum(__global const float *d_aa,"+
+		"		  __global const float *d_bb,"+
+		"         __global float *d_cc)" +
+		"{"+
+		"     int i = get_global_id(0);"+
+		"     float t_d_cc = d_aa[i] + d_bb[i];"+
+		"	  for(int j = 0; j<"+num+"; j++){" +
+		"			t_d_cc += d_bb[i];	 "+
+		"	   }"+
+		"	   d_cc[i] = t_d_cc;			"+
+		"}";
+
 		GPU sum = new GPU(kernelCode, "arraysum", true);
 		    
-	    cl_mem d_xx, d_yy, d_zz;
+	    cl_mem d_xx, d_yy, d_zz, l_d_xx, l_d_yy, l_d_zz;
 	    
 	    int n1 = array1.length;
 	    int n2 = array1[0].length;
@@ -101,6 +115,10 @@ public class ArraySumUtil {
 	    d_xx = sum.createFloatBuffer(dims);
 	    d_yy = sum.createFloatBuffer(dims);
 	    d_zz = sum.createFloatBuffer(dims);
+	    //l_d_xx = sum.createFloatBuffer(dims);
+	    //l_d_yy = sum.createFloatBuffer(dims);
+	    //l_d_zz = sum.createFloatBuffer(dims);
+	
 	    
 	    packArray(n1, n2, array1, pArray1);
 	    packArray(n1, n2, array2, pArray2);
@@ -108,9 +126,12 @@ public class ArraySumUtil {
 	    sum.writeToDevice(d_xx, pArray1, dims);
 	    sum.writeToDevice(d_yy, pArray2, dims);
 	    
-	    sum.setKernelArg(d_xx, 0);
-	    sum.setKernelArg(d_yy, 1);
-	    sum.setKernelArg(d_zz, 2);
+	    sum.setGlobalKernelArg(d_xx, 0);
+		//sum.setLocalKernelArg(l_d_xx, 1);
+	    sum.setGlobalKernelArg(d_yy, 1);
+		//sum.setLocalKernelArg(l_d_yy, 3);
+	    sum.setGlobalKernelArg(d_zz, 2);
+		//sum.setLocalKernelArg(l_d_zz, 5);
 	    	    
 	    sum.executeKernel(dims);
 	    
@@ -171,9 +192,9 @@ public class ArraySumUtil {
 	    sum.writeToDevice(d_xx, pArray1, dims);
 	    sum.writeToDevice(d_yy, pArray2, dims);
 	    
-	    sum.setKernelArg(d_xx, 0);
-	    sum.setKernelArg(d_yy, 1);
-	    sum.setKernelArg(d_zz, 2);
+	    sum.setGlobalKernelArg(d_xx, 0);
+	    sum.setGlobalKernelArg(d_yy, 1);
+	    sum.setGlobalKernelArg(d_zz, 2);
 	    	    
 	    sum.executeKernel(dims);
 	    
@@ -246,9 +267,9 @@ public class ArraySumUtil {
 		    sum.writeToDevice(d_xx, pArray1, dims);
 		    sum.writeToDevice(d_yy, pArray2, dims);
 		    
-		    sum.setKernelArg(d_xx, 0);
-		    sum.setKernelArg(d_yy, 1);
-		    sum.setKernelArg(d_zz, 2);
+		    sum.setGlobalKernelArg(d_xx, 0);
+		    sum.setGlobalKernelArg(d_yy, 1);
+		    sum.setGlobalKernelArg(d_zz, 2);
 		    	    
 		    sum.executeKernel(dims);
 		    
