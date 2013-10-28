@@ -1,0 +1,3 @@
+The CUDA branch of Spencer Haich's and Joseph Jennings' Senior Design project.
+
+Contains an adding matrix program written in parallel on the GPU.

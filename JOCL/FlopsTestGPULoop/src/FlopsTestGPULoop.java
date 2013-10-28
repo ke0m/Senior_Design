@@ -28,7 +28,7 @@ public class FlopsTestGPULoop {
 			"{"+
 			"     int i = get_global_id(0);"+
 			"     d_zz[i] = d_xx[i] + d_yy[i];"+
-			"	  for(int j = 0; j<250; j++){" +
+			"	  for(int j = 0; j<200; j++){" +
 			"			d_zz[i] += d_yy[i];	 "+
 			"	   }						"+
 			"}";

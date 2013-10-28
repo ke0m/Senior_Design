@@ -36,7 +36,7 @@ public class FlopsTestCPULoop {
 		for (int i = 0; i<n; i++){
 			for (int j=0; j<n; j++){
 				zz[i][j] = xx[i][j] + yy[i][j];
-				for (int k=0; k<250; k++){
+				for (int k=0; k<200; k++){
 					zz[i][j] += yy[i][j];
 				}
 				

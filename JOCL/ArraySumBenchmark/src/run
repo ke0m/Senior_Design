@@ -1,0 +1,8 @@
+#! /bin/bash
+
+export CLASSPATH=:../bin:../lib/JOCL-0.1.9.jar
+rm ../bin/*.class
+javac *.java
+mv *.class ../bin
+java -ea -Xmx512m $*
+
