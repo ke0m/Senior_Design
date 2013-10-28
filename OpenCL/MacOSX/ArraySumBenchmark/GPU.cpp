@@ -173,7 +173,7 @@ GPU::GPU(const char* kernelFileName, const char* nameOfKernel, bool gpuVCPU){
     err = 0;
     fileName = kernelFileName;
     kernelName = nameOfKernel;
-    program_handle = fopen("flopstestloop.cl", "r");
+    program_handle = fopen(kernelFileName, "r");
     setRunOnGPU(gpuVCPU);
     
     
@@ -255,12 +255,22 @@ void GPU::writeToDevice(cl_mem ddata, float* hdata, int datadims){
 }
 
 
-void GPU::setKernelArg(cl_mem ddata, int kernelNum){
+void GPU::setGlobalKernelArg(cl_mem ddata, int kernelNum){
     err = clSetKernelArg(kernel, kernelNum, sizeof(cl_mem), &ddata);
     if(err != CL_SUCCESS){
         std::cout << "Error: Could not set the kernel argument." << std::endl;
+		std::cout << "OpenCL error code: " << err << std::endl;
         exit(1);
     }
+}
+
+void GPU::setLocalKernelArg(cl_mem ddata, int kernelNum){
+	err = clSetKernelArg(kernel, kernelNum, sizeof(cl_mem), NULL);
+	if(err != CL_SUCCESS){
+		std::cout << "Error: Could not set the kernel argument." << std::endl;
+		std::cout << "OpenCL error code: " << err << std::endl;
+		exit(1);
+	}
 }
 
 void GPU::executeKernel(int datadims){
@@ -276,6 +286,7 @@ void GPU::readFromDevice(cl_mem ddata, float* hdata, int datadims){
     err = clEnqueueReadBuffer(queue, ddata, CL_TRUE, 0, sizeof(float)*datadims, hdata, 0, NULL, NULL);
     if(err != CL_SUCCESS){
         std::cout << "Error: Could not read data from the kernel." << std::endl;
+		std::cout << "OpenCL error code: " << std::endl;
         exit(1);
     }
     

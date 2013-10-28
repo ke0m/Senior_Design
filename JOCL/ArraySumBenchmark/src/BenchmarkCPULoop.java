@@ -8,11 +8,10 @@
 
 public class BenchmarkCPULoop {
 	
-	public static void main(String args[]){
-		
-		int n1=1000;
-		int n2=1001;
-		
+	public float runBenchmarkCPU(int iters, int n1, int n2){
+	
+		float mflops = 0;
+
 		float[][] h_aa = new float[n1][n2];
 		float[][] h_bb = new float[n1][n2];
 
@@ -28,15 +27,15 @@ public class BenchmarkCPULoop {
 		
 		Stopwatch sw = new Stopwatch();
 		
-		double maxTime = 2;
+		double maxTime = 5;
 	
 		int counter = 0;
 		
 		ArraySumUtil norm = new ArraySumUtil();
 	
-		sw.start();		
+		sw.restart();		
 		while(sw.time() < maxTime){
-			norm.arraySumCPULoop(h_aa, h_bb,250);
+			norm.arraySumCPULoop(h_aa, h_bb,iters);
 			System.out.println("SW Time:" + sw.time());
 			counter++;
 		}
@@ -45,8 +44,17 @@ public class BenchmarkCPULoop {
 		float n1f = (float) n1;
 		float n2f = (float) n2;
 		float counterf = (float) counter;
-		System.out.println("Number of MegaFLOPs: " + counterf*n1f*n2f*250f*1.0e-6);
-		System.out.println("FLOPS Rate: " + counterf*n1f*n2f*250f*1.0e-6/sw.time() + " MFLOPS/s");
+		if(iters == 0){
+			mflops = (float) (counterf*n1f*n2f*1.0e-6/sw.time());
+		}
+		else{
+			mflops = (float) (counterf*n1f*n2f*iters*1.0e-6/sw.time());
+		}
+
+		System.out.println("Number of MegaFLOPs: " + counterf*n1f*n2f*iters*1.0e-6);
+		System.out.println("FLOPS Rate: " + mflops + " MFLOPS/s");
+
+		return mflops;
 	
 	}
 
