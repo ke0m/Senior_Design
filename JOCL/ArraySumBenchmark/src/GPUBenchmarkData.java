@@ -9,7 +9,9 @@ public class GPUBenchmarkData {
 	public static void main(String args[]) throws FileNotFoundException{
 		
 		//BenchmarkGPULoop data = new BenchmarkGPULoop();
-		BenchmarkCPULoop datacpu = new BenchmarkCPULoop();
+		//BenchmarkCPULoop datacpu = new BenchmarkCPULoop();
+		BenchmarkOCLCPU dataoclcpu = new BenchmarkOCLCPU();
+
 
 		int minArraySize = 500;
 		int maxArraySize = 10000;
@@ -21,11 +23,13 @@ public class GPUBenchmarkData {
 		PrintStream output = new PrintStream(new File("data.txt"));
 		
 		for(int i = minArraySize; i <= maxArraySize; i+=100){
+			System.out.println(i);
 			k++;
 			output.println();
 			for(int j = minIters; j<=maxIters; j+=100){
 				//flopValues[k][z] = data.runBenchmark(j, i, i+1);
-				flopValues[k][z] = datacpu.runBenchmarkCPU(j, i, i+1);
+				//flopValues[k][z] = datacpu.runBenchmarkCPU(j, i, i+1);
+				flopValues[k][z] = dataoclcpu.runBenchmarkOCLCPU(j, i, i+1);
 				output.print(flopValues[k][z] + " ");
 				z++;
 				

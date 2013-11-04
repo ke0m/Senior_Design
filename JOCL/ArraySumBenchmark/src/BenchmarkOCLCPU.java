@@ -9,11 +9,9 @@
 
 public class BenchmarkOCLCPU {
 
-public static void main(String args[]){
-		
-		int n1=1000;
-		int n2=1001;
-		
+	public float runBenchmarkOCLCPU(int iters, int n1, int n2){
+
+		float mflops = 0;
 		float[][] h_aa = new float[n1][n2];
 		float[][] h_bb = new float[n1][n2];
 		float[][] h_cc = new float[n1][n2];
@@ -30,15 +28,13 @@ public static void main(String args[]){
 		
 		Stopwatch sw = new Stopwatch();
 		
-		double maxTime = 10;
-		
+		double maxTime = 5;
 		int counter = 0;
-	
 		ArraySumUtil oclcpu = new ArraySumUtil();
 
 		sw.start();
 		while(sw.time() < maxTime){
-			h_cc = oclcpu.arraySumOCLCPU(h_aa, h_bb, 500);
+			h_cc = oclcpu.arraySumOCLCPU(h_aa, h_bb, iters);
 			System.out.println("SW Time:" + sw.time());
 			counter++;
 		}
@@ -48,9 +44,19 @@ public static void main(String args[]){
 		float n1f = (float) n1;
 		float n2f = (float) n2;
 		float counterf = (float) counter;
+		if(iters == 0){
+			mflops = (float) (counterf*n1f*n2f*1.0e-6/sw.time());
+		}
+		else{
+			mflops = (float) (counterf*n1f*n2f*iters*1.0e-6/sw.time());
+		}
 		System.out.println("Number of MegaFLOPs: "+ counterf*n1f*n2f*500f*1.0e-6);
 		System.out.println("FLOPS Rate: " + counterf*n1f*n2f*500f*1.0e-6/maxTime + " MFLOPS/s");
+
+		return mflops;
+
+	}
 	
-	}	
+		
 
 }
