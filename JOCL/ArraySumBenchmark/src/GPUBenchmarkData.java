@@ -11,8 +11,7 @@ public class GPUBenchmarkData {
 		//BenchmarkGPULoop data = new BenchmarkGPULoop();
 		//BenchmarkCPULoop datacpu = new BenchmarkCPULoop();
 		BenchmarkOCLCPU dataoclcpu = new BenchmarkOCLCPU();
-
-
+		
 		int minArraySize = 500;
 		int maxArraySize = 10000;
 		int minIters = 0;
