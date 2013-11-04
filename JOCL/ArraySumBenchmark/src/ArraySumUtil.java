@@ -99,7 +99,7 @@ public class ArraySumUtil {
 		"}";
 
 		GPU sum = new GPU(kernelCode, "arraysum", true);
-		    
+
 	    cl_mem d_xx, d_yy, d_zz, l_d_xx, l_d_yy, l_d_zz;
 	    
 	    int n1 = array1.length;

@@ -179,6 +179,7 @@ public class GPU {
 		err = clEnqueueWriteBuffer(queue, ddata, CL_FALSE, 0, Sizeof.cl_float*dataDims, phdata.to(hdata), 0, null, null);
 		if(err < 0){
 			System.out.println("Error: Could not write data to buffer");
+			System.out.println("OpenCL Error Code: " + err);
 			System.exit(1);
 		}	
 	}
