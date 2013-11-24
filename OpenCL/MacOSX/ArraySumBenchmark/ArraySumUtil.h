@@ -13,17 +13,16 @@
 
 class ArraySumUtil{
     
-
+    
 public:
     
     void packArray(int n1, int n2, float** array2d, float* array1d);
     void unPackArray(int n1, int n2, float* array1d, float** array2d);
-    float** arraySumGPU(float** array1, float** array2, int n1, int n2);
+    float** arraySumGPU(float** array1, float** array2, int n1, int n2, int iters);
     float** arraySumOCLCPU(float** array1, float** array2, int n1, int n2);
-    float** arraySumCPULoop(float** array1, float** array2, int n1, int n2);
+    float** arraySumCPULoop(float** array1, float** array2, int n1, int n2, int iters);
 	float** arraySumCPU(float** array1, float** array2, int n1, int n2);
 };
-
 
 
 

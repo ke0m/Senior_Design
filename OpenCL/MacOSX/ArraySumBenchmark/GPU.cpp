@@ -246,7 +246,7 @@ cl_mem GPU::createFloatBuffer(int datadims){
 
 
 void GPU::writeToDevice(cl_mem ddata, float* hdata, int datadims){
-    err = clEnqueueWriteBuffer(queue, ddata, CL_TRUE, 0, sizeof(float)*datadims, hdata, 0, NULL, NULL);
+    err = clEnqueueWriteBuffer(queue, ddata, CL_FALSE, 0, sizeof(float)*datadims, hdata, 0, NULL, NULL);
     if(err != CL_SUCCESS){
         std::cout << "Error: Could not write to buffer." << std::endl;
         exit(1);
@@ -272,6 +272,17 @@ void GPU::setLocalKernelArg(cl_mem ddata, int kernelNum){
 		exit(1);
 	}
 }
+
+
+void GPU::setGlobalIntArg(int num, int kernelNum){
+    err = clSetKernelArg(kernel, kernelNum, sizeof(num), &num);
+    if(err != CL_SUCCESS){
+        std::cout << "Error: Could not set the integer kernel argument." << std::endl;
+        std::cout << "OpenCL error code: " << err << std::endl;
+        exit(1);
+    }
+}
+
 
 void GPU::executeKernel(int datadims){
     work_units_per_kernel = datadims;

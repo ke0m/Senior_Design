@@ -12,17 +12,15 @@
 #include "ArraySumUtil.h"
 #include "Stopwatch.h"
 #include <OpenCL/OpenCL.h>
+#include "BenchmarkOCLCPU.h"
 
-int main(int argc, const char * argv[])
+float BenchmarkOCLCPU::runBenchmarkOCLCPU(int iters, int n1, int n2)
 {
     ArraySumUtil hope;
     Stopwatch sw;
     
     
     //Testing the GPU class
-    
-    int n1=1000;
-    int n2=1001;
     
     
     float **h_xx = (float**)malloc(sizeof(float*)*n1);
@@ -59,8 +57,11 @@ int main(int argc, const char * argv[])
     float n2f = (float) n2;
     float countf = (float) count;
     
+    float mflops = n1f*n2f*countf*iters*1.0e-06/sw.getTime();
     
-    std::cout << (n1f*n2f*250*countf*1e-06/maxTime) << " MegaFLOPS" << std::endl;
+    std::cout << mflops << " MegaFLOPS" << std::endl;
+    
+    return mflops;
     
     
 }

@@ -13,18 +13,15 @@
 #include "ArraySumUtil.h"
 #include "Stopwatch.h"
 #include <OpenCL/OpenCL.h>
+#include "BenchmarkCPU.h"
 
-int main(int argc, const char * argv[])
+float BenchmarkCPU::runCPUBenchmark(int iters, int n1, int n2)
 {
     ArraySumUtil hope;
     Stopwatch sw;
     
     
     //Testing the GPU class
-    
-    int n1=1000;
-    int n2=1001;
-    
     
     float **h_xx = (float**)malloc(sizeof(float*)*n1);
     float **h_yy = (float**)malloc(sizeof(float*)*n1);
@@ -43,12 +40,12 @@ int main(int argc, const char * argv[])
         
     }
     
-    int maxTime = 10;
+    int maxTime = 5;
     int count = 0;
     
     sw.restart();
     while (sw.getTime() < maxTime){
-        hope.arraySumCPU(h_xx, h_yy, n1, n2);
+        hope.arraySumCPULoop(h_xx, h_yy, n1, n2, iters);
         count++;
         std::cout << sw.getTime() << std::endl;
         
@@ -58,8 +55,12 @@ int main(int argc, const char * argv[])
     float n1f = (float) n1;
     float n2f = (float) n2;
     float countf = (float) count;
+    
+    float mflops = n1f*n2f*countf*iters*1.0e-06/sw.getTime();
 	
-	std::cout << "Number of MegaFLOPs: " << n1f*n2f*500*countf*1.0e-6 << std::endl;
-    std::cout << (n1f*n2f*500*countf*1.0e-06/sw.getTime()) << " MegaFLOPS" << std::endl;
+	//std::cout << "Number of MegaFLOPs: " << n1f*n2f*500*countf*1.0e-6 << std::endl;
+    std::cout << mflops << " MegaFLOPS" << std::endl;
+    
+    return mflops;
     
 }

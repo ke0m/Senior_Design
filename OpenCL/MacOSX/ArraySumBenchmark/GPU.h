@@ -68,6 +68,7 @@ void writeToDevice(cl_mem ddata, float* hdata, int datadims);
 void readFromDevice(cl_mem ddata, float* hdata, int datadims);
 void setGlobalKernelArg(cl_mem ddata, int kernelNum);
 void setLocalKernelArg(cl_mem ddata, int kernelNum);
+void setGlobalIntArg(int num, int kernelNum);
 void executeKernel(int datadims);
 void freeDeviceMem(cl_mem ddata);
 void freeKernel();

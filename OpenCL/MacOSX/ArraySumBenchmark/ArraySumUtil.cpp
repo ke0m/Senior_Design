@@ -27,7 +27,7 @@ void  ArraySumUtil::packArray(int n1, int n2, float ** array2d, float *array1d){
         }
         
     }
-
+    
 }
 
 
@@ -48,13 +48,13 @@ void ArraySumUtil::unPackArray(int n1, int n2, float* array1d, float** array2d){
 }
 
 
-//TODO: Allow for the user to specifarray2 how manarray2 iterations he or she desires. This will require either placing
+//TODO: Allow for the user to specify how many iterations he or she desires. This will require either placing
 //this specified number somehow in the file or simplarray2 instead of using a file, use a long string within c++.
 
-float **ArraySumUtil::arraySumGPU(float** array1, float** array2, int n1, int n2){
+float **ArraySumUtil::arraySumGPU(float** array1, float** array2, int n1, int n2, int iters){
     
-    GPU test("floppmem.cl", "arraysum", true);
-
+    GPU test("floptmem.cl", "arraysum", true);
+    
     int dims = n1*n2;
     
     float** array3 = new float*[n1];
@@ -87,6 +87,7 @@ float **ArraySumUtil::arraySumGPU(float** array1, float** array2, int n1, int n2
   	//test.setLocalKernelArg(l_d_yy, 3);
   	test.setGlobalKernelArg(d_zz, 2);
 	//test.setLocalKernelArg(l_d_zz, 5);
+    test.setGlobalIntArg(iters, 3);
 	
     test.executeKernel(dims);
     
@@ -162,7 +163,7 @@ float **ArraySumUtil::arraySumOCLCPU(float** array1, float** array2, int n1, int
 }
 
 
-float **ArraySumUtil::arraySumCPULoop(float** array1, float** array2, int n1, int n2){
+float **ArraySumUtil::arraySumCPULoop(float** array1, float** array2, int n1, int n2, int iters){
     
     
     float **array3 = (float**)malloc(sizeof(float*)*n1);
@@ -174,13 +175,13 @@ float **ArraySumUtil::arraySumCPULoop(float** array1, float** array2, int n1, in
     for(int i = 0; i<n1; i++){
         for(int j = 0; j<n2; j++){
             array3[i][j] = array1[i][j] + array2[i][j];
-			for(int k = 0; k < 500; k++){
+			for(int k = 0; k < iters-1; k++){
 				array3[i][j] += array2[i][j];
                 
 			}
         }
     }
-
+    
     
     
     
@@ -189,14 +190,14 @@ float **ArraySumUtil::arraySumCPULoop(float** array1, float** array2, int n1, in
 
 
 float **ArraySumUtil::arraySumCPU(float** array1, float** array2, int n1, int n2){
-
+    
 	float** array3 = new float*[n1];
     for (int i = 0; i < n2; ++i)
         array3[i] = new float[n2];
     
-	 for(int i = 0; i<n1; i++){
+    for(int i = 0; i<n1; i++){
         for(int j = 0; j<n2; j++){
-
+            
             array3[i][j] = array1[i][j] + array2[i][j] + array2[i][j] + array2[i][j] + array2[i][j] + array2[i][j]
             +array2[i][j] + array2[i][j] + array2[i][j] + array2[i][j] + array2[i][j]
             +array2[i][j] + array2[i][j] + array2[i][j] + array2[i][j] + array2[i][j]
@@ -350,21 +351,16 @@ float **ArraySumUtil::arraySumCPU(float** array1, float** array2, int n1, int n2
 			+array2[i][j] + array2[i][j] + array2[i][j] + array2[i][j] + array2[i][j]
 			+array2[i][j] + array2[i][j] + array2[i][j] + array2[i][j] + array2[i][j]
 			+array2[i][j] + array2[i][j] + array2[i][j] + array2[i][j] + array2[i][j];
-
+            
             
             
         }
     }
-
-
+    
+    
 	return array3;
-
-
-
+    
+    
+    
 }
-
-
-
-
-
 

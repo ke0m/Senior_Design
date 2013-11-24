@@ -1,7 +1,13 @@
 
 env = Environment(CPPFLAGS='-Weffc++ -Wall -DUNIX -g -DDEBUG')
 
-env.Program(target='BenchmarkGPU', source=['BenchmarkGPU.cpp', 'GPU.cpp', 'ArraySumUtil.cpp', 'Stopwatch.cpp'])
+#env.Program(target='BenchmarkGPU', source=['BenchmarkGPU.cpp', 'GPU.cpp', 'ArraySumUtil.cpp', 'Stopwatch.cpp'])
+
+#env.Program(target='BenchmarkCPU', source=['BenchmarkCPU.cpp', 'GPU.cpp', 'ArraySumUtil.cpp', 'Stopwatch.cpp'])
+
+#env.Program(target='BenchmarkOCLCPU', source=['BenchmarkOCLCPU.cpp', 'GPU.cpp', 'ArraySumUtil.cpp', 'Stopwatch.cpp'])
+
+env.Program(target='GPUBenchmarkData', source=['GPUBenchmarkData.cpp', 'GPU.cpp', 'ArraySumUtil.cpp', 'Stopwatch.cpp', 'BenchmarkGPU.cpp', 'BenchmarkCPU.cpp', 'BenchmarkOCLCPU.cpp'])
 
 env.Append(FRAMEWORKS = ['OpenCL'])
 
