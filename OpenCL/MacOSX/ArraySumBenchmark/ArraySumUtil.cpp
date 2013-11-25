@@ -47,9 +47,17 @@ void ArraySumUtil::unPackArray(int n1, int n2, float* array1d, float** array2d){
     
 }
 
+void ArraySumUtil::printArray2D(int numRows, int numCols, float** array){
+    
+    for(int i = 0; i < numRows; ++i){
+        for(int j = 0; j < numCols; ++j){
+            std::cout << array[i][j] << " ";
+        }
+        std::cout << std::endl;
+    }
+}
 
-//TODO: Allow for the user to specify how many iterations he or she desires. This will require either placing
-//this specified number somehow in the file or simplarray2 instead of using a file, use a long string within c++.
+
 
 float **ArraySumUtil::arraySumGPU(float** array1, float** array2, int n1, int n2, int iters){
     
@@ -61,7 +69,6 @@ float **ArraySumUtil::arraySumGPU(float** array1, float** array2, int n1, int n2
     for (int i = 0; i < n2; ++i)
         array3[i] = new float[n2];
     
-    
     cl_mem d_xx, d_yy, d_zz, l_d_xx, l_d_yy, l_d_zz;
 	
     d_xx = test.createFloatBuffer(dims);
@@ -69,7 +76,7 @@ float **ArraySumUtil::arraySumGPU(float** array1, float** array2, int n1, int n2
     d_yy = test.createFloatBuffer(dims);
 	//l_d_yy = test.createFloatBuffer(dims);
 	d_zz = test.createFloatBuffer(dims);
-	//l_d_zz = test.createFloatBuffer(dims);
+	//l_d_zz = test.createFloatBuffer(dims);    
     
     float *h_xx1 = new float[dims];
     float *h_yy1 = new float[dims];
@@ -107,9 +114,9 @@ float **ArraySumUtil::arraySumGPU(float** array1, float** array2, int n1, int n2
     
 }
 
-float **ArraySumUtil::arraySumOCLCPU(float** array1, float** array2, int n1, int n2){
+float **ArraySumUtil::arraySumOCLCPU(float** array1, float** array2, int n1, int n2, int iters){
     
-    GPU test("flopstestloop.cl", "array2sum", false);
+    GPU test("floptmem.cl", "arraysum", false);
     
     int dims = n1*n2;
     
@@ -363,4 +370,5 @@ float **ArraySumUtil::arraySumCPU(float** array1, float** array2, int n1, int n2
     
     
 }
+
 

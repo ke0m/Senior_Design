@@ -23,21 +23,21 @@ int main (int argc, const char * argv[]){
     BenchmarkOCLCPU dataoclcpu;
     
     int minIters = 1;
-    int maxIters = 10000000;
+    int maxIters = 4096;
     int minSize = 500;
     int maxSize = 2500;
     int a = 0;
     int b = 0;
     
     float** data = new float*[maxSize/minSize];
-    for (int i = 0; i < 7; ++i)
-        data[i] = new float[7];
+    for (int i = 0; i < 11; ++i)
+        data[i] = new float[11];
     
     for(int i = minSize; i < maxSize; i+=100){
         std::cout << "Array Size: " << i << std::endl;
-        for(int j = minIters; j < maxIters; j*=10){
+        for(int j = minIters; j < maxIters; j*=2){
             std::cout << "Iterations: " << j << std::endl;
-            data[a][b] = datagpu.runGPUBenchmark(j, 500, 500+1);
+            data[a][b] = datagpu.runGPUBenchmark(j, i, i+1);
             //data[a][b] = datacpu.runCPUBenchmark(j, i, i+1);
             //data[a][b] = dataoclcpu.runBenchmarkOCLCPU(j, i, i+1);
             b++;

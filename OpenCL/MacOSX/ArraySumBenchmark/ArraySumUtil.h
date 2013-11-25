@@ -18,8 +18,9 @@ public:
     
     void packArray(int n1, int n2, float** array2d, float* array1d);
     void unPackArray(int n1, int n2, float* array1d, float** array2d);
+    void printArray2D(int numRows, int numCols, float** array);
     float** arraySumGPU(float** array1, float** array2, int n1, int n2, int iters);
-    float** arraySumOCLCPU(float** array1, float** array2, int n1, int n2);
+    float** arraySumOCLCPU(float** array1, float** array2, int n1, int n2, int iters);
     float** arraySumCPULoop(float** array1, float** array2, int n1, int n2, int iters);
 	float** arraySumCPU(float** array1, float** array2, int n1, int n2);
 };
@@ -29,5 +30,3 @@ public:
 
 
 #endif /* defined(__ArraySum1_1__ArraySumUtil__) */
-
-

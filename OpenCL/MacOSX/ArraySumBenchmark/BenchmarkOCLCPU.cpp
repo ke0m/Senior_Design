@@ -46,7 +46,7 @@ float BenchmarkOCLCPU::runBenchmarkOCLCPU(int iters, int n1, int n2)
     
     sw.start();
     while (sw.getTime() < maxTime){
-        hope.arraySumOCLCPU(h_xx, h_yy, n1, n2);
+        hope.arraySumOCLCPU(h_xx, h_yy, n1, n2, iters);
         count++;
         std::cout << sw.getTime() << std::endl;
         

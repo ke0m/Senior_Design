@@ -56,7 +56,9 @@ float BenchmarkGPU::runGPUBenchmark(int iters, int n1, int n2)
     float mflops = (n1f*n2f*iters*countf*1e-06)/sw.getTime();
     
     std::cout << mflops << " MegaFLOPS" << std::endl;
-                    
+ 
+	delete h_zz, h_yy, h_xx;
+
     return mflops;
     
 }
