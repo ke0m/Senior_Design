@@ -13,9 +13,6 @@
 #include <stdlib.h>
 #include "GPU.h"
 
-
-
-
 void  ArraySumUtil::packArray(int n1, int n2, float ** array2d, float *array1d){
     
     int k = 0;
@@ -30,6 +27,19 @@ void  ArraySumUtil::packArray(int n1, int n2, float ** array2d, float *array1d){
     
 }
 
+void ArraySumUtil::packVector(std::vector<std::vector<float> > &vec2d, std::vector<float> &vec1d){
+    
+    int n1 = vec2d.size();
+    int n2 = vec2d[0].size();
+    int k = 0;
+    
+    for (int i = 0; i < n1; i++){
+        for (int j = 0; j < n2; j++){
+            vec1d[k] = vec2d[i][j];
+        	k++;
+		}
+    }
+}
 
 void ArraySumUtil::unPackArray(int n1, int n2, float* array1d, float** array2d){
     
@@ -47,6 +57,21 @@ void ArraySumUtil::unPackArray(int n1, int n2, float* array1d, float** array2d){
     
 }
 
+void ArraySumUtil::unPackVector(std::vector<float> &vec1d, std::vector<std::vector<float> > &vec2d){
+    
+    int n1 = vec2d.size();
+    int n2 = vec2d[0].size();
+    int k = 0;
+    
+    for(int i = 0; i < n1; ++i){
+        for (int j = 0; j < n2; ++j){
+            vec2d[i][j] = vec1d[k];
+            k++;
+        }
+    }
+       
+}
+
 void ArraySumUtil::printArray2D(int numRows, int numCols, float** array){
     
     for(int i = 0; i < numRows; ++i){
@@ -57,6 +82,20 @@ void ArraySumUtil::printArray2D(int numRows, int numCols, float** array){
     }
 }
 
+
+void ArraySumUtil::printVec2D(std::vector<std::vector<float> > &vec2d){
+    
+    int n1 = vec2d.size();
+    int n2 = vec2d[0].size();
+    
+    for(int i = 0; i < n1; ++i){
+        for (int j = 0; j < n2; ++j){
+            std::cout << vec2d[i][j] << " ";
+        }
+        std::cout << std::endl;
+    }
+    
+}
 
 
 float **ArraySumUtil::arraySumGPU(float** array1, float** array2, int n1, int n2, int iters){

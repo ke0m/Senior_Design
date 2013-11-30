@@ -13,6 +13,7 @@
 #include <stdlib.h>
 #include <OpenCL/OpenCL.h>
 #include <sys/time.h>
+#include <vector>
 
 cl_platform_id platform;
 cl_device_id device;
@@ -254,6 +255,15 @@ void GPU::writeToDevice(cl_mem ddata, float* hdata, int datadims){
     
 }
 
+void GPU::writeVecToDevice(cl_mem ddata, std::vector<float> &vec){
+    clEnqueueWriteBuffer(queue, ddata, CL_FALSE, 0, sizeof(float)*vec.size(), &vec, 0, NULL, NULL);
+    if(err != CL_SUCCESS){
+        std::cout << "Error: Could not write vector to buffer." << std::endl;
+        std::cout << "OpenCL error code: " << std::endl;
+        exit(1);
+    }
+    
+}
 
 void GPU::setGlobalKernelArg(cl_mem ddata, int kernelNum){
     err = clSetKernelArg(kernel, kernelNum, sizeof(cl_mem), &ddata);
@@ -301,6 +311,15 @@ void GPU::readFromDevice(cl_mem ddata, float* hdata, int datadims){
         exit(1);
     }
     
+}
+
+void GPU::readVecFromDevice(cl_mem ddata, std::vector<float> &vec){
+    err = clEnqueueReadBuffer(queue, ddata, CL_TRUE, 0, sizeof(float)*vec.size(), &vec, 0, NULL, NULL);
+    if(err != CL_SUCCESS){
+        std::cout << "Error: Could not read vector from the kernel." << std::endl;
+        std::cout << "OpenCL error code: " << std::endl;
+        exit(1);
+    }
 }
 
 void GPU::freeDeviceMem(cl_mem ddata){
