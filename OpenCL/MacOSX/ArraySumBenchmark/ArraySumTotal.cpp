@@ -10,7 +10,6 @@
 #include <iostream>
 #include <stdlib.h>
 #include <OpenCL/OpenCL.h>
-#include "ArraySumTotal.h"
 #include "Stopwatch.h"
 
 
@@ -49,9 +48,9 @@ int main (int argc, const char * argv[]){
     Stopwatch sw;
     
     //creating array to hold flops values
-    float** data = new float*[maxSize/minSize];
-    for (int i = 0; i < 15; ++i)
-        data[i] = new float[15];
+    //float** data = new float*[maxSize/minSize];
+    //for (int i = 0; i < 15; ++i)
+      //  data[i] = new float[15];
     
     //Outer most loop: This loop should encompass all code and is used in order to loop over
     //different values of the iterations and array size to create the data for the plot.
@@ -69,7 +68,7 @@ int main (int argc, const char * argv[]){
             int n1 = i;
             int n2 = i+1;
             int iters = j;
-            int dims = n1*n2;
+            long dims = n1*n2;
             
             float **h_xx = new float*[n1];
             float **h_yy = new float*[n1];
@@ -94,7 +93,7 @@ int main (int argc, const char * argv[]){
             //Here the benchmark occurs. Within this while loop must occurr all OpenCL calls and executions
             int maxTime = 5;
             int count = 0;
-            sw.start();
+            sw.restart();
             while (sw.getTime() < maxTime){
                 
                 err = clGetPlatformIDs(1, &platform, NULL);
@@ -255,9 +254,9 @@ int main (int argc, const char * argv[]){
                 
                 //unpacking the 1D array
                 k = 0;
-                for (int x = 0; x < i; x++){
-                    for (int y = 0; y < i+1; y++){
-                        h_zz[x][x] = h_zz1[k];
+                for (int x = 0; x < n1; x++){
+                    for (int y = 0; y < n2; y++){
+                        h_zz[x][y] = h_zz1[k];
                         k++;
                     }
                 }
@@ -266,6 +265,7 @@ int main (int argc, const char * argv[]){
                 delete [] h_yy1;
                 delete [] h_zz1;
                 
+            	count++;
                 //Freeing up memory. Hopefully!
                 clReleaseMemObject(d_xx);
                 clReleaseMemObject(d_yy);
@@ -291,17 +291,23 @@ int main (int argc, const char * argv[]){
             
 
             
-            count++;
             float n1f = (float) n1;
             float n2f = (float) n2;
             float countf = (float) count;
+			
+			std::cout << "n1: " << n1f << std::endl;
+			std::cout << "n2: " << n2f << std::endl;
+			std::cout << "Iters: " << iters << std::endl;
+			std::cout << "count: " << countf << std::endl;
+			std::cout << "Time: " << sw.getTime() << std::endl;
+			std::cout << std::endl;
             
             float mflops = n1f*n2f*countf*iters*1.0e-06/sw.getTime();
             
             //std::cout << "Number of MegaFLOPs: " << n1f*n2f*500*countf*1.0e-6 << std::endl;
             std::cout << mflops << " MegaFLOPS" << std::endl;
 
-            data[a][b] = mflops;
+           // data[a][b] = mflops;
 
             b++;
         }
