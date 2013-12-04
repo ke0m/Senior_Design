@@ -1,0 +1,31 @@
+
+
+env = Environment(LIBPATH = ['/opt/AMDAPP/lib/x86_64'])
+env = Environment(CPPPATH = ['/opt/AMDAPP/include/'])
+env = Environment(LIBS = ['CL'])
+
+env.Append(CPPFLAGS = ['-Weffc++ -Wall -DUNIX -g -DDEBUG -m64'])
+env = Environment(CPPFLAGS='-Weffc++ -Wall -DUNIX -g -DDEBUG -m64')
+
+#env.Append(CPPPATH = ['/opt/AMDAPP/include/'])
+
+env.Append(LIBPATH = ['/opt/AMDAPP/lib/x86_64'])
+env.Append(LIBS = ['-lOpenCL'])
+
+
+
+#env.Program(target='BenchmarkGPU', source=['BenchmarkGPU.cpp', 'GPU.cpp', 'ArraySumUtil.cpp', 'Stopwatch.cpp'])
+
+#env.Program(target='BenchmarkCPU', source=['BenchmarkCPU.cpp', 'GPU.cpp', 'ArraySumUtil.cpp', 'Stopwatch.cpp'])
+
+#env.Program(target='BenchmarkOCLCPU', source=['BenchmarkOCLCPU.cpp', 'GPU.cpp', 'ArraySumUtil.cpp', 'Stopwatch.cpp'])
+
+#env.Program(target='GPUBenchmarkData', source=['GPUBenchmarkData.cpp', 'GPU.cpp', 'ArraySumUtil.cpp', 'Stopwatch.cpp', 'BenchmarkGPU.cpp', 'BenchmarkCPU.cpp', 'BenchmarkOCLCPU.cpp'])
+
+
+env.Program(target='FMATotal', source=['FMATotal.cpp', 'Stopwatch.cpp'])
+
+
+#env.Append(FRAMEWORKS = ['OpenCL'])
+
+

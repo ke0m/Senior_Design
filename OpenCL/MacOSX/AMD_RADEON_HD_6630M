@@ -1,0 +1,94 @@
+    TeraScale 2 Unified Processing Architecture
+        480 Stream Processing Units
+        24 Texture Units
+        32 Z/Stencil ROP Units
+        8 Color ROP Units
+    GDDR5 memory interface
+    PCI Express 2.1 x16 bus interface
+    DirectX® 11 Evolved technology
+        DirectX® 11 support
+            Shader Model 5.0
+            DirectCompute 11
+            Programmable hardware tessellation unit
+            Accelerated multi-threading
+            HDR texture compression
+            Order-independent transparency
+        OpenGL 4.1 support
+        Image quality enhancement technology
+            Up to 24x multi-sample and super-sample anti-aliasing modes
+            Adaptive anti-aliasing
+            Morphological anti-aliasing (MLAA)
+            16x angle independent anisotropic texture filtering
+            128-bit floating point HDR rendering
+    AMD Eyefinity multi-display technology4
+        Support for up to 6 simultaneous displays
+            Independent resolutions, refresh rates, color controls, and video overlays
+        Display grouping
+            Combine multiple displays to behave like a single large display
+    AMD CrossFireX™ multi-GPU technology5
+        Dual GPU scaling
+    AMD App Acceleration2
+        OpenCL™ 1.1 support6
+        DirectCompute 11
+        Accelerated video encoding, transcoding, and upscaling7,8,9
+        UVD 3 dedicated video playback accelerator
+            MPEG-4 AVC/H.264
+            VC-1
+            MPEG-2 (SD & HD)
+            Multi-View Codec (MVC)10
+            MPEG-4 part 2 (DivX®, Xvid)
+            Adobe® Flash®11
+        Enhanced video quality features
+            Advanced post-processing and scaling9
+            Dynamic contrast enhancement and color correction
+            Brighter whites processing (blue stretch)
+            Independent video gamma control
+            Dynamic video range control
+        Dual-stream HD (1080p) playback support12
+        DXVA 1.0 & 2.0 support
+    AMD HD3D technology1
+        Stereoscopic 3D display/glasses support
+        Blu-ray 3D support10
+        Stereoscopic 3D gaming support
+        3rd party Stereoscopic 3D middleware software support
+    Cutting-edge integrated display support
+        Dual-link DVI with HDCP13
+            Max resolution: 2560x160014
+        DisplayPort 1.2
+            Max resolution: 2560x160014
+            Multi-Stream Transport
+            21.6 Gbps bandwidth
+            High bit-rate audio
+        HDMI® with Stereoscopic 3D Frame Packing Format, Deep Color, xvYCC wide gamut support, and high bit-rate audio
+            Max resolution: 1920x120014
+        VGA
+            Max resolution: 2048x153614
+    Integrated HD audio controller
+        Output protected high bit rate 7.1 channel surround sound over HDMI® or DisplayPort with no additional cables required
+        Supports AC-3, AAC, Dolby® TrueHD and DTS-HD Master Audio™ formats
+    AMD PowerPlay™ power management technology
+        Dynamic power management with low power idle state
+        Ultra-low power state support for multi-GPU configurations
+    AMD Dynamic Switchable Graphics technology3
+        Seamlessly powers down GPU when not required, and powers up GPU when you need it
+    AMD Catalyst™ software and HD video configuration software
+        Unified graphics display drivers
+            Certified for Windows® 7, Windows Vista®, and Windows® XP
+        AMD Catalyst Control Center™
+            Software application and user interface for setup, configuration, and accessing special features of AMD Radeon™ products
+
+
+---------------------------------------------Performance Specifications------------------------------------------------------
+
+
+    Engine clock speed: 500-725 MHz
+    Processing power (single precision): 480-696 GigaFLOPS
+    Polygon throughput: 500-725M polygons/sec
+    Data fetch rate (32-bit): 48-69.6 billion fetches/sec
+    Texel fill rate (bilinear filtered): 12-17.4 Gigatexels/sec
+    Pixel fill rate: 4-5.8 Gigapixels/sec
+    Anti-aliased pixel fill rate: 16-23.2 Gigasamples/sec
+    Memory clock speed: 800-900 MHz GDDR5 or DDR3
+    Memory data rate: 3.2-3.6 Gbps GDDR5 or 1.6-1.8 Gbps DDR3
+    Memory bandwidth: 51.2-57.6 GB/sec (GDDR5) or 25.6-28.8 GB/sec (DDR3)
+
