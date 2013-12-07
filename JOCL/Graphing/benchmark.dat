@@ -1,0 +1,693 @@
+Number of platforms: 1
+Number of devices in platform AMD Accelerated Parallel Processing: 2
+--- Info for device Pitcairn: ---
+CL_DEVICE_NAME: 			Pitcairn
+CL_DEVICE_VENDOR: 			Advanced Micro Devices, Inc.
+CL_DRIVER_VERSION: 			1348.4 (VM)
+CL_DEVICE_TYPE:				CL_DEVICE_TYPE_GPU
+CL_DEVICE_MAX_COMPUTE_UNITS:		20
+CL_DEVICE_MAX_WORK_ITEM_DIMENSIONS:	3
+CL_DEVICE_MAX_WORK_ITEM_SIZES:		256 / 256 / 256 
+CL_DEVICE_MAX_WORK_GROUP_SIZE:		256
+CL_DEVICE_MAX_CLOCK_FREQUENCY:		1000 MHz
+CL_DEVICE_ADDRESS_BITS:			32
+CL_DEVICE_MAX_MEM_ALLOC_SIZE:		1024 MByte
+CL_DEVICE_GLOBAL_MEM_SIZE:		1808 MByte
+CL_DEVICE_ERROR_CORRECTION_SUPPORT:	no
+CL_DEVICE_LOCAL_MEM_TYPE:		local
+CL_DEVICE_LOCAL_MEM_SIZE:		32 KByte
+CL_DEVICE_MAX_CONSTANT_BUFFER_SIZE:	64 KByte
+CL_DEVICE_QUEUE_PROPERTIES:		CL_QUEUE_PROFILING_ENABLE
+CL_DEVICE_IMAGE_SUPPORT:		1
+CL_DEVICE_MAX_READ_IMAGE_ARGS:		128
+CL_DEVICE_MAX_WRITE_IMAGE_ARGS:		8
+CL_DEVICE_SINGLE_FP_CONFIG:		CL_FP_INF_NAN CL_FP_ROUND_TO_NEAREST CL_FP_ROUND_TO_ZERO CL_FP_ROUND_TO_INF CL_FP_FMA CL_FP_CORRECTLY_ROUNDED_DIVIDE_SQRT 
+CL_DEVICE_2D_MAX_WIDTH			16384
+CL_DEVICE_2D_MAX_HEIGHT			16384
+CL_DEVICE_3D_MAX_WIDTH			2048
+CL_DEVICE_3D_MAX_HEIGHT			2048
+CL_DEVICE_3D_MAX_DEPTH			2048
+CL_DEVICE_PREFERRED_VECTOR_WIDTH_<t>	CHAR 4, SHORT 2, INT 1, LONG 1, FLOAT 1, DOUBLE 1
+
+
+--- Info for device Intel(R) Core(TM) i5 CPU         650  @ 3.20GHz: ---
+CL_DEVICE_NAME: 			Intel(R) Core(TM) i5 CPU         650  @ 3.20GHz
+CL_DEVICE_VENDOR: 			GenuineIntel
+CL_DRIVER_VERSION: 			1348.4 (sse2)
+CL_DEVICE_TYPE:				CL_DEVICE_TYPE_CPU
+CL_DEVICE_MAX_COMPUTE_UNITS:		4
+CL_DEVICE_MAX_WORK_ITEM_DIMENSIONS:	3
+CL_DEVICE_MAX_WORK_ITEM_SIZES:		1024 / 1024 / 1024 
+CL_DEVICE_MAX_WORK_GROUP_SIZE:		1024
+CL_DEVICE_MAX_CLOCK_FREQUENCY:		3193 MHz
+CL_DEVICE_ADDRESS_BITS:			64
+CL_DEVICE_MAX_MEM_ALLOC_SIZE:		2986 MByte
+CL_DEVICE_GLOBAL_MEM_SIZE:		11945 MByte
+CL_DEVICE_ERROR_CORRECTION_SUPPORT:	no
+CL_DEVICE_LOCAL_MEM_TYPE:		global
+CL_DEVICE_LOCAL_MEM_SIZE:		32 KByte
+CL_DEVICE_MAX_CONSTANT_BUFFER_SIZE:	64 KByte
+CL_DEVICE_QUEUE_PROPERTIES:		CL_QUEUE_PROFILING_ENABLE
+CL_DEVICE_IMAGE_SUPPORT:		1
+CL_DEVICE_MAX_READ_IMAGE_ARGS:		128
+CL_DEVICE_MAX_WRITE_IMAGE_ARGS:		8
+CL_DEVICE_SINGLE_FP_CONFIG:		CL_FP_DENORM CL_FP_INF_NAN CL_FP_ROUND_TO_NEAREST CL_FP_ROUND_TO_ZERO CL_FP_ROUND_TO_INF CL_FP_FMA CL_FP_CORRECTLY_ROUNDED_DIVIDE_SQRT 
+CL_DEVICE_2D_MAX_WIDTH			8192
+CL_DEVICE_2D_MAX_HEIGHT			8192
+CL_DEVICE_3D_MAX_WIDTH			2048
+CL_DEVICE_3D_MAX_HEIGHT			2048
+CL_DEVICE_3D_MAX_DEPTH			2048
+CL_DEVICE_PREFERRED_VECTOR_WIDTH_<t>	CHAR 16, SHORT 8, INT 4, LONG 2, FLOAT 4, DOUBLE 2
+
+
+1
+Array Size: 10
+Number of Iterations: 1
+Counter: 87
+FLOPS Rate: 0.0043310947 GFLOPs/s
+1
+Number of Iterations: 10
+Counter: 88
+FLOPS Rate: 0.043691948 GFLOPs/s
+2
+Number of Iterations: 100
+Counter: 84
+FLOPS Rate: 0.41841218 GFLOPs/s
+3
+Number of Iterations: 1000
+Counter: 71
+FLOPS Rate: 3.5104263 GFLOPs/s
+4
+Number of Iterations: 10000
+Counter: 8
+FLOPS Rate: 3.8689642 GFLOPs/s
+5
+Number of Iterations: 100000
+Counter: 62
+FLOPS Rate: 309.70895 GFLOPs/s
+6
+Number of Iterations: 1000000
+Counter: 17
+FLOPS Rate: 832.0814 GFLOPs/s
+7
+Number of Iterations: 10000000
+Counter: 2
+FLOPS Rate: 974.4635 GFLOPs/s
+8
+Number of Iterations: 100000000
+Counter: 1
+FLOPS Rate: 893.7945 GFLOPs/s
+9
+2
+Array Size: 110
+Number of Iterations: 1
+Counter: 90
+FLOPS Rate: 0.0044583133 GFLOPs/s
+1
+Number of Iterations: 10
+Counter: 89
+FLOPS Rate: 0.04427495 GFLOPs/s
+2
+Number of Iterations: 100
+Counter: 84
+FLOPS Rate: 0.42025444 GFLOPs/s
+3
+Number of Iterations: 1000
+Counter: 70
+FLOPS Rate: 3.4896781 GFLOPs/s
+4
+Number of Iterations: 10000
+Counter: 8
+FLOPS Rate: 3.9837492 GFLOPs/s
+5
+Number of Iterations: 100000
+Counter: 64
+FLOPS Rate: 320.4195 GFLOPs/s
+6
+Number of Iterations: 1000000
+Counter: 17
+FLOPS Rate: 838.8391 GFLOPs/s
+7
+Number of Iterations: 10000000
+Counter: 2
+FLOPS Rate: 1001.9265 GFLOPs/s
+8
+Number of Iterations: 100000000
+Counter: 1
+FLOPS Rate: 1050.7389 GFLOPs/s
+9
+3
+Array Size: 210
+Number of Iterations: 1
+Counter: 88
+FLOPS Rate: 0.0043861056 GFLOPs/s
+1
+Number of Iterations: 10
+Counter: 89
+FLOPS Rate: 0.04452457 GFLOPs/s
+2
+Number of Iterations: 100
+Counter: 85
+FLOPS Rate: 0.42544648 GFLOPs/s
+3
+Number of Iterations: 1000
+Counter: 71
+FLOPS Rate: 3.5077393 GFLOPs/s
+4
+Number of Iterations: 10000
+Counter: 9
+FLOPS Rate: 4.081319 GFLOPs/s
+5
+Number of Iterations: 100000
+Counter: 64
+FLOPS Rate: 319.05356 GFLOPs/s
+6
+Number of Iterations: 1000000
+Counter: 19
+FLOPS Rate: 941.9439 GFLOPs/s
+7
+Number of Iterations: 10000000
+Counter: 3
+FLOPS Rate: 1018.7418 GFLOPs/s
+8
+Number of Iterations: 100000000
+Counter: 1
+FLOPS Rate: 835.07086 GFLOPs/s
+9
+4
+Array Size: 310
+Number of Iterations: 1
+Counter: 91
+FLOPS Rate: 0.004510292 GFLOPs/s
+1
+Number of Iterations: 10
+Counter: 89
+FLOPS Rate: 0.044282734 GFLOPs/s
+2
+Number of Iterations: 100
+Counter: 86
+FLOPS Rate: 0.42704746 GFLOPs/s
+3
+Number of Iterations: 1000
+Counter: 71
+FLOPS Rate: 3.5276394 GFLOPs/s
+4
+Number of Iterations: 10000
+Counter: 9
+FLOPS Rate: 4.08741 GFLOPs/s
+5
+Number of Iterations: 100000
+Counter: 64
+FLOPS Rate: 315.31573 GFLOPs/s
+6
+Number of Iterations: 1000000
+Counter: 19
+FLOPS Rate: 948.40466 GFLOPs/s
+7
+Number of Iterations: 10000000
+Counter: 2
+FLOPS Rate: 969.46954 GFLOPs/s
+8
+Number of Iterations: 100000000
+Counter: 1
+FLOPS Rate: 829.4133 GFLOPs/s
+9
+5
+Array Size: 410
+Number of Iterations: 1
+Counter: 90
+FLOPS Rate: 0.0045027174 GFLOPs/s
+1
+Number of Iterations: 10
+Counter: 90
+FLOPS Rate: 0.04483649 GFLOPs/s
+2
+Number of Iterations: 100
+Counter: 84
+FLOPS Rate: 0.41974002 GFLOPs/s
+3
+Number of Iterations: 1000
+Counter: 72
+FLOPS Rate: 3.5649333 GFLOPs/s
+4
+Number of Iterations: 10000
+Counter: 8
+FLOPS Rate: 3.6782534 GFLOPs/s
+5
+Number of Iterations: 100000
+Counter: 64
+FLOPS Rate: 316.58847 GFLOPs/s
+6
+Number of Iterations: 1000000
+Counter: 19
+FLOPS Rate: 945.4291 GFLOPs/s
+7
+Number of Iterations: 10000000
+Counter: 2
+FLOPS Rate: 986.09174 GFLOPs/s
+8
+Number of Iterations: 100000000
+Counter: 1
+FLOPS Rate: 977.34546 GFLOPs/s
+9
+6
+Array Size: 510
+Number of Iterations: 1
+Counter: 87
+FLOPS Rate: 0.004333442 GFLOPs/s
+1
+Number of Iterations: 10
+Counter: 85
+FLOPS Rate: 0.042538162 GFLOPs/s
+2
+Number of Iterations: 100
+Counter: 82
+FLOPS Rate: 0.40918267 GFLOPs/s
+3
+Number of Iterations: 1000
+Counter: 68
+FLOPS Rate: 3.3701258 GFLOPs/s
+4
+Number of Iterations: 10000
+Counter: 8
+FLOPS Rate: 3.580599 GFLOPs/s
+5
+Number of Iterations: 100000
+Counter: 62
+FLOPS Rate: 309.16504 GFLOPs/s
+6
+Number of Iterations: 1000000
+Counter: 17
+FLOPS Rate: 822.3038 GFLOPs/s
+7
+Number of Iterations: 10000000
+Counter: 2
+FLOPS Rate: 911.07635 GFLOPs/s
+8
+Number of Iterations: 100000000
+Counter: 1
+FLOPS Rate: 958.02 GFLOPs/s
+9
+7
+Array Size: 610
+Number of Iterations: 1
+Counter: 90
+FLOPS Rate: 0.004492496 GFLOPs/s
+1
+Number of Iterations: 10
+Counter: 89
+FLOPS Rate: 0.044522654 GFLOPs/s
+2
+Number of Iterations: 100
+Counter: 86
+FLOPS Rate: 0.42984223 GFLOPs/s
+3
+Number of Iterations: 1000
+Counter: 69
+FLOPS Rate: 3.4156137 GFLOPs/s
+4
+Number of Iterations: 10000
+Counter: 6
+FLOPS Rate: 2.904543 GFLOPs/s
+5
+Number of Iterations: 100000
+Counter: 60
+FLOPS Rate: 297.01642 GFLOPs/s
+6
+Number of Iterations: 1000000
+Counter: 15
+FLOPS Rate: 749.8544 GFLOPs/s
+7
+Number of Iterations: 10000000
+Counter: 2
+FLOPS Rate: 923.9242 GFLOPs/s
+8
+Number of Iterations: 100000000
+Counter: 1
+FLOPS Rate: 970.374 GFLOPs/s
+9
+8
+Array Size: 710
+Number of Iterations: 1
+Counter: 87
+FLOPS Rate: 0.0043215253 GFLOPs/s
+1
+Number of Iterations: 10
+Counter: 87
+FLOPS Rate: 0.043267585 GFLOPs/s
+2
+Number of Iterations: 100
+Counter: 84
+FLOPS Rate: 0.41629097 GFLOPs/s
+3
+Number of Iterations: 1000
+Counter: 69
+FLOPS Rate: 3.4255915 GFLOPs/s
+4
+Number of Iterations: 10000
+Counter: 8
+FLOPS Rate: 3.6539307 GFLOPs/s
+5
+Number of Iterations: 100000
+Counter: 61
+FLOPS Rate: 305.13095 GFLOPs/s
+6
+Number of Iterations: 1000000
+Counter: 17
+FLOPS Rate: 812.8422 GFLOPs/s
+7
+Number of Iterations: 10000000
+Counter: 2
+FLOPS Rate: 943.37695 GFLOPs/s
+8
+Number of Iterations: 100000000
+Counter: 1
+FLOPS Rate: 969.44696 GFLOPs/s
+9
+9
+Array Size: 810
+Number of Iterations: 1
+Counter: 90
+FLOPS Rate: 0.0044921706 GFLOPs/s
+1
+Number of Iterations: 10
+Counter: 90
+FLOPS Rate: 0.044693723 GFLOPs/s
+2
+Number of Iterations: 100
+Counter: 85
+FLOPS Rate: 0.42239955 GFLOPs/s
+3
+Number of Iterations: 1000
+Counter: 71
+FLOPS Rate: 3.5062933 GFLOPs/s
+4
+Number of Iterations: 10000
+Counter: 8
+FLOPS Rate: 3.8282957 GFLOPs/s
+5
+Number of Iterations: 100000
+Counter: 64
+FLOPS Rate: 318.18164 GFLOPs/s
+6
+Number of Iterations: 1000000
+Counter: 20
+FLOPS Rate: 965.13617 GFLOPs/s
+7
+Number of Iterations: 10000000
+Counter: 3
+FLOPS Rate: 1172.973 GFLOPs/s
+8
+Number of Iterations: 100000000
+Counter: 1
+FLOPS Rate: 1253.6191 GFLOPs/s
+9
+10
+Array Size: 910
+Number of Iterations: 1
+Counter: 90
+FLOPS Rate: 0.004489732 GFLOPs/s
+1
+Number of Iterations: 10
+Counter: 89
+FLOPS Rate: 0.04427894 GFLOPs/s
+2
+Number of Iterations: 100
+Counter: 84
+FLOPS Rate: 0.42064843 GFLOPs/s
+3
+Number of Iterations: 1000
+Counter: 71
+FLOPS Rate: 3.507916 GFLOPs/s
+4
+Number of Iterations: 10000
+Counter: 8
+FLOPS Rate: 3.8523552 GFLOPs/s
+5
+Number of Iterations: 100000
+Counter: 64
+FLOPS Rate: 319.25238 GFLOPs/s
+6
+Number of Iterations: 1000000
+Counter: 20
+FLOPS Rate: 961.21594 GFLOPs/s
+7
+Number of Iterations: 10000000
+Counter: 3
+FLOPS Rate: 1182.7084 GFLOPs/s
+8
+Number of Iterations: 100000000
+Counter: 1
+FLOPS Rate: 1253.4489 GFLOPs/s
+9
+11
+Array Size: 1010
+Number of Iterations: 1
+Counter: 90
+FLOPS Rate: 0.004465417 GFLOPs/s
+1
+Number of Iterations: 10
+Counter: 88
+FLOPS Rate: 0.04373271 GFLOPs/s
+2
+Number of Iterations: 100
+Counter: 85
+FLOPS Rate: 0.4165223 GFLOPs/s
+3
+Number of Iterations: 1000
+Counter: 70
+FLOPS Rate: 3.4824905 GFLOPs/s
+4
+Number of Iterations: 10000
+Counter: 9
+FLOPS Rate: 4.1388264 GFLOPs/s
+5
+Number of Iterations: 100000
+Counter: 64
+FLOPS Rate: 316.3425 GFLOPs/s
+6
+Number of Iterations: 1000000
+Counter: 20
+FLOPS Rate: 962.1208 GFLOPs/s
+7
+Number of Iterations: 10000000
+Counter: 3
+FLOPS Rate: 1220.3506 GFLOPs/s
+8
+Number of Iterations: 100000000
+Counter: 1
+FLOPS Rate: 1183.209 GFLOPs/s
+9
+12
+Array Size: 1110
+Number of Iterations: 1
+Counter: 89
+FLOPS Rate: 0.0044246493 GFLOPs/s
+1
+Number of Iterations: 10
+Counter: 89
+FLOPS Rate: 0.044247236 GFLOPs/s
+2
+Number of Iterations: 100
+Counter: 85
+FLOPS Rate: 0.42478454 GFLOPs/s
+3
+Number of Iterations: 1000
+Counter: 71
+FLOPS Rate: 3.5382447 GFLOPs/s
+4
+Number of Iterations: 10000
+Counter: 9
+FLOPS Rate: 4.004142 GFLOPs/s
+5
+Number of Iterations: 100000
+Counter: 64
+FLOPS Rate: 317.82346 GFLOPs/s
+6
+Number of Iterations: 1000000
+Counter: 20
+FLOPS Rate: 973.97925 GFLOPs/s
+7
+Number of Iterations: 10000000
+Counter: 3
+FLOPS Rate: 1218.4321 GFLOPs/s
+8
+Number of Iterations: 100000000
+Counter: 1
+FLOPS Rate: 1060.7019 GFLOPs/s
+9
+13
+Array Size: 1210
+Number of Iterations: 1
+Counter: 90
+FLOPS Rate: 0.0044816732 GFLOPs/s
+1
+Number of Iterations: 10
+Counter: 90
+FLOPS Rate: 0.044718876 GFLOPs/s
+2
+Number of Iterations: 100
+Counter: 85
+FLOPS Rate: 0.4229018 GFLOPs/s
+3
+Number of Iterations: 1000
+Counter: 71
+FLOPS Rate: 3.5220804 GFLOPs/s
+4
+Number of Iterations: 10000
+Counter: 9
+FLOPS Rate: 4.077318 GFLOPs/s
+5
+Number of Iterations: 100000
+Counter: 64
+FLOPS Rate: 317.9366 GFLOPs/s
+6
+Number of Iterations: 1000000
+Counter: 19
+FLOPS Rate: 911.75903 GFLOPs/s
+7
+Number of Iterations: 10000000
+Counter: 2
+FLOPS Rate: 905.92004 GFLOPs/s
+8
+Number of Iterations: 100000000
+Counter: 1
+FLOPS Rate: 807.66754 GFLOPs/s
+9
+14
+Array Size: 1310
+Number of Iterations: 1
+Counter: 86
+FLOPS Rate: 0.0043036486 GFLOPs/s
+1
+Number of Iterations: 10
+Counter: 86
+FLOPS Rate: 0.042633943 GFLOPs/s
+2
+Number of Iterations: 100
+Counter: 83
+FLOPS Rate: 0.41441795 GFLOPs/s
+3
+Number of Iterations: 1000
+Counter: 69
+FLOPS Rate: 3.4127822 GFLOPs/s
+4
+Number of Iterations: 10000
+Counter: 8
+FLOPS Rate: 3.89737 GFLOPs/s
+5
+Number of Iterations: 100000
+Counter: 62
+FLOPS Rate: 308.50293 GFLOPs/s
+6
+Number of Iterations: 1000000
+Counter: 17
+FLOPS Rate: 830.90216 GFLOPs/s
+7
+Number of Iterations: 10000000
+Counter: 2
+FLOPS Rate: 990.62085 GFLOPs/s
+8
+Number of Iterations: 100000000
+Counter: 1
+FLOPS Rate: 917.67413 GFLOPs/s
+9
+15
+Array Size: 1410
+Number of Iterations: 1
+Counter: 88
+FLOPS Rate: 0.004357842 GFLOPs/s
+1
+Number of Iterations: 10
+Counter: 86
+FLOPS Rate: 0.042960834 GFLOPs/s
+2
+Number of Iterations: 100
+Counter: 84
+FLOPS Rate: 0.4185302 GFLOPs/s
+3
+Number of Iterations: 1000
+Counter: 70
+FLOPS Rate: 3.4787042 GFLOPs/s
+4
+Number of Iterations: 10000
+Counter: 8
+FLOPS Rate: 3.6002302 GFLOPs/s
+5
+Number of Iterations: 100000
+Counter: 62
+FLOPS Rate: 305.8734 GFLOPs/s
+6
+Number of Iterations: 1000000
+Counter: 18
+FLOPS Rate: 880.9736 GFLOPs/s
+7
+Number of Iterations: 10000000
+Counter: 2
+FLOPS Rate: 977.357 GFLOPs/s
+8
+Number of Iterations: 100000000
+Counter: 1
+FLOPS Rate: 1022.4801 GFLOPs/s
+9
+16
+Array Size: 1510
+Number of Iterations: 1
+Counter: 88
+FLOPS Rate: 0.0043971413 GFLOPs/s
+1
+Number of Iterations: 10
+Counter: 87
+FLOPS Rate: 0.043184128 GFLOPs/s
+2
+Number of Iterations: 100
+Counter: 85
+FLOPS Rate: 0.42089573 GFLOPs/s
+3
+Number of Iterations: 1000
+Counter: 70
+FLOPS Rate: 3.475355 GFLOPs/s
+4
+Number of Iterations: 10000
+Counter: 8
+FLOPS Rate: 3.8638427 GFLOPs/s
+5
+Number of Iterations: 100000
+Counter: 64
+FLOPS Rate: 316.45038 GFLOPs/s
+6
+Number of Iterations: 1000000
+Counter: 20
+FLOPS Rate: 968.68317 GFLOPs/s
+7
+Number of Iterations: 10000000
+Counter: 3
+FLOPS Rate: 1132.7195 GFLOPs/s
+8
+Number of Iterations: 100000000
+Counter: 1
+FLOPS Rate: 1118.0752 GFLOPs/s
+9
+17
+Array Size: 1610
+Number of Iterations: 1
+Counter: 89
+FLOPS Rate: 0.0044549024 GFLOPs/s
+1
+Number of Iterations: 10
+Counter: 89
+FLOPS Rate: 0.044324983 GFLOPs/s
+2
+Number of Iterations: 100
+Counter: 84
+FLOPS Rate: 0.4174744 GFLOPs/s
+3
+Number of Iterations: 1000
+Counter: 71
+FLOPS Rate: 3.5315654 GFLOPs/s
+4
+Number of Iterations: 10000
+Counter: 8
+FLOPS Rate: 3.8347237 GFLOPs/s
+5
+Number of Iterations: 100000

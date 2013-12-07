@@ -316,6 +316,7 @@ public class GPU {
 			err = clGetDeviceIDs(platforms[0], CL_DEVICE_TYPE_GPU, 1, devices ,null);
 			if(err < 0){
 				System.out.println("Error: Failed to locate device.");
+				System.out.println("OpenCL Error Code: " + err);
 				System.exit(1);
 			}	
 			
@@ -324,6 +325,7 @@ public class GPU {
 			err = clGetDeviceIDs(platforms[0], CL_DEVICE_TYPE_CPU, 1, devices ,null);
 			if(err < 0){
 				System.out.println("Error: Failed to locate device.");
+				System.out.println("OpenCL error code: " + err);
 				System.exit(1);
 			}	
 			

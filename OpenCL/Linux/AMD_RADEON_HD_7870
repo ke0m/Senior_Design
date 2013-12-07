@@ -1,0 +1,108 @@
+    1000MHz Engine Clock
+    2GB GDDR5 Memory
+    1200MHz Memory Clock (4.8 Gbps GDDR5)
+    153.6GB/s memory bandwidth (maximum)
+    2.56 TFLOPS Single Precision compute power
+    GCN Architecture
+        20 Compute Units (1280 Stream Processors)
+        80 Texture Units
+        128 Z/Stencil ROP Units
+        32 Color ROP Units
+        Dual Geometry Engines
+        Dual Asynchronous Compute Engines (ACE)
+    256-bit GDDR5 memory interface
+    PCI Express 3.0 x16 bus interface
+    DirectX® 11.1-capable graphics
+    OpenGL 4.2 support
+    Partially Resident Textures (PRT)
+        Ultra-high resolution texture streaming technology
+    Image quality enhancement technology
+        Up to 24x multi-sample and super-sample anti-aliasing
+        Adaptive anti-aliasing
+        Morphological Anti-Aliasing (MLAA)
+        Enhanced Quality Anti-Aliasing (EQAA)
+        DirectX® 9/10/11 Supersample Anti-Aliasing (SSAA)
+            Requires AMD Catalyst™ 12.2 or later
+        16x angle independent anisotropic texture filtering
+    AMD Eyefinity multi-display technology2
+        Up to 6 displays supported
+        Independent resolutions, refresh rates, color controls, and video overlays
+        Display grouping
+            Combine multiple displays to behave like a single large display
+        Discrete Digital Multi-Point Audio (DDMA)
+    AMD App Acceleration3
+        Supports OpenCL™ 1.2, DirectCompute 11 & Microsoft C++ AMP
+        Double Precision Floating Point
+        AMD HD Media Accelerator
+            Unified Video Decoder (UVD)
+                H.264
+                VC-1
+                MPEG-2 (SD & HD)
+                MVC (Blu-ray 3D)
+                MPEG-4 Part 2 (DivX/Xvid)
+                Adobe Flash
+                DXVA 1.0 & 2.0 support
+                WMV HD
+            Video Codec Engine (VCE)
+                Multi-stream hardware H.264 encoder
+                Full-fixed mode: 1080p @ 60 FPS encoding
+                Hybrid mode: Stream Processor-assisted encoding
+            Enhanced Video Quality features
+                Advanced post-processing and scaling
+                    Deblocking
+                    Denoising
+                    Automatic deinterlacing
+                    Mosquito noise reduction
+                    Edge enhancement
+                    3:2 pulldown detection
+                Advanced video color correction
+                    Brighter whites processing (Blue Stretch)
+                    Independent video gamma control
+                    Flesh tone correction
+                    Color vibrance control
+                    Dynamic contrast
+                    Dynamic video range control
+    AMD HD3D technology5
+        Stereoscopic 3D display/glasses support
+        Blu-ray 3D support
+        Stereoscopic 3D gaming
+        3rd party Stereoscopic 3D middleware software support
+    AMD CrossFire™ multi-GPU technology6
+        Supports dual-GPU performance scaling
+    Cutting-edge integrated display support
+        DisplayPort 1.2
+            Max resolution: 4096x2160 @ 60 Hz per display
+            Multi-Stream
+            21.6 Gbps bandwidth (HBR2)
+            High bit-rate audio
+            Quad HD/4K/UHDTV display support
+            1080p60 Stereoscopic 3D (Frame Sequential Format) 
+        HDMI® (With 4K, 3D, x.v.Color™ and Deep Color)
+            Max resolution: 4096x2160 @ 30 Hz
+            1080p30 Stereoscopic 3D (Packed Frame Format)
+            Quad HD/4K/UHDTV video display support
+        Dual-link DVI with HDCP
+            Max resolution: 2560x1600
+        VGA
+            Max resolution: 2048x1536
+    Integrated HD audio controller
+        Output protected high bit rate 7.1 channel surround sound over HDMI with no additional cables required
+        Supports AC-3, AAC, Dolby TrueHD and DTS Master Audio formats
+    AMD PowerPlay™ power management technology4
+        Automatic power management with low power idle states
+    AMD PowerTune technology4
+        Intelligent TDP management technology
+        Dynamic clockspeed/performance enhancement for games
+    AMD ZeroCore Power technology4
+        Ultra-low idle power when the connected display is in power saving mode
+        Efficient low power mode for desktop work
+        Secondary GPUs in an AMD CrossFire™ technology configuration power down when unneeded
+    AMD Catalyst™ graphics and HD video configuration software
+        Software support for Windows 7, Windows Vista and Windows XP
+        AMD Catalyst™ Control Center - AMD Catalyst™ software application and user interface for setup, configuration, and accessing features of AMD Radeon products.
+    Unified Graphics display driver - AMD Catalyst™ software enabling other PC programs and devices to use advanced graphics, video, and features of AMD Radeon™ products.
+
+
+
+
+

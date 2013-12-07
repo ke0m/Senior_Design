@@ -1,0 +1,35 @@
+Number of Iterations: 1
+Counter: 87
+FLOPS Rate: 0.0043310947 GFLOPs/s
+
+Number of Iterations: 10
+Counter: 88
+FLOPS Rate: 0.043691948 GFLOPs/s
+
+Number of Iterations: 100
+Counter: 84
+FLOPS Rate: 0.41841218 GFLOPs/s
+
+Number of Iterations: 1000
+Counter: 71
+FLOPS Rate: 3.5104263 GFLOPs/s
+
+Number of Iterations: 10000
+Counter: 8
+FLOPS Rate: 3.8689642 GFLOPs/s
+
+Number of Iterations: 100000
+Counter: 62
+FLOPS Rate: 309.70895 GFLOPs/s
+
+Number of Iterations: 1000000
+Counter: 17
+FLOPS Rate: 832.0814 GFLOPs/s
+
+Number of Iterations: 10000000
+Counter: 2
+FLOPS Rate: 974.4635 GFLOPs/s
+
+Number of Iterations: 100000000
+Counter: 1
+FLOPS Rate: 893.7945 GFLOPs/s

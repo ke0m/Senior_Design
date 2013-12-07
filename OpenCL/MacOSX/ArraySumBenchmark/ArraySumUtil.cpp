@@ -13,9 +13,6 @@
 #include <stdlib.h>
 #include "GPU.h"
 
-
-
-
 void  ArraySumUtil::packArray(int n1, int n2, float ** array2d, float *array1d){
     
     int k = 0;
@@ -27,9 +24,22 @@ void  ArraySumUtil::packArray(int n1, int n2, float ** array2d, float *array1d){
         }
         
     }
-
+    
 }
 
+void ArraySumUtil::packVector(std::vector<std::vector<float> > &vec2d, std::vector<float> &vec1d){
+    
+    int n1 = vec2d.size();
+    int n2 = vec2d[0].size();
+    int k = 0;
+    
+    for (int i = 0; i < n1; i++){
+        for (int j = 0; j < n2; j++){
+            vec1d[k] = vec2d[i][j];
+        	k++;
+		}
+    }
+}
 
 void ArraySumUtil::unPackArray(int n1, int n2, float* array1d, float** array2d){
     
@@ -47,20 +57,56 @@ void ArraySumUtil::unPackArray(int n1, int n2, float* array1d, float** array2d){
     
 }
 
-
-//TODO: Allow for the user to specifarray2 how manarray2 iterations he or she desires. This will require either placing
-//this specified number somehow in the file or simplarray2 instead of using a file, use a long string within c++.
-
-float **ArraySumUtil::arraySumGPU(float** array1, float** array2, int n1, int n2){
+void ArraySumUtil::unPackVector(std::vector<float> &vec1d, std::vector<std::vector<float> > &vec2d){
     
-    GPU test("floppmem.cl", "arraysum", true);
+    int n1 = vec2d.size();
+    int n2 = vec2d[0].size();
+    int k = 0;
+    
+    for(int i = 0; i < n1; ++i){
+        for (int j = 0; j < n2; ++j){
+            vec2d[i][j] = vec1d[k];
+            k++;
+        }
+    }
+       
+}
 
+void ArraySumUtil::printArray2D(int numRows, int numCols, float** array){
+    
+    for(int i = 0; i < numRows; ++i){
+        for(int j = 0; j < numCols; ++j){
+            std::cout << array[i][j] << " ";
+        }
+        std::cout << std::endl;
+    }
+}
+
+
+void ArraySumUtil::printVec2D(std::vector<std::vector<float> > &vec2d){
+    
+    int n1 = vec2d.size();
+    int n2 = vec2d[0].size();
+    
+    for(int i = 0; i < n1; ++i){
+        for (int j = 0; j < n2; ++j){
+            std::cout << vec2d[i][j] << " ";
+        }
+        std::cout << std::endl;
+    }
+    
+}
+
+
+float **ArraySumUtil::arraySumGPU(float** array1, float** array2, int n1, int n2, int iters){
+    
+    GPU test("floptmem.cl", "arraysum", true);
+    
     int dims = n1*n2;
     
     float** array3 = new float*[n1];
     for (int i = 0; i < n2; ++i)
         array3[i] = new float[n2];
-    
     
     cl_mem d_xx, d_yy, d_zz, l_d_xx, l_d_yy, l_d_zz;
 	
@@ -69,7 +115,7 @@ float **ArraySumUtil::arraySumGPU(float** array1, float** array2, int n1, int n2
     d_yy = test.createFloatBuffer(dims);
 	//l_d_yy = test.createFloatBuffer(dims);
 	d_zz = test.createFloatBuffer(dims);
-	//l_d_zz = test.createFloatBuffer(dims);
+	//l_d_zz = test.createFloatBuffer(dims);    
     
     float *h_xx1 = new float[dims];
     float *h_yy1 = new float[dims];
@@ -87,6 +133,7 @@ float **ArraySumUtil::arraySumGPU(float** array1, float** array2, int n1, int n2
   	//test.setLocalKernelArg(l_d_yy, 3);
   	test.setGlobalKernelArg(d_zz, 2);
 	//test.setLocalKernelArg(l_d_zz, 5);
+    test.setGlobalIntArg(iters, 3);
 	
     test.executeKernel(dims);
     
@@ -106,9 +153,9 @@ float **ArraySumUtil::arraySumGPU(float** array1, float** array2, int n1, int n2
     
 }
 
-float **ArraySumUtil::arraySumOCLCPU(float** array1, float** array2, int n1, int n2){
+float **ArraySumUtil::arraySumOCLCPU(float** array1, float** array2, int n1, int n2, int iters){
     
-    GPU test("flopstestloop.cl", "array2sum", false);
+    GPU test("floptmem.cl", "arraysum", false);
     
     int dims = n1*n2;
     
@@ -162,7 +209,7 @@ float **ArraySumUtil::arraySumOCLCPU(float** array1, float** array2, int n1, int
 }
 
 
-float **ArraySumUtil::arraySumCPULoop(float** array1, float** array2, int n1, int n2){
+float **ArraySumUtil::arraySumCPULoop(float** array1, float** array2, int n1, int n2, int iters){
     
     
     float **array3 = (float**)malloc(sizeof(float*)*n1);
@@ -174,13 +221,13 @@ float **ArraySumUtil::arraySumCPULoop(float** array1, float** array2, int n1, in
     for(int i = 0; i<n1; i++){
         for(int j = 0; j<n2; j++){
             array3[i][j] = array1[i][j] + array2[i][j];
-			for(int k = 0; k < 500; k++){
+			for(int k = 0; k < iters-1; k++){
 				array3[i][j] += array2[i][j];
                 
 			}
         }
     }
-
+    
     
     
     
@@ -189,14 +236,14 @@ float **ArraySumUtil::arraySumCPULoop(float** array1, float** array2, int n1, in
 
 
 float **ArraySumUtil::arraySumCPU(float** array1, float** array2, int n1, int n2){
-
+    
 	float** array3 = new float*[n1];
     for (int i = 0; i < n2; ++i)
         array3[i] = new float[n2];
     
-	 for(int i = 0; i<n1; i++){
+    for(int i = 0; i<n1; i++){
         for(int j = 0; j<n2; j++){
-
+            
             array3[i][j] = array1[i][j] + array2[i][j] + array2[i][j] + array2[i][j] + array2[i][j] + array2[i][j]
             +array2[i][j] + array2[i][j] + array2[i][j] + array2[i][j] + array2[i][j]
             +array2[i][j] + array2[i][j] + array2[i][j] + array2[i][j] + array2[i][j]
@@ -350,21 +397,17 @@ float **ArraySumUtil::arraySumCPU(float** array1, float** array2, int n1, int n2
 			+array2[i][j] + array2[i][j] + array2[i][j] + array2[i][j] + array2[i][j]
 			+array2[i][j] + array2[i][j] + array2[i][j] + array2[i][j] + array2[i][j]
 			+array2[i][j] + array2[i][j] + array2[i][j] + array2[i][j] + array2[i][j];
-
+            
             
             
         }
     }
-
-
+    
+    
 	return array3;
-
-
-
+    
+    
+    
 }
-
-
-
-
 
 

@@ -13,6 +13,7 @@
 #include <stdlib.h>
 #include <iostream>
 #include <OpenCL/OpenCL.h>
+#include <vector>
 
 #endif /* defined(__ArraySum1_1__GPU__) */
 
@@ -65,9 +66,12 @@ cl_program getProgram();
 cl_int getErr();
 cl_mem createFloatBuffer(int datadims);
 void writeToDevice(cl_mem ddata, float* hdata, int datadims);
+void writeVecToDevice(cl_mem ddata, std::vector<float> &vec);
 void readFromDevice(cl_mem ddata, float* hdata, int datadims);
+void readVecFromDevice(cl_mem ddata, std::vector<float> &vec);
 void setGlobalKernelArg(cl_mem ddata, int kernelNum);
 void setLocalKernelArg(cl_mem ddata, int kernelNum);
+void setGlobalIntArg(int num, int kernelNum);
 void executeKernel(int datadims);
 void freeDeviceMem(cl_mem ddata);
 void freeKernel();

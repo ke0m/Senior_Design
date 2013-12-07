@@ -38,7 +38,6 @@ public class BenchmarkGPULoop {
 		sw.restart();		
 		while(sw.time() < maxTime){
 			h_cc = oclgpu.arraySumGPULoop(h_aa, h_bb, iters);
-			System.out.println("SW Time:" + sw.time());
 			counter++;
 		}
 		sw.stop();
@@ -55,6 +54,7 @@ public class BenchmarkGPULoop {
 
 		System.out.println("Number of MegaFLOPs: " + counterf*n1f*n2f*iters*1.0e-6);
 		System.out.println("FLOPS Rate: " + mflops + " MFLOPs/s");
+		System.out.println("Counter: " + counter);
 
 	return mflops;	
 
