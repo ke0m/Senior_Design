@@ -23,6 +23,7 @@ done
 
 paste ../../perflogs/ArraySumLogs/JOCLlog.txt ../../perflogs/ArraySumLogs/Javalog.txt | column -s $'\t' -t > ../../perflogs/ArraySumLogs/log_`date '+%Y-%m-%d-%H%M'`.txt
 
+echo $HOSTNAME >> ../../perflogs/ArraySumLogs/log_`date '+%Y-%m-%d-%H%M'`.txt
 
 rm ../../perflogs/ArraySumLogs/JOCLlog.txt
 rm ../../perflogs/ArraySumLogs/Javalog.txt

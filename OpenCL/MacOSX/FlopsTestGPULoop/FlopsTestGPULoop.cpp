@@ -8,15 +8,14 @@
  * 				programming the GPU useful.
  */
 
-//Include the OpenCL and the I/O header files
+
+
 #include <iostream>
 #include <OpenCL/OpenCL.h>
 #include <sys/time.h>
 
 int main(int argc, const char * argv[])
 {
- 
-
 	
 	 //First we set the variables for measuring performance.
 	 

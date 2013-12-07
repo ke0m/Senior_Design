@@ -44,6 +44,8 @@ done
 
 paste ../perflogs/ArraySumLogs/GPULog.txt ../perflogs/ArraySumLogs/CPULog.txt | column -s $'\t' -t > ../perflogs/ArraySumLogs/log_`date '+%Y-%m-%d-%H%M'`.txt
 
+echo $HOSTNAME >> ../perflogs/ArraySumLogs/log_`date '+%Y-%m-%d-%H%M'`.txt
+
 rm ../perflogs/ArraySumLogs/GPULog.txt
 rm ../perflogs/ArraySumLogs/CPULog.txt
 

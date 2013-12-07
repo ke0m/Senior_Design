@@ -53,7 +53,7 @@ endif
 endif
 
 $(PROJ): $(PROJ).cpp
-	$(CXX) $(CXXFLAGS) -o $@ $^ $(INC_DIRS:%=-I%) $(LIB_DIRS:%=-L%) $(LIBS)
+	$(CXX) $(CXXFLAGS) -o $@ $^ $(INC_DIRS:%=-I%) $(LIB_DIRS:%=-L%)
 
 .PHONY: clean
 

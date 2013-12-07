@@ -1,0 +1,2600 @@
+Array Size: 500
+Iterations: 1
+n1: 500
+n2: 501
+count: 587
+Iterations: 1
+Time: 5.00485
+0.0587604 MegaFLOPS
+
+Iterations: 2
+n1: 500
+n2: 501
+count: 642
+Iterations: 2
+Time: 5.00554
+0.128514 MegaFLOPS
+
+Iterations: 4
+n1: 500
+n2: 501
+count: 647
+Iterations: 4
+Time: 5.00274
+0.259175 MegaFLOPS
+
+Iterations: 8
+n1: 500
+n2: 501
+count: 632
+Iterations: 8
+Time: 5.00587
+0.506017 MegaFLOPS
+
+Iterations: 16
+n1: 500
+n2: 501
+count: 609
+Iterations: 16
+Time: 5.00453
+0.975465 MegaFLOPS
+
+Iterations: 32
+n1: 500
+n2: 501
+count: 567
+Iterations: 32
+Time: 5.00644
+1.81569 MegaFLOPS
+
+Iterations: 64
+n1: 500
+n2: 501
+count: 535
+Iterations: 64
+Time: 5.00668
+3.42627 MegaFLOPS
+
+Iterations: 128
+n1: 500
+n2: 501
+count: 503
+Iterations: 128
+Time: 5.00036
+6.45081 MegaFLOPS
+
+Iterations: 256
+n1: 500
+n2: 501
+count: 369
+Iterations: 256
+Time: 5.00594
+9.45405 MegaFLOPS
+
+Iterations: 512
+n1: 500
+n2: 501
+count: 268
+Iterations: 512
+Time: 5.00908
+13.7241 MegaFLOPS
+
+Iterations: 1024
+n1: 500
+n2: 501
+count: 181
+Iterations: 1024
+Time: 5.01123
+18.5298 MegaFLOPS
+
+Iterations: 2048
+n1: 500
+n2: 501
+count: 112
+Iterations: 2048
+Time: 5.03794
+22.8104 MegaFLOPS
+
+Iterations: 4096
+n1: 500
+n2: 501
+count: 63
+Iterations: 4096
+Time: 5.02952
+25.7047 MegaFLOPS
+
+Iterations: 8192
+n1: 500
+n2: 501
+count: 34
+Iterations: 8192
+Time: 5.06695
+27.5398 MegaFLOPS
+
+Iterations: 16384
+n1: 500
+n2: 501
+count: 18
+Iterations: 16384
+Time: 5.21287
+28.3435 MegaFLOPS
+
+Iterations: 32768
+n1: 500
+n2: 501
+count: 9
+Iterations: 32768
+Time: 5.26459
+28.065 MegaFLOPS
+
+
+Array Size: 600
+Iterations: 1
+n1: 600
+n2: 601
+count: 434
+Iterations: 1
+Time: 5.00369
+0.062554 MegaFLOPS
+
+Iterations: 2
+n1: 600
+n2: 601
+count: 417
+Iterations: 2
+Time: 5.00685
+0.120132 MegaFLOPS
+
+Iterations: 4
+n1: 600
+n2: 601
+count: 423
+Iterations: 4
+Time: 5.00539
+0.243791 MegaFLOPS
+
+Iterations: 8
+n1: 600
+n2: 601
+count: 402
+Iterations: 8
+Time: 5.00566
+0.463351 MegaFLOPS
+
+Iterations: 16
+n1: 600
+n2: 601
+count: 395
+Iterations: 16
+Time: 5.00699
+0.910323 MegaFLOPS
+
+Iterations: 32
+n1: 600
+n2: 601
+count: 391
+Iterations: 32
+Time: 5.01984
+1.7976 MegaFLOPS
+
+Iterations: 64
+n1: 600
+n2: 601
+count: 384
+Iterations: 64
+Time: 5.00464
+3.54156 MegaFLOPS
+
+Iterations: 128
+n1: 600
+n2: 601
+count: 330
+Iterations: 128
+Time: 5.0125
+6.07751 MegaFLOPS
+
+Iterations: 256
+n1: 600
+n2: 601
+count: 253
+Iterations: 256
+Time: 5.00552
+9.33183 MegaFLOPS
+
+Iterations: 512
+n1: 600
+n2: 601
+count: 180
+Iterations: 512
+Time: 5.01977
+13.2408 MegaFLOPS
+
+Iterations: 1024
+n1: 600
+n2: 601
+count: 115
+Iterations: 1024
+Time: 5.00778
+16.9593 MegaFLOPS
+
+Iterations: 2048
+n1: 600
+n2: 601
+count: 68
+Iterations: 2048
+Time: 5.06013
+19.8487 MegaFLOPS
+
+Iterations: 4096
+n1: 600
+n2: 601
+count: 37
+Iterations: 4096
+Time: 5.10388
+21.415 MegaFLOPS
+
+Iterations: 8192
+n1: 600
+n2: 601
+count: 19
+Iterations: 8192
+Time: 5.03843
+22.2794 MegaFLOPS
+
+Iterations: 16384
+n1: 600
+n2: 601
+count: 10
+Iterations: 16384
+Time: 5.10952
+23.1257 MegaFLOPS
+
+Iterations: 32768
+n1: 600
+n2: 601
+count: 5
+Iterations: 32768
+Time: 5.12275
+23.066 MegaFLOPS
+
+
+Array Size: 700
+Iterations: 1
+n1: 700
+n2: 701
+count: 364
+Iterations: 1
+Time: 5.00036
+0.0714408 MegaFLOPS
+
+Iterations: 2
+n1: 700
+n2: 701
+count: 342
+Iterations: 2
+Time: 5.00724
+0.134062 MegaFLOPS
+
+Iterations: 4
+n1: 700
+n2: 701
+count: 340
+Iterations: 4
+Time: 5.00216
+0.266826 MegaFLOPS
+
+Iterations: 8
+n1: 700
+n2: 701
+count: 321
+Iterations: 8
+Time: 5.00189
+0.503857 MegaFLOPS
+
+Iterations: 16
+n1: 700
+n2: 701
+count: 312
+Iterations: 16
+Time: 5.00092
+0.979649 MegaFLOPS
+
+Iterations: 32
+n1: 700
+n2: 701
+count: 305
+Iterations: 32
+Time: 5.01012
+1.91182 MegaFLOPS
+
+Iterations: 64
+n1: 700
+n2: 701
+count: 302
+Iterations: 64
+Time: 5.00953
+3.78648 MegaFLOPS
+
+Iterations: 128
+n1: 700
+n2: 701
+count: 264
+Iterations: 128
+Time: 5.0166
+6.61074 MegaFLOPS
+
+Iterations: 256
+n1: 700
+n2: 701
+count: 210
+Iterations: 256
+Time: 5.00769
+10.5358 MegaFLOPS
+
+Iterations: 512
+n1: 700
+n2: 701
+count: 152
+Iterations: 512
+Time: 5.01506
+15.2294 MegaFLOPS
+
+Iterations: 1024
+n1: 700
+n2: 701
+count: 98
+Iterations: 1024
+Time: 5.0104
+19.6562 MegaFLOPS
+
+Iterations: 2048
+n1: 700
+n2: 701
+count: 58
+Iterations: 2048
+Time: 5.05311
+23.0699 MegaFLOPS
+
+Iterations: 4096
+n1: 700
+n2: 701
+count: 32
+Iterations: 4096
+Time: 5.14125
+25.02 MegaFLOPS
+
+Iterations: 8192
+n1: 700
+n2: 701
+count: 17
+Iterations: 8192
+Time: 5.29277
+25.8227 MegaFLOPS
+
+Iterations: 16384
+n1: 700
+n2: 701
+count: 8
+Iterations: 16384
+Time: 5.02488
+25.5994 MegaFLOPS
+
+Iterations: 32768
+n1: 700
+n2: 701
+count: 5
+Iterations: 32768
+Time: 5.86455
+27.4177 MegaFLOPS
+
+
+Array Size: 800
+Iterations: 1
+n1: 800
+n2: 801
+count: 238
+Iterations: 1
+Time: 5.01639
+0.0608049 MegaFLOPS
+
+Iterations: 2
+n1: 800
+n2: 801
+count: 266
+Iterations: 2
+Time: 5.01344
+0.135997 MegaFLOPS
+
+Iterations: 4
+n1: 800
+n2: 801
+count: 266
+Iterations: 4
+Time: 5.00101
+0.272669 MegaFLOPS
+
+Iterations: 8
+n1: 800
+n2: 801
+count: 254
+Iterations: 8
+Time: 5.0055
+0.52027 MegaFLOPS
+
+Iterations: 16
+n1: 800
+n2: 801
+count: 256
+Iterations: 16
+Time: 5.00646
+1.04853 MegaFLOPS
+
+Iterations: 32
+n1: 800
+n2: 801
+count: 259
+Iterations: 32
+Time: 5.02513
+2.11376 MegaFLOPS
+
+Iterations: 64
+n1: 800
+n2: 801
+count: 246
+Iterations: 64
+Time: 5.00853
+4.02863 MegaFLOPS
+
+Iterations: 128
+n1: 800
+n2: 801
+count: 220
+Iterations: 128
+Time: 5.01835
+7.19158 MegaFLOPS
+
+Iterations: 256
+n1: 800
+n2: 801
+count: 173
+Iterations: 256
+Time: 5.0039
+11.3431 MegaFLOPS
+
+Iterations: 512
+n1: 800
+n2: 801
+count: 124
+Iterations: 512
+Time: 5.01292
+16.2313 MegaFLOPS
+
+Iterations: 1024
+n1: 800
+n2: 801
+count: 79
+Iterations: 1024
+Time: 5.01268
+20.6828 MegaFLOPS
+
+Iterations: 2048
+n1: 800
+n2: 801
+count: 46
+Iterations: 2048
+Time: 5.02959
+24.0053 MegaFLOPS
+
+Iterations: 4096
+n1: 800
+n2: 801
+count: 25
+Iterations: 4096
+Time: 5.03846
+26.0468 MegaFLOPS
+
+Iterations: 8192
+n1: 800
+n2: 801
+count: 13
+Iterations: 8192
+Time: 5.01684
+27.2054 MegaFLOPS
+
+Iterations: 16384
+n1: 800
+n2: 801
+count: 7
+Iterations: 16384
+Time: 5.25841
+27.9522 MegaFLOPS
+
+Iterations: 32768
+n1: 800
+n2: 801
+count: 4
+Iterations: 32768
+Time: 6.17409
+27.2075 MegaFLOPS
+
+
+Array Size: 900
+Iterations: 1
+n1: 900
+n2: 901
+count: 231
+Iterations: 1
+Time: 5.01068
+0.0747674 MegaFLOPS
+
+Iterations: 2
+n1: 900
+n2: 901
+count: 216
+Iterations: 2
+Time: 5.01958
+0.139577 MegaFLOPS
+
+Iterations: 4
+n1: 900
+n2: 901
+count: 215
+Iterations: 4
+Time: 5.00395
+0.27873 MegaFLOPS
+
+Iterations: 8
+n1: 900
+n2: 901
+count: 221
+Iterations: 8
+Time: 5.02912
+0.570148 MegaFLOPS
+
+Iterations: 16
+n1: 900
+n2: 901
+count: 217
+Iterations: 16
+Time: 5.01118
+1.12367 MegaFLOPS
+
+Iterations: 32
+n1: 900
+n2: 901
+count: 209
+Iterations: 32
+Time: 5.01062
+2.16472 MegaFLOPS
+
+Iterations: 64
+n1: 900
+n2: 901
+count: 208
+Iterations: 64
+Time: 5.00816
+4.31085 MegaFLOPS
+
+Iterations: 128
+n1: 900
+n2: 901
+count: 181
+Iterations: 128
+Time: 5.00615
+7.50554 MegaFLOPS
+
+Iterations: 256
+n1: 900
+n2: 901
+count: 146
+Iterations: 256
+Time: 5.0081
+12.1037 MegaFLOPS
+
+Iterations: 512
+n1: 900
+n2: 901
+count: 105
+Iterations: 512
+Time: 5.0403
+17.2982 MegaFLOPS
+
+Iterations: 1024
+n1: 900
+n2: 901
+count: 67
+Iterations: 1024
+Time: 5.07403
+21.929 MegaFLOPS
+
+Iterations: 2048
+n1: 900
+n2: 901
+count: 39
+Iterations: 2048
+Time: 5.11769
+25.3115 MegaFLOPS
+
+Iterations: 4096
+n1: 900
+n2: 901
+count: 21
+Iterations: 4096
+Time: 5.11925
+27.2503 MegaFLOPS
+
+Iterations: 8192
+n1: 900
+n2: 901
+count: 11
+Iterations: 8192
+Time: 5.13614
+28.454 MegaFLOPS
+
+Iterations: 16384
+n1: 900
+n2: 901
+count: 6
+Iterations: 16384
+Time: 5.48587
+29.0618 MegaFLOPS
+
+Iterations: 32768
+n1: 900
+n2: 901
+count: 3
+Iterations: 32768
+Time: 5.77111
+27.6254 MegaFLOPS
+
+
+Array Size: 1000
+Iterations: 1
+n1: 1000
+n2: 1001
+count: 175
+Iterations: 1
+Time: 5.00666
+0.0699768 MegaFLOPS
+
+Iterations: 2
+n1: 1000
+n2: 1001
+count: 190
+Iterations: 2
+Time: 5.02388
+0.151429 MegaFLOPS
+
+Iterations: 4
+n1: 1000
+n2: 1001
+count: 190
+Iterations: 4
+Time: 5.00542
+0.303975 MegaFLOPS
+
+Iterations: 8
+n1: 1000
+n2: 1001
+count: 184
+Iterations: 8
+Time: 5.01839
+0.587229 MegaFLOPS
+
+Iterations: 16
+n1: 1000
+n2: 1001
+count: 190
+Iterations: 16
+Time: 5.0165
+1.21321 MegaFLOPS
+
+Iterations: 32
+n1: 1000
+n2: 1001
+count: 169
+Iterations: 32
+Time: 5.00631
+2.16263 MegaFLOPS
+
+Iterations: 64
+n1: 1000
+n2: 1001
+count: 174
+Iterations: 64
+Time: 5.00426
+4.45506 MegaFLOPS
+
+Iterations: 128
+n1: 1000
+n2: 1001
+count: 153
+Iterations: 128
+Time: 5.01532
+7.81748 MegaFLOPS
+
+Iterations: 256
+n1: 1000
+n2: 1001
+count: 122
+Iterations: 256
+Time: 5.00487
+12.4931 MegaFLOPS
+
+Iterations: 512
+n1: 1000
+n2: 1001
+count: 87
+Iterations: 512
+Time: 5.05766
+17.6321 MegaFLOPS
+
+Iterations: 1024
+n1: 1000
+n2: 1001
+count: 54
+Iterations: 1024
+Time: 5.04205
+21.9559 MegaFLOPS
+
+Iterations: 2048
+n1: 1000
+n2: 1001
+count: 31
+Iterations: 2048
+Time: 5.03585
+25.2397 MegaFLOPS
+
+Iterations: 4096
+n1: 1000
+n2: 1001
+count: 17
+Iterations: 4096
+Time: 5.09626
+27.3541 MegaFLOPS
+
+Iterations: 8192
+n1: 1000
+n2: 1001
+count: 9
+Iterations: 8192
+Time: 5.24201
+28.1578 MegaFLOPS
+
+Iterations: 16384
+n1: 1000
+n2: 1001
+count: 5
+Iterations: 16384
+Time: 5.843
+28.0684 MegaFLOPS
+
+Iterations: 32768
+n1: 1000
+n2: 1001
+count: 2
+Iterations: 32768
+Time: 5.27836
+24.8568 MegaFLOPS
+
+
+Array Size: 1100
+Iterations: 1
+n1: 1100
+n2: 1101
+count: 161
+Iterations: 1
+Time: 5.0246
+0.077613 MegaFLOPS
+
+Iterations: 2
+n1: 1100
+n2: 1101
+count: 167
+Iterations: 2
+Time: 5.00991
+0.161483 MegaFLOPS
+
+Iterations: 4
+n1: 1100
+n2: 1101
+count: 156
+Iterations: 4
+Time: 5.02941
+0.300523 MegaFLOPS
+
+Iterations: 8
+n1: 1100
+n2: 1101
+count: 155
+Iterations: 8
+Time: 5.02267
+0.597995 MegaFLOPS
+
+Iterations: 16
+n1: 1100
+n2: 1101
+count: 153
+Iterations: 16
+Time: 5.01502
+1.18236 MegaFLOPS
+
+Iterations: 32
+n1: 1100
+n2: 1101
+count: 150
+Iterations: 32
+Time: 5.03289
+2.31011 MegaFLOPS
+
+Iterations: 64
+n1: 1100
+n2: 1101
+count: 145
+Iterations: 64
+Time: 5.03742
+4.46221 MegaFLOPS
+
+Iterations: 128
+n1: 1100
+n2: 1101
+count: 127
+Iterations: 128
+Time: 5.01688
+7.84855 MegaFLOPS
+
+Iterations: 256
+n1: 1100
+n2: 1101
+count: 98
+Iterations: 256
+Time: 5.02034
+12.1044 MegaFLOPS
+
+Iterations: 512
+n1: 1100
+n2: 1101
+count: 67
+Iterations: 512
+Time: 5.06294
+16.4116 MegaFLOPS
+
+Iterations: 1024
+n1: 1100
+n2: 1101
+count: 41
+Iterations: 1024
+Time: 5.0421
+20.1689 MegaFLOPS
+
+Iterations: 2048
+n1: 1100
+n2: 1101
+count: 23
+Iterations: 2048
+Time: 5.01343
+22.758 MegaFLOPS
+
+Iterations: 4096
+n1: 1100
+n2: 1101
+count: 13
+Iterations: 4096
+Time: 5.27129
+24.4679 MegaFLOPS
+
+Iterations: 8192
+n1: 1100
+n2: 1101
+count: 7
+Iterations: 8192
+Time: 5.73871
+24.2038 MegaFLOPS
+
+Iterations: 16384
+n1: 1100
+n2: 1101
+count: 3
+Iterations: 16384
+Time: 5.34608
+22.2698 MegaFLOPS
+
+Iterations: 32768
+n1: 1100
+n2: 1101
+count: 2
+Iterations: 32768
+Time: 6.43196
+24.6801 MegaFLOPS
+
+
+Array Size: 1200
+Iterations: 1
+n1: 1200
+n2: 1201
+count: 141
+Iterations: 1
+Time: 5.03697
+0.080687 MegaFLOPS
+
+Iterations: 2
+n1: 1200
+n2: 1201
+count: 140
+Iterations: 2
+Time: 5.02718
+0.160542 MegaFLOPS
+
+Iterations: 4
+n1: 1200
+n2: 1201
+count: 138
+Iterations: 4
+Time: 5.00432
+0.317942 MegaFLOPS
+
+Iterations: 8
+n1: 1200
+n2: 1201
+count: 137
+Iterations: 8
+Time: 5.0124
+0.630259 MegaFLOPS
+
+Iterations: 16
+n1: 1200
+n2: 1201
+count: 133
+Iterations: 16
+Time: 5.02716
+1.22012 MegaFLOPS
+
+Iterations: 32
+n1: 1200
+n2: 1201
+count: 129
+Iterations: 32
+Time: 5.03339
+2.36392 MegaFLOPS
+
+Iterations: 64
+n1: 1200
+n2: 1201
+count: 123
+Iterations: 64
+Time: 5.00147
+4.53672 MegaFLOPS
+
+Iterations: 128
+n1: 1200
+n2: 1201
+count: 110
+Iterations: 128
+Time: 5.00595
+8.10719 MegaFLOPS
+
+Iterations: 256
+n1: 1200
+n2: 1201
+count: 87
+Iterations: 256
+Time: 5.01262
+12.807 MegaFLOPS
+
+Iterations: 512
+n1: 1200
+n2: 1201
+count: 60
+Iterations: 512
+Time: 5.0133
+17.6625 MegaFLOPS
+
+Iterations: 1024
+n1: 1200
+n2: 1201
+count: 37
+Iterations: 1024
+Time: 5.00018
+21.8409 MegaFLOPS
+
+Iterations: 2048
+n1: 1200
+n2: 1201
+count: 22
+Iterations: 2048
+Time: 5.2161
+24.8978 MegaFLOPS
+
+Iterations: 4096
+n1: 1200
+n2: 1201
+count: 11
+Iterations: 4096
+Time: 5.08695
+25.5299 MegaFLOPS
+
+Iterations: 8192
+n1: 1200
+n2: 1201
+count: 6
+Iterations: 8192
+Time: 5.21426
+27.1708 MegaFLOPS
+
+Iterations: 16384
+n1: 1200
+n2: 1201
+count: 3
+Iterations: 16384
+Time: 5.24203
+27.0269 MegaFLOPS
+
+Iterations: 32768
+n1: 1200
+n2: 1201
+count: 2
+Iterations: 32768
+Time: 6.87927
+27.4594 MegaFLOPS
+
+
+Array Size: 1300
+Iterations: 1
+n1: 1300
+n2: 1301
+count: 109
+Iterations: 1
+Time: 5.01124
+0.0735752 MegaFLOPS
+
+Iterations: 2
+n1: 1300
+n2: 1301
+count: 125
+Iterations: 2
+Time: 5.00223
+0.169054 MegaFLOPS
+
+Iterations: 4
+n1: 1300
+n2: 1301
+count: 127
+Iterations: 4
+Time: 5.03084
+0.341565 MegaFLOPS
+
+Iterations: 8
+n1: 1300
+n2: 1301
+count: 123
+Iterations: 8
+Time: 5.06427
+0.657248 MegaFLOPS
+
+Iterations: 16
+n1: 1300
+n2: 1301
+count: 116
+Iterations: 16
+Time: 5.00627
+1.25405 MegaFLOPS
+
+Iterations: 32
+n1: 1300
+n2: 1301
+count: 115
+Iterations: 32
+Time: 5.02908
+2.4752 MegaFLOPS
+
+Iterations: 64
+n1: 1300
+n2: 1301
+count: 105
+Iterations: 64
+Time: 5.00694
+4.53991 MegaFLOPS
+
+Iterations: 128
+n1: 1300
+n2: 1301
+count: 86
+Iterations: 128
+Time: 5.00104
+7.44558 MegaFLOPS
+
+Iterations: 256
+n1: 1300
+n2: 1301
+count: 65
+Iterations: 256
+Time: 5.07554
+11.0897 MegaFLOPS
+
+Iterations: 512
+n1: 1300
+n2: 1301
+count: 42
+Iterations: 512
+Time: 5.11495
+14.221 MegaFLOPS
+
+Iterations: 1024
+n1: 1300
+n2: 1301
+count: 25
+Iterations: 1024
+Time: 5.1978
+16.6598 MegaFLOPS
+
+Iterations: 2048
+n1: 1300
+n2: 1301
+count: 13
+Iterations: 2048
+Time: 5.02308
+17.9289 MegaFLOPS
+
+Iterations: 4096
+n1: 1300
+n2: 1301
+count: 8
+Iterations: 4096
+Time: 5.64908
+19.6211 MegaFLOPS
+
+Iterations: 8192
+n1: 1300
+n2: 1301
+count: 4
+Iterations: 8192
+Time: 6.13738
+18.06 MegaFLOPS
+
+Iterations: 16384
+n1: 1300
+n2: 1301
+count: 2
+Iterations: 16384
+Time: 5.55437
+19.9556 MegaFLOPS
+
+Iterations: 32768
+n1: 1300
+n2: 1301
+count: 1
+Iterations: 32768
+Time: 5.93551
+18.6742 MegaFLOPS
+
+
+Array Size: 1400
+Iterations: 1
+n1: 1400
+n2: 1401
+count: 97
+Iterations: 1
+Time: 5.02104
+0.0757834 MegaFLOPS
+
+Iterations: 2
+n1: 1400
+n2: 1401
+count: 115
+Iterations: 2
+Time: 5.0128
+0.179988 MegaFLOPS
+
+Iterations: 4
+n1: 1400
+n2: 1401
+count: 113
+Iterations: 4
+Time: 5.03728
+0.351997 MegaFLOPS
+
+Iterations: 8
+n1: 1400
+n2: 1401
+count: 104
+Iterations: 8
+Time: 5.00077
+0.652653 MegaFLOPS
+
+Iterations: 16
+n1: 1400
+n2: 1401
+count: 104
+Iterations: 16
+Time: 5.0269
+1.29852 MegaFLOPS
+
+Iterations: 32
+n1: 1400
+n2: 1401
+count: 97
+Iterations: 32
+Time: 5.01072
+2.43006 MegaFLOPS
+
+Iterations: 64
+n1: 1400
+n2: 1401
+count: 93
+Iterations: 64
+Time: 5.01398
+4.65668 MegaFLOPS
+
+Iterations: 128
+n1: 1400
+n2: 1401
+count: 82
+Iterations: 128
+Time: 5.03996
+8.16945 MegaFLOPS
+
+Iterations: 256
+n1: 1400
+n2: 1401
+count: 62
+Iterations: 256
+Time: 5.07185
+12.2761 MegaFLOPS
+
+Iterations: 512
+n1: 1400
+n2: 1401
+count: 41
+Iterations: 512
+Time: 5.03738
+16.3473 MegaFLOPS
+
+Iterations: 1024
+n1: 1400
+n2: 1401
+count: 25
+Iterations: 1024
+Time: 5.06493
+19.8273 MegaFLOPS
+
+Iterations: 2048
+n1: 1400
+n2: 1401
+count: 14
+Iterations: 2048
+Time: 5.11858
+21.9738 MegaFLOPS
+
+Iterations: 4096
+n1: 1400
+n2: 1401
+count: 8
+Iterations: 4096
+Time: 5.56769
+23.0872 MegaFLOPS
+
+Iterations: 8192
+n1: 1400
+n2: 1401
+count: 4
+Iterations: 8192
+Time: 5.84568
+21.9893 MegaFLOPS
+
+Iterations: 16384
+n1: 1400
+n2: 1401
+count: 2
+Iterations: 16384
+Time: 6.044
+21.2678 MegaFLOPS
+
+Iterations: 32768
+n1: 1400
+n2: 1401
+count: 1
+Iterations: 32768
+Time: 5.20003
+24.7195 MegaFLOPS
+
+
+Array Size: 1500
+Iterations: 1
+n1: 1500
+n2: 1501
+count: 101
+Iterations: 1
+Time: 5.03222
+0.0903782 MegaFLOPS
+
+Iterations: 2
+n1: 1500
+n2: 1501
+count: 97
+Iterations: 2
+Time: 5.02305
+0.173915 MegaFLOPS
+
+Iterations: 4
+n1: 1500
+n2: 1501
+count: 94
+Iterations: 4
+Time: 5.01078
+0.337897 MegaFLOPS
+
+Iterations: 8
+n1: 1500
+n2: 1501
+count: 95
+Iterations: 8
+Time: 5.02937
+0.680459 MegaFLOPS
+
+Iterations: 16
+n1: 1500
+n2: 1501
+count: 88
+Iterations: 16
+Time: 5.03717
+1.25869 MegaFLOPS
+
+Iterations: 32
+n1: 1500
+n2: 1501
+count: 87
+Iterations: 32
+Time: 5.03532
+2.48968 MegaFLOPS
+
+Iterations: 64
+n1: 1500
+n2: 1501
+count: 82
+Iterations: 64
+Time: 5.04799
+4.68142 MegaFLOPS
+
+Iterations: 128
+n1: 1500
+n2: 1501
+count: 75
+Iterations: 128
+Time: 5.02968
+8.59475 MegaFLOPS
+
+Iterations: 256
+n1: 1500
+n2: 1501
+count: 59
+Iterations: 256
+Time: 5.03648
+13.5041 MegaFLOPS
+
+Iterations: 512
+n1: 1500
+n2: 1501
+count: 41
+Iterations: 512
+Time: 5.08361
+18.5945 MegaFLOPS
+
+Iterations: 1024
+n1: 1500
+n2: 1501
+count: 25
+Iterations: 1024
+Time: 5.11301
+22.5458 MegaFLOPS
+
+Iterations: 2048
+n1: 1500
+n2: 1501
+count: 14
+Iterations: 2048
+Time: 5.08337
+25.3985 MegaFLOPS
+
+Iterations: 4096
+n1: 1500
+n2: 1501
+count: 8
+Iterations: 4096
+Time: 5.3822
+27.4152 MegaFLOPS
+
+Iterations: 8192
+n1: 1500
+n2: 1501
+count: 4
+Iterations: 8192
+Time: 5.50335
+26.8117 MegaFLOPS
+
+Iterations: 16384
+n1: 1500
+n2: 1501
+count: 2
+Iterations: 16384
+Time: 5.53435
+26.6615 MegaFLOPS
+
+Iterations: 32768
+n1: 1500
+n2: 1501
+count: 1
+Iterations: 32768
+Time: 5.51631
+26.7487 MegaFLOPS
+
+
+Array Size: 1600
+Iterations: 1
+n1: 1600
+n2: 1601
+count: 80
+Iterations: 1
+Time: 5.05454
+0.0810867 MegaFLOPS
+
+Iterations: 2
+n1: 1600
+n2: 1601
+count: 86
+Iterations: 2
+Time: 5.04512
+0.174662 MegaFLOPS
+
+Iterations: 4
+n1: 1600
+n2: 1601
+count: 82
+Iterations: 4
+Time: 5.03011
+0.33407 MegaFLOPS
+
+Iterations: 8
+n1: 1600
+n2: 1601
+count: 83
+Iterations: 8
+Time: 5.01588
+0.678207 MegaFLOPS
+
+Iterations: 16
+n1: 1600
+n2: 1601
+count: 81
+Iterations: 16
+Time: 5.01503
+1.32395 MegaFLOPS
+
+Iterations: 32
+n1: 1600
+n2: 1601
+count: 76
+Iterations: 32
+Time: 5.05008
+2.46721 MegaFLOPS
+
+Iterations: 64
+n1: 1600
+n2: 1601
+count: 69
+Iterations: 64
+Time: 5.04661
+4.48302 MegaFLOPS
+
+Iterations: 128
+n1: 1600
+n2: 1601
+count: 63
+Iterations: 128
+Time: 5.05893
+8.16645 MegaFLOPS
+
+Iterations: 256
+n1: 1600
+n2: 1601
+count: 47
+Iterations: 256
+Time: 5.04503
+12.2184 MegaFLOPS
+
+Iterations: 512
+n1: 1600
+n2: 1601
+count: 31
+Iterations: 512
+Time: 5.04498
+16.1181 MegaFLOPS
+
+Iterations: 1024
+n1: 1600
+n2: 1601
+count: 19
+Iterations: 1024
+Time: 5.1983
+19.1749 MegaFLOPS
+
+Iterations: 2048
+n1: 1600
+n2: 1601
+count: 10
+Iterations: 2048
+Time: 5.09761
+20.5828 MegaFLOPS
+
+Iterations: 4096
+n1: 1600
+n2: 1601
+count: 6
+Iterations: 4096
+Time: 5.66722
+22.2168 MegaFLOPS
+
+Iterations: 8192
+n1: 1600
+n2: 1601
+count: 3
+Iterations: 8192
+Time: 6.08079
+20.7058 MegaFLOPS
+
+Iterations: 16384
+n1: 1600
+n2: 1601
+count: 2
+Iterations: 16384
+Time: 7.19807
+23.3225 MegaFLOPS
+
+Iterations: 32768
+n1: 1600
+n2: 1601
+count: 1
+Iterations: 32768
+Time: 7.25856
+23.1281 MegaFLOPS
+
+
+Array Size: 1700
+Iterations: 1
+n1: 1700
+n2: 1701
+count: 70
+Iterations: 1
+Time: 5.05989
+0.0800092 MegaFLOPS
+
+Iterations: 2
+n1: 1700
+n2: 1701
+count: 72
+Iterations: 2
+Time: 5.00137
+0.166516 MegaFLOPS
+
+Iterations: 4
+n1: 1700
+n2: 1701
+count: 67
+Iterations: 4
+Time: 5.0234
+0.308546 MegaFLOPS
+
+Iterations: 8
+n1: 1700
+n2: 1701
+count: 72
+Iterations: 8
+Time: 5.02347
+0.663134 MegaFLOPS
+
+Iterations: 16
+n1: 1700
+n2: 1701
+count: 71
+Iterations: 16
+Time: 5.0385
+1.30395 MegaFLOPS
+
+Iterations: 32
+n1: 1700
+n2: 1701
+count: 65
+Iterations: 32
+Time: 5.00786
+2.40212 MegaFLOPS
+
+Iterations: 64
+n1: 1700
+n2: 1701
+count: 65
+Iterations: 64
+Time: 5.04387
+4.76994 MegaFLOPS
+
+Iterations: 128
+n1: 1700
+n2: 1701
+count: 55
+Iterations: 128
+Time: 5.0159
+8.11721 MegaFLOPS
+
+Iterations: 256
+n1: 1700
+n2: 1701
+count: 48
+Iterations: 256
+Time: 5.09844
+13.9389 MegaFLOPS
+
+Iterations: 512
+n1: 1700
+n2: 1701
+count: 32
+Iterations: 512
+Time: 5.04154
+18.7949 MegaFLOPS
+
+Iterations: 1024
+n1: 1700
+n2: 1701
+count: 20
+Iterations: 1024
+Time: 5.07028
+23.3605 MegaFLOPS
+
+Iterations: 2048
+n1: 1700
+n2: 1701
+count: 12
+Iterations: 2048
+Time: 5.41341
+26.2557 MegaFLOPS
+
+Iterations: 4096
+n1: 1700
+n2: 1701
+count: 6
+Iterations: 4096
+Time: 5.41357
+26.2549 MegaFLOPS
+
+Iterations: 8192
+n1: 1700
+n2: 1701
+count: 3
+Iterations: 8192
+Time: 5.24664
+27.0902 MegaFLOPS
+
+Iterations: 16384
+n1: 1700
+n2: 1701
+count: 2
+Iterations: 16384
+Time: 6.58312
+28.7873 MegaFLOPS
+
+Iterations: 32768
+n1: 1700
+n2: 1701
+count: 1
+Iterations: 32768
+Time: 6.85195
+27.6579 MegaFLOPS
+
+
+Array Size: 1800
+Iterations: 1
+n1: 1800
+n2: 1801
+count: 57
+Iterations: 1
+Time: 5.09285
+0.0725655 MegaFLOPS
+
+Iterations: 2
+n1: 1800
+n2: 1801
+count: 65
+Iterations: 2
+Time: 5.11457
+0.164797 MegaFLOPS
+
+Iterations: 4
+n1: 1800
+n2: 1801
+count: 63
+Iterations: 4
+Time: 5.00163
+0.326667 MegaFLOPS
+
+Iterations: 8
+n1: 1800
+n2: 1801
+count: 61
+Iterations: 8
+Time: 5.0134
+0.631107 MegaFLOPS
+
+Iterations: 16
+n1: 1800
+n2: 1801
+count: 60
+Iterations: 16
+Time: 5.04693
+1.23328 MegaFLOPS
+
+Iterations: 32
+n1: 1800
+n2: 1801
+count: 58
+Iterations: 32
+Time: 5.01682
+2.39864 MegaFLOPS
+
+Iterations: 64
+n1: 1800
+n2: 1801
+count: 56
+Iterations: 64
+Time: 5.07729
+4.5767 MegaFLOPS
+
+Iterations: 128
+n1: 1800
+n2: 1801
+count: 48
+Iterations: 128
+Time: 5.03072
+7.9184 MegaFLOPS
+
+Iterations: 256
+n1: 1800
+n2: 1801
+count: 40
+Iterations: 256
+Time: 5.09248
+13.0373 MegaFLOPS
+
+Iterations: 512
+n1: 1800
+n2: 1801
+count: 27
+Iterations: 512
+Time: 5.14475
+17.4215 MegaFLOPS
+
+Iterations: 1024
+n1: 1800
+n2: 1801
+count: 16
+Iterations: 1024
+Time: 5.11872
+20.7527 MegaFLOPS
+
+Iterations: 2048
+n1: 1800
+n2: 1801
+count: 9
+Iterations: 2048
+Time: 5.13562
+23.27 MegaFLOPS
+
+Iterations: 4096
+n1: 1800
+n2: 1801
+count: 5
+Iterations: 4096
+Time: 5.38176
+24.673 MegaFLOPS
+
+Iterations: 8192
+n1: 1800
+n2: 1801
+count: 3
+Iterations: 8192
+Time: 6.49026
+24.5508 MegaFLOPS
+
+Iterations: 16384
+n1: 1800
+n2: 1801
+count: 2
+Iterations: 16384
+Time: 8.50476
+24.9807 MegaFLOPS
+
+Iterations: 32768
+n1: 1800
+n2: 1801
+count: 1
+Iterations: 32768
+Time: 8.46104
+25.1098 MegaFLOPS
+
+
+Array Size: 1900
+Iterations: 1
+n1: 1900
+n2: 1901
+count: 56
+Iterations: 1
+Time: 5.06668
+0.0798418 MegaFLOPS
+
+Iterations: 2
+n1: 1900
+n2: 1901
+count: 59
+Iterations: 2
+Time: 5.10026
+0.16713 MegaFLOPS
+
+Iterations: 4
+n1: 1900
+n2: 1901
+count: 58
+Iterations: 4
+Time: 5.06911
+0.330615 MegaFLOPS
+
+Iterations: 8
+n1: 1900
+n2: 1901
+count: 58
+Iterations: 8
+Time: 5.05996
+0.662425 MegaFLOPS
+
+Iterations: 16
+n1: 1900
+n2: 1901
+count: 58
+Iterations: 16
+Time: 5.00013
+1.3407 MegaFLOPS
+
+Iterations: 32
+n1: 1900
+n2: 1901
+count: 57
+Iterations: 32
+Time: 5.05303
+2.60759 MegaFLOPS
+
+Iterations: 64
+n1: 1900
+n2: 1901
+count: 50
+Iterations: 64
+Time: 5.11074
+4.52306 MegaFLOPS
+
+Iterations: 128
+n1: 1900
+n2: 1901
+count: 42
+Iterations: 128
+Time: 5.00373
+7.76125 MegaFLOPS
+
+Iterations: 256
+n1: 1900
+n2: 1901
+count: 36
+Iterations: 256
+Time: 5.03781
+13.215 MegaFLOPS
+
+Iterations: 512
+n1: 1900
+n2: 1901
+count: 26
+Iterations: 512
+Time: 5.04485
+19.0617 MegaFLOPS
+
+Iterations: 1024
+n1: 1900
+n2: 1901
+count: 16
+Iterations: 1024
+Time: 5.06743
+23.356 MegaFLOPS
+
+Iterations: 2048
+n1: 1900
+n2: 1901
+count: 9
+Iterations: 2048
+Time: 5.09494
+26.1336 MegaFLOPS
+
+Iterations: 4096
+n1: 1900
+n2: 1901
+count: 5
+Iterations: 4096
+Time: 5.33267
+27.7428 MegaFLOPS
+
+Iterations: 8192
+n1: 1900
+n2: 1901
+count: 3
+Iterations: 8192
+Time: 6.40744
+27.7072 MegaFLOPS
+
+Iterations: 16384
+n1: 1900
+n2: 1901
+count: 2
+Iterations: 16384
+Time: 8.355
+28.3315 MegaFLOPS
+
+Iterations: 32768
+n1: 1900
+n2: 1901
+count: 1
+Iterations: 32768
+Time: 8.23699
+28.7374 MegaFLOPS
+
+
+Array Size: 2000
+Iterations: 1
+n1: 2000
+n2: 2001
+count: 52
+Iterations: 1
+Time: 5.08219
+0.0818954 MegaFLOPS
+
+Iterations: 2
+n1: 2000
+n2: 2001
+count: 54
+Iterations: 2
+Time: 5.08116
+0.170125 MegaFLOPS
+
+Iterations: 4
+n1: 2000
+n2: 2001
+count: 51
+Iterations: 4
+Time: 5.03526
+0.324277 MegaFLOPS
+
+Iterations: 8
+n1: 2000
+n2: 2001
+count: 52
+Iterations: 8
+Time: 5.06894
+0.656876 MegaFLOPS
+
+Iterations: 16
+n1: 2000
+n2: 2001
+count: 48
+Iterations: 16
+Time: 5.07776
+1.21059 MegaFLOPS
+
+Iterations: 32
+n1: 2000
+n2: 2001
+count: 48
+Iterations: 32
+Time: 5.01821
+2.44991 MegaFLOPS
+
+Iterations: 64
+n1: 2000
+n2: 2001
+count: 49
+Iterations: 64
+Time: 5.10797
+4.91399 MegaFLOPS
+
+Iterations: 128
+n1: 2000
+n2: 2001
+count: 41
+Iterations: 128
+Time: 5.0426
+8.33002 MegaFLOPS
+
+Iterations: 256
+n1: 2000
+n2: 2001
+count: 33
+Iterations: 256
+Time: 5.02094
+13.4672 MegaFLOPS
+
+Iterations: 512
+n1: 2000
+n2: 2001
+count: 24
+Iterations: 512
+Time: 5.19483
+18.9329 MegaFLOPS
+
+Iterations: 1024
+n1: 2000
+n2: 2001
+count: 14
+Iterations: 1024
+Time: 5.10657
+22.4701 MegaFLOPS
+
+Iterations: 2048
+n1: 2000
+n2: 2001
+count: 8
+Iterations: 2048
+Time: 5.10958
+25.665 MegaFLOPS
+
+Iterations: 4096
+n1: 2000
+n2: 2001
+count: 5
+Iterations: 4096
+Time: 5.9711
+27.4526 MegaFLOPS
+
+Iterations: 8192
+n1: 2000
+n2: 2001
+count: 2
+Iterations: 8192
+Time: 5.51552
+23.7761 MegaFLOPS
+
+Iterations: 16384
+n1: 2000
+n2: 2001
+count: 2
+Iterations: 16384
+Time: 9.4334
+27.8028 MegaFLOPS
+
+Iterations: 32768
+n1: 2000
+n2: 2001
+count: 1
+Iterations: 32768
+Time: 9.2729
+28.2841 MegaFLOPS
+
+
+Array Size: 2100
+Iterations: 1
+n1: 2100
+n2: 2101
+count: 49
+Iterations: 1
+Time: 5.06714
+0.0853313 MegaFLOPS
+
+Iterations: 2
+n1: 2100
+n2: 2101
+count: 46
+Iterations: 2
+Time: 5.04719
+0.160847 MegaFLOPS
+
+Iterations: 4
+n1: 2100
+n2: 2101
+count: 49
+Iterations: 4
+Time: 5.06914
+0.341191 MegaFLOPS
+
+Iterations: 8
+n1: 2100
+n2: 2101
+count: 49
+Iterations: 8
+Time: 5.07446
+0.681666 MegaFLOPS
+
+Iterations: 16
+n1: 2100
+n2: 2101
+count: 45
+Iterations: 16
+Time: 5.02848
+1.26349 MegaFLOPS
+
+Iterations: 32
+n1: 2100
+n2: 2101
+count: 46
+Iterations: 32
+Time: 5.07604
+2.55893 MegaFLOPS
+
+Iterations: 64
+n1: 2100
+n2: 2101
+count: 42
+Iterations: 64
+Time: 5.02167
+4.72342 MegaFLOPS
+
+Iterations: 128
+n1: 2100
+n2: 2101
+count: 36
+Iterations: 128
+Time: 5.09035
+7.98804 MegaFLOPS
+
+Iterations: 256
+n1: 2100
+n2: 2101
+count: 29
+Iterations: 256
+Time: 5.16492
+12.6838 MegaFLOPS
+
+Iterations: 512
+n1: 2100
+n2: 2101
+count: 20
+Iterations: 512
+Time: 5.12821
+17.6201 MegaFLOPS
+
+Iterations: 1024
+n1: 2100
+n2: 2101
+count: 12
+Iterations: 1024
+Time: 5.05701
+21.4419 MegaFLOPS
+
+Iterations: 2048
+n1: 2100
+n2: 2101
+count: 7
+Iterations: 2048
+Time: 5.22649
+24.2044 MegaFLOPS
+
+Iterations: 4096
+n1: 2100
+n2: 2101
+count: 4
+Iterations: 4096
+Time: 5.80022
+24.9259 MegaFLOPS
+
+Iterations: 8192
+n1: 2100
+n2: 2101
+count: 2
+Iterations: 8192
+Time: 6.20509
+23.2995 MegaFLOPS
+
+Iterations: 16384
+n1: 2100
+n2: 2101
+count: 1
+Iterations: 16384
+Time: 5.5339
+26.1255 MegaFLOPS
+
+Iterations: 32768
+n1: 2100
+n2: 2101
+count: 1
+Iterations: 32768
+Time: 11.0816
+26.093 MegaFLOPS
+
+
+Array Size: 2200
+Iterations: 1
+n1: 2200
+n2: 2201
+count: 44
+Iterations: 1
+Time: 5.00068
+0.0852111 MegaFLOPS
+
+Iterations: 2
+n1: 2200
+n2: 2201
+count: 45
+Iterations: 2
+Time: 5.10243
+0.17082 MegaFLOPS
+
+Iterations: 4
+n1: 2200
+n2: 2201
+count: 42
+Iterations: 4
+Time: 5.05726
+0.321712 MegaFLOPS
+
+Iterations: 8
+n1: 2200
+n2: 2201
+count: 43
+Iterations: 8
+Time: 5.09556
+0.653791 MegaFLOPS
+
+Iterations: 16
+n1: 2200
+n2: 2201
+count: 40
+Iterations: 16
+Time: 5.07521
+1.22123 MegaFLOPS
+
+Iterations: 32
+n1: 2200
+n2: 2201
+count: 37
+Iterations: 32
+Time: 5.04604
+2.27234 MegaFLOPS
+
+Iterations: 64
+n1: 2200
+n2: 2201
+count: 38
+Iterations: 64
+Time: 5.05826
+4.65624 MegaFLOPS
+
+Iterations: 128
+n1: 2200
+n2: 2201
+count: 32
+Iterations: 128
+Time: 5.00094
+7.93198 MegaFLOPS
+
+Iterations: 256
+n1: 2200
+n2: 2201
+count: 26
+Iterations: 256
+Time: 5.04931
+12.766 MegaFLOPS
+
+Iterations: 512
+n1: 2200
+n2: 2201
+count: 19
+Iterations: 512
+Time: 5.01718
+18.7774 MegaFLOPS
+
+Iterations: 1024
+n1: 2200
+n2: 2201
+count: 12
+Iterations: 1024
+Time: 5.1658
+23.0365 MegaFLOPS
+
+Iterations: 2048
+n1: 2200
+n2: 2201
+count: 7
+Iterations: 2048
+Time: 5.50558
+25.2173 MegaFLOPS
+
+Iterations: 4096
+n1: 2200
+n2: 2201
+count: 4
+Iterations: 4096
+Time: 6.23559
+25.4458 MegaFLOPS
+
+Iterations: 8192
+n1: 2200
+n2: 2201
+count: 2
+Iterations: 8192
+Time: 5.77753
+27.4632 MegaFLOPS
+
+Iterations: 16384
+n1: 2200
+n2: 2201
+count: 1
+Iterations: 16384
+Time: 6.23797
+25.436 MegaFLOPS
+
+Iterations: 32768
+n1: 2200
+n2: 2201
+count: 1
+Iterations: 32768
+Time: 11.0222
+28.7909 MegaFLOPS
+
+
+Array Size: 2300
+Iterations: 1
+n1: 2300
+n2: 2301
+count: 42
+Iterations: 1
+Time: 5.04181
+0.0881733 MegaFLOPS
+
+Iterations: 2
+n1: 2300
+n2: 2301
+count: 40
+Iterations: 2
+Time: 5.10761
+0.165786 MegaFLOPS
+
+Iterations: 4
+n1: 2300
+n2: 2301
+count: 38
+Iterations: 4
+Time: 5.00173
+0.321661 MegaFLOPS
+
+Iterations: 8
+n1: 2300
+n2: 2301
+count: 39
+Iterations: 8
+Time: 5.07552
+0.650652 MegaFLOPS
+
+Iterations: 16
+n1: 2300
+n2: 2301
+count: 41
+Iterations: 16
+Time: 5.02255
+1.38247 MegaFLOPS
+
+Iterations: 32
+n1: 2300
+n2: 2301
+count: 39
+Iterations: 32
+Time: 5.02503
+2.62875 MegaFLOPS
+
+Iterations: 64
+n1: 2300
+n2: 2301
+count: 38
+Iterations: 64
+Time: 5.06582
+5.08146 MegaFLOPS
+
+Iterations: 128
+n1: 2300
+n2: 2301
+count: 32
+Iterations: 128
+Time: 5.14062
+8.43371 MegaFLOPS
+
+Iterations: 256
+n1: 2300
+n2: 2301
+count: 24
+Iterations: 256
+Time: 5.15117
+12.6247 MegaFLOPS
+
+Iterations: 512
+n1: 2300
+n2: 2301
+count: 17
+Iterations: 512
+Time: 5.17641
+17.7977 MegaFLOPS
+
+Iterations: 1024
+n1: 2300
+n2: 2301
+count: 10
+Iterations: 1024
+Time: 5.03081
+21.5445 MegaFLOPS
+
+Iterations: 2048
+n1: 2300
+n2: 2301
+count: 6
+Iterations: 2048
+Time: 5.25777
+24.7374 MegaFLOPS
+
+Iterations: 4096
+n1: 2300
+n2: 2301
+count: 3
+Iterations: 4096
+Time: 5.17544
+25.1309 MegaFLOPS
+
+Iterations: 8192
+n1: 2300
+n2: 2301
+count: 2
+Iterations: 8192
+Time: 6.5308
+26.5539 MegaFLOPS
+
+Iterations: 16384
+n1: 2300
+n2: 2301
+count: 1
+Iterations: 16384
+Time: 6.78896
+25.5441 MegaFLOPS
+
+Iterations: 32768
+n1: 2300
+n2: 2301
+count: 1
+Iterations: 32768
+Time: 13.165
+26.3453 MegaFLOPS
+
+
+Array Size: 2400
+Iterations: 1
+n1: 2400
+n2: 2401
+count: 37
+Iterations: 1
+Time: 5.0781
+0.0839718 MegaFLOPS
+
+Iterations: 2
+n1: 2400
+n2: 2401
+count: 37
+Iterations: 2
+Time: 5.00676
+0.170337 MegaFLOPS
+
+Iterations: 4
+n1: 2400
+n2: 2401
+count: 38
+Iterations: 4
+Time: 5.04609
+0.347154 MegaFLOPS
+
+Iterations: 8
+n1: 2400
+n2: 2401
+count: 37
+Iterations: 8
+Time: 5.01495
+0.680235 MegaFLOPS
+
+Iterations: 16
+n1: 2400
+n2: 2401
+count: 39
+Iterations: 16
+Time: 5.11147
+1.40693 MegaFLOPS
+
+Iterations: 32
+n1: 2400
+n2: 2401
+count: 35
+Iterations: 32
+Time: 5.14317
+2.5097 MegaFLOPS
+
+Iterations: 64
+n1: 2400
+n2: 2401
+count: 33
+Iterations: 64
+Time: 5.06401
+4.80654 MegaFLOPS
+
+Iterations: 128
+n1: 2400
+n2: 2401
+count: 28
+Iterations: 128
+Time: 5.00037
+8.26037 MegaFLOPS
+
+Iterations: 256
+n1: 2400
+n2: 2401
+count: 23
+Iterations: 256
+Time: 5.01035
+13.5436 MegaFLOPS
+
+Iterations: 512
+n1: 2400
+n2: 2401
+count: 16
+Iterations: 512
+Time: 5.00817
+18.8514 MegaFLOPS
+
+Iterations: 1024
+n1: 2400
+n2: 2401
+count: 10
+Iterations: 1024
+Time: 5.14821
+22.9233 MegaFLOPS
+
+Iterations: 2048
+n1: 2400
+n2: 2401
+count: 6
+Iterations: 2048
+Time: 5.65525
+25.0417 MegaFLOPS
+
+Iterations: 4096
+n1: 2400
+n2: 2401
+count: 3
+Iterations: 4096
+Time: 5.832
+24.2827 MegaFLOPS
+
+Iterations: 8192
+n1: 2400
+n2: 2401
+count: 2
+Iterations: 8192
+Time: 7.50602
+25.1561 MegaFLOPS
+
+Iterations: 16384
+n1: 2400
+n2: 2401
+count: 1
+Iterations: 16384
+Time: 7.07729
+26.68 MegaFLOPS
+
+Iterations: 32768
+n1: 2400
+n2: 2401
+count: 1
+Iterations: 32768
+Time: 13.0737
+28.8858 MegaFLOPS
+
+
