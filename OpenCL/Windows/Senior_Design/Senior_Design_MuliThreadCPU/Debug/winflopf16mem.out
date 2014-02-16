@@ -1,0 +1,13 @@
+Using default instruction set architecture.
+Intel OpenCL Intel CPU device was found!
+Device name: Intel(R) Core(TM) i7-4700HQ CPU @ 2.40GHz
+Device version: OpenCL 1.2 (Build 80752)
+Device vendor: Intel(R) Corporation
+Device profile: FULL_PROFILE
+Compilation started
+Compilation done
+Linking started
+Linking done
+Kernel <arraysum> was not vectorized
+Done.
+Build succeeded!
