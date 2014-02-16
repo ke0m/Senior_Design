@@ -18,11 +18,7 @@ int main (int argc, const char * argv[]){
     
     //Declaring Variables for for loops
     int minIters = 2;
-<<<<<<< HEAD
-    int maxIters = 65536;
-=======
     int maxIters = 32768;
->>>>>>> 17f84df76dd0d1428c04a63b074859006c5ff240
     int minSize = 500;
     int maxSize = 2500;
     int a = 0;
@@ -51,14 +47,6 @@ int main (int argc, const char * argv[]){
     
     Stopwatch sw;
     
-    //creating array to hold flops values
-    //float** data = new float*[maxSize/minSize];
-    //for (int i = 0; i < 15; ++i)
-<<<<<<< HEAD
-     //   data[i] = new float[15];
-=======
-      //  data[i] = new float[15];
->>>>>>> 17f84df76dd0d1428c04a63b074859006c5ff240
     
     //Outer most loop: This loop should encompass all code and is used in order to loop over
     //different values of the iterations and array size to create the data for the plot.
@@ -90,14 +78,9 @@ int main (int argc, const char * argv[]){
                 
                 //Initializing the arrays.
                 for(int y = 0; y<n2; y++){
-                    
-<<<<<<< HEAD
+
                     h_xx[x][y] = x+y;
                     h_yy[x][y] = x+y;
-=======
-                    h_xx[x][y] = 1;
-                    h_yy[x][y] = 1;
->>>>>>> 17f84df76dd0d1428c04a63b074859006c5ff240
                     
                 }
                 
@@ -277,13 +260,9 @@ int main (int argc, const char * argv[]){
                 delete [] h_xx1;
                 delete [] h_yy1;
                 delete [] h_zz1;
-<<<<<<< HEAD
-             
-		count++;   
-=======
-                
+      
             	count++;
->>>>>>> 17f84df76dd0d1428c04a63b074859006c5ff240
+
                 //Freeing up memory. Hopefully!
                 clReleaseMemObject(d_xx);
                 clReleaseMemObject(d_yy);
@@ -295,13 +274,11 @@ int main (int argc, const char * argv[]){
                 
 
             }
+
             sw.stop();
-            
-<<<<<<< HEAD
-            for (int x = 0; x < n1; x++){
-=======
-            for (int x = 0; x < i; x++){
->>>>>>> 17f84df76dd0d1428c04a63b074859006c5ff240
+
+            for (int x = 0; x < n1; x++)
+			{
                 delete [] h_xx[x];
                 delete [] h_yy[x];
                 delete [] h_zz[x];
@@ -316,21 +293,7 @@ int main (int argc, const char * argv[]){
             float n1f = (float) n1;
             float n2f = (float) n2;
             float countf = (float) count;
-<<<<<<< HEAD
-            
-            float mflops = n1f*n2f*countf*iters*1.0e-09/sw.getTime();
-            
-	    std::cout << "n1: " << n1f << std::endl;
-	    std::cout << "n2: " << n2f << std::endl;
-	    std::cout << "count: " << countf << std::endl;
-	    std::cout << "Iterations: " << iters << std::endl;
-    	    std::cout << "Time: " << sw.getTime() << std::endl;
-            //std::cout << "Number of MegaFLOPs: " << n1f*n2f*500*countf*1.0e-6 << std::endl;
-            std::cout << mflops << " MegaFLOPS" << std::endl;
-	    std::cout << std::endl;
 
-            //data[a][b] = mflops;
-=======
 			
 			std::cout << "n1: " << n1f << std::endl;
 			std::cout << "n2: " << n2f << std::endl;
@@ -343,9 +306,6 @@ int main (int argc, const char * argv[]){
             
             //std::cout << "Number of MegaFLOPs: " << n1f*n2f*500*countf*1.0e-6 << std::endl;
             std::cout << mflops << " MegaFLOPS" << std::endl;
-
-           // data[a][b] = mflops;
->>>>>>> 17f84df76dd0d1428c04a63b074859006c5ff240
 
             b++;
         }
