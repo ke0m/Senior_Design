@@ -1,0 +1,17 @@
+﻿  Stopwatch.cpp
+Stopwatch.cpp(16): warning C4244: '=' : conversion from 'time_t' to 'long', possible loss of data
+Stopwatch.cpp(24): warning C4244: '+=' : conversion from 'time_t' to 'long', possible loss of data
+Stopwatch.cpp(43): warning C4244: 'return' : conversion from 'time_t' to 'long', possible loss of data
+  SOS_Random_Nums.cpp
+SOS_Random_Nums.cpp(11): warning C4005: 'RAND_MAX' : macro redefinition
+          C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\include\stdlib.h(154) : see previous definition of 'RAND_MAX'
+SOS_Random_Nums.cpp(286): warning C4244: 'initializing' : conversion from 'long' to 'float', possible loss of data
+SOS_Random_Nums.cpp(513): warning C4244: 'initializing' : conversion from 'double' to 'size_t', possible loss of data
+SOS_Random_Nums.cpp(528): warning C4244: 'initializing' : conversion from 'long' to 'float', possible loss of data
+SOS_Random_Nums.cpp(722): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+SOS_Random_Nums.cpp(68): warning C4101: 'program_buffer' : unreferenced local variable
+SOS_Random_Nums.cpp(65): warning C4101: 'kernelName' : unreferenced local variable
+SOS_Random_Nums.cpp(69): warning C4101: 'program_size' : unreferenced local variable
+SOS_Random_Nums.cpp(67): warning C4101: 'program_handle' : unreferenced local variable
+  Generating Code...
+  SOS_Random_Numbers.vcxproj -> C:\Users\Dave\Documents\Visual Studio 2012\Projects\Senior_Design\x64\Debug\SOS_Random_Numbers.exe
