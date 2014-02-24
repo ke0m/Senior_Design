@@ -1,1 +1,38 @@
-﻿
+﻿  Stopwatch.cpp
+Stopwatch.cpp(16): warning C4244: '=' : conversion from 'time_t' to 'long', possible loss of data
+Stopwatch.cpp(24): warning C4244: '+=' : conversion from 'time_t' to 'long', possible loss of data
+Stopwatch.cpp(43): warning C4244: 'return' : conversion from 'time_t' to 'long', possible loss of data
+  ArraySumTotal.cpp
+ArraySumTotal.cpp(96): warning C4244: '*=' : conversion from 'double' to 'int', possible loss of data
+ArraySumTotal.cpp(301): warning C4244: 'initializing' : conversion from 'double' to 'size_t', possible loss of data
+ArraySumTotal.cpp(302): warning C4244: 'initializing' : conversion from 'double' to 'size_t', possible loss of data
+ArraySumTotal.cpp(321): warning C4244: 'initializing' : conversion from 'long' to 'float', possible loss of data
+ArraySumTotal.cpp(366): warning C4244: 'initializing' : conversion from 'long' to 'float', possible loss of data
+ArraySumTotal.cpp(466): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+ArraySumTotal.cpp(467): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+ArraySumTotal.cpp(82): warning C4101: 'program_buffer' : unreferenced local variable
+ArraySumTotal.cpp(79): warning C4101: 'kernelName' : unreferenced local variable
+ArraySumTotal.cpp(83): warning C4101: 'program_size' : unreferenced local variable
+ArraySumTotal.cpp(81): warning C4101: 'program_handle' : unreferenced local variable
+ArraySumTotal.cpp(78): warning C4101: 'fileName' : unreferenced local variable
+  Generating Code...
+ArraySumTotal.obj : error LNK2019: unresolved external symbol clGetPlatformIDs referenced in function main
+ArraySumTotal.obj : error LNK2019: unresolved external symbol clGetDeviceIDs referenced in function main
+ArraySumTotal.obj : error LNK2019: unresolved external symbol clCreateContext referenced in function main
+ArraySumTotal.obj : error LNK2019: unresolved external symbol clReleaseContext referenced in function main
+ArraySumTotal.obj : error LNK2019: unresolved external symbol clCreateCommandQueue referenced in function main
+ArraySumTotal.obj : error LNK2019: unresolved external symbol clReleaseCommandQueue referenced in function main
+ArraySumTotal.obj : error LNK2019: unresolved external symbol clCreateBuffer referenced in function main
+ArraySumTotal.obj : error LNK2019: unresolved external symbol clReleaseMemObject referenced in function main
+ArraySumTotal.obj : error LNK2019: unresolved external symbol clCreateProgramWithSource referenced in function main
+ArraySumTotal.obj : error LNK2019: unresolved external symbol clReleaseProgram referenced in function main
+ArraySumTotal.obj : error LNK2019: unresolved external symbol clBuildProgram referenced in function main
+ArraySumTotal.obj : error LNK2019: unresolved external symbol clGetProgramBuildInfo referenced in function main
+ArraySumTotal.obj : error LNK2019: unresolved external symbol clCreateKernel referenced in function main
+ArraySumTotal.obj : error LNK2019: unresolved external symbol clReleaseKernel referenced in function main
+ArraySumTotal.obj : error LNK2019: unresolved external symbol clSetKernelArg referenced in function main
+ArraySumTotal.obj : error LNK2019: unresolved external symbol clFinish referenced in function main
+ArraySumTotal.obj : error LNK2019: unresolved external symbol clEnqueueReadBuffer referenced in function main
+ArraySumTotal.obj : error LNK2019: unresolved external symbol clEnqueueWriteBuffer referenced in function main
+ArraySumTotal.obj : error LNK2019: unresolved external symbol clEnqueueNDRangeKernel referenced in function main
+C:\Users\Dave\Documents\Visual Studio 2012\Projects\Senior_Design\x64\Debug\Senior_Design.exe : fatal error LNK1120: 19 unresolved externals

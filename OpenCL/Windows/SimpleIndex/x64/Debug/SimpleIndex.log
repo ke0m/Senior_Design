@@ -1,1 +1,29 @@
-﻿
+﻿  Simple2DIndex.cpp
+Simple2DIndex.cpp(87): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+Simple2DIndex.cpp(88): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+Simple2DIndex.cpp(89): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+Simple2DIndex.cpp(90): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+Simple2DIndex.cpp(240): warning C4244: 'initializing' : conversion from 'double' to 'size_t', possible loss of data
+Simple2DIndex.cpp(62): warning C4101: 'program_buffer' : unreferenced local variable
+Simple2DIndex.cpp(59): warning C4101: 'kernelName' : unreferenced local variable
+Simple2DIndex.cpp(63): warning C4101: 'program_size' : unreferenced local variable
+Simple2DIndex.cpp(61): warning C4101: 'program_handle' : unreferenced local variable
+Simple2DIndex.obj : error LNK2019: unresolved external symbol clGetPlatformIDs referenced in function main
+Simple2DIndex.obj : error LNK2019: unresolved external symbol clGetDeviceIDs referenced in function main
+Simple2DIndex.obj : error LNK2019: unresolved external symbol clCreateContext referenced in function main
+Simple2DIndex.obj : error LNK2019: unresolved external symbol clReleaseContext referenced in function main
+Simple2DIndex.obj : error LNK2019: unresolved external symbol clCreateCommandQueue referenced in function main
+Simple2DIndex.obj : error LNK2019: unresolved external symbol clReleaseCommandQueue referenced in function main
+Simple2DIndex.obj : error LNK2019: unresolved external symbol clCreateBuffer referenced in function main
+Simple2DIndex.obj : error LNK2019: unresolved external symbol clReleaseMemObject referenced in function main
+Simple2DIndex.obj : error LNK2019: unresolved external symbol clCreateProgramWithSource referenced in function main
+Simple2DIndex.obj : error LNK2019: unresolved external symbol clReleaseProgram referenced in function main
+Simple2DIndex.obj : error LNK2019: unresolved external symbol clBuildProgram referenced in function main
+Simple2DIndex.obj : error LNK2019: unresolved external symbol clGetProgramBuildInfo referenced in function main
+Simple2DIndex.obj : error LNK2019: unresolved external symbol clCreateKernel referenced in function main
+Simple2DIndex.obj : error LNK2019: unresolved external symbol clReleaseKernel referenced in function main
+Simple2DIndex.obj : error LNK2019: unresolved external symbol clSetKernelArg referenced in function main
+Simple2DIndex.obj : error LNK2019: unresolved external symbol clEnqueueReadBuffer referenced in function main
+Simple2DIndex.obj : error LNK2019: unresolved external symbol clEnqueueWriteBuffer referenced in function main
+Simple2DIndex.obj : error LNK2019: unresolved external symbol clEnqueueNDRangeKernel referenced in function main
+C:\Users\Dave\Documents\Visual Studio 2012\Projects\Senior_Design\x64\Debug\SimpleIndex.exe : fatal error LNK1120: 18 unresolved externals

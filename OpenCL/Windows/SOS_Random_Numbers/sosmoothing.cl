@@ -27,15 +27,9 @@ __kernel void soSmoothing(__global const float* restrict d_r,
 
 	//int i2 = get_local_id(0);
 	//int i1 = get_local_id(1);
-
-	//two potential issues. One is that perhaps the array d_s is not getting zeroesd out. Two is that
-	//the indices are not properly matching.
 	
 	if(i1 >=1 && i2 >= 1) 
-	{
-		//d_s[i2*n2     +     i1] = d_s[i2*n2     +     i1] + (alpha * d_d11[i2*n2 + i1]) + (alpha * d_d12[i2*n2 + i1]); //0.25f*(d_r[i2*n2 + i1]+d_r[i2*n2 + (i1-1)]+d_r[(i2-1)*n2 + i1]+d_r[(i2-1)*n2 + (i1-1)]);
-		
-		
+	{			
 		d_s[i2*n2     +     i1] = d_s[i2*n2     +     i1] + (alpha * d_d11[i2*n2 + i1]*((d_r[i2*n2 + i1]-d_r[(i2-1)*n2 + (i1-1)])-(d_r[i2*n2 + (i1-1)]-d_r[(i2-1)*n2 + i1]))+alpha * d_d12[i2*n2 + i1]*((d_r[i2*n2 + i1]-d_r[(i2-1)*n2 + (i1-1)])+(d_r[i2*n2 + (i1-1)]-d_r[(i2-1)*n2 + i1]))+(alpha * d_d12[i2*n2 + i1]*((d_r[i2*n2 + i1]-d_r[(i2-1)*n2 + (i1-1)])-(d_r[i2*n2 + (i1-1)]-d_r[(i2-1)*n2 + i1]))+alpha * d_d22[i2*n2 + i1]*((d_r[i2*n2 + i1]-d_r[(i2-1)*n2 + (i1-1)])+(d_r[i2*n2 + (i1-1)]-d_r[(i2-1)*n2 + i1])))+0.25f*(d_r[i2*n2 + i1]+d_r[i2*n2 + (i1-1)]+d_r[(i2-1)*n2 + i1]+d_r[(i2-1)*n2 + (i1-1)]));
 		barrier(CLK_LOCAL_MEM_FENCE | CLK_GLOBAL_MEM_FENCE);
 		d_s[i2*n2     + (i1-1)] -= (alpha * d_d11[i2*n2 + i1]*((d_r[i2*n2 + i1]-d_r[(i2-1)*n2 + (i1-1)])-(d_r[i2*n2 + (i1-1)]-d_r[(i2-1)*n2 + i1]))+alpha * d_d12[i2*n2 + i1]*((d_r[i2*n2 + i1]-d_r[(i2-1)*n2 + (i1-1)])+(d_r[i2*n2 + (i1-1)]-d_r[(i2-1)*n2 + i1]))-(alpha * d_d12[i2*n2 + i1]*((d_r[i2*n2 + i1]-d_r[(i2-1)*n2 + (i1-1)])-(d_r[i2*n2 + (i1-1)]-d_r[(i2-1)*n2 + i1]))+alpha * d_d22[i2*n2 + i1]*((d_r[i2*n2 + i1]-d_r[(i2-1)*n2 + (i1-1)])+(d_r[i2*n2 + (i1-1)]-d_r[(i2-1)*n2 + i1])))-0.25f*(d_r[i2*n2 + i1]+d_r[i2*n2 + (i1-1)]+d_r[(i2-1)*n2 + i1]+d_r[(i2-1)*n2 + (i1-1)]));
@@ -53,7 +47,7 @@ __kernel void soSmoothingNew(__global const float* restrict d_r,
 						  __global const float* restrict d_d12, 
 						  __global const float* restrict d_d22, 
 						  __global float* restrict d_s, 
-						  int alpha, 
+						  float alpha, 
 						  int n1, 
 						  int n2)
 {
@@ -82,10 +76,27 @@ __kernel void soSmoothingNew(__global const float* restrict d_r,
 		s_2 = e12*r1+e22*r2;
 		s_a = s_1+s_2;
 		s_b = s_1-s_2;
-		d_s[i2*n2 + i1] += s_a+rs;
-		d_s[i2*n2 + (i1 -1)] -= s_b-rs;
-		d_s[(i2-1)*n2 + i1] += s_b+rs;
-		d_s[(i2-1)*n2 + (i1-1)] -= s_a-rs;
+		
+		if(i2 % 2 == 0)
+		{
+			d_s[i2*n2 + i1] += s_a+rs;
+			barrier(CLK_LOCAL_MEM_FENCE | CLK_GLOBAL_MEM_FENCE);
+			d_s[i2*n2 + (i1 -1)] -= s_b-rs;
+			barrier(CLK_LOCAL_MEM_FENCE | CLK_GLOBAL_MEM_FENCE);
+			d_s[(i2-1)*n2 + i1] += s_b+rs;
+			barrier(CLK_LOCAL_MEM_FENCE | CLK_GLOBAL_MEM_FENCE);
+			d_s[(i2-1)*n2 + (i1-1)] -= s_a-rs;
+		}
+		else
+		{
+			d_s[i2*n2 + i1] += s_a+rs;
+			barrier(CLK_LOCAL_MEM_FENCE | CLK_GLOBAL_MEM_FENCE);
+			d_s[i2*n2 + (i1 -1)] -= s_b-rs;
+			barrier(CLK_LOCAL_MEM_FENCE | CLK_GLOBAL_MEM_FENCE);
+			d_s[(i2-1)*n2 + i1] += s_b+rs;
+			barrier(CLK_LOCAL_MEM_FENCE | CLK_GLOBAL_MEM_FENCE);
+			d_s[(i2-1)*n2 + (i1-1)] -= s_a-rs;
+		}
 	}
 
 

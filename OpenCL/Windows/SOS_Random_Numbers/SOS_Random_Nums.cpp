@@ -45,7 +45,7 @@ int convertToString(const char *filename, std::string& s)
 int main (int argc, const char * argv[])
 {
 
-	const int n1 = 1024;
+	const int n1 = 1023;
 	const int n2 = n1+1;
 	const int dims = n1*n2;
 	int value = 0;
@@ -127,7 +127,7 @@ int main (int argc, const char * argv[])
 		exit(1);
 	}
                 
-	err = clBuildProgram(program, 1, &device, "-cl-opt-disable", NULL, NULL);
+	err = clBuildProgram(program, 1, &device, "-cl-strict-aliasing -cl-unsafe-math-optimizations -cl-finite-math-only -cl-fast-relaxed-math -DMAC", NULL, NULL); //here I use the cl-opt-disable flag to diable the FMA rounding. This was the only way I could get both CPU and GPU output to match
 	if(err != CL_SUCCESS){
 		std::cout << "Error: Could not compile the program" << std::endl;
 		clGetProgramBuildInfo(program, device, CL_PROGRAM_BUILD_LOG, 0, NULL, &log_size);
@@ -149,7 +149,7 @@ int main (int argc, const char * argv[])
 		exit(1);
 	}
 
-	kernel2 = clCreateKernel(program, "soSmoothing", &err);
+	kernel2 = clCreateKernel(program, "soSmoothing", &err);  //first kernel I wrote. It made sense to me to write it this way but it is hard to read
 	if(err != CL_SUCCESS){
 		std::cout << "Error: Could not create the kernel." << std::endl;
 		std::cout << "OpenCL error code: " << err << std::endl;
@@ -157,7 +157,7 @@ int main (int argc, const char * argv[])
 		exit(1);
 	}
 
-	kernel3 = clCreateKernel(program, "soSmoothingNew", &err);
+	kernel3 = clCreateKernel(program, "soSmoothingNew", &err); //the second kernel I wrote. More readable and the one I am currently using
 	if(err != CL_SUCCESS){
 		std::cout << "Error: Could not create the kernel." << std::endl;
 		std::cout << "OpenCL error code: " << err << std::endl;
@@ -240,10 +240,8 @@ int main (int argc, const char * argv[])
 
 	int maxTime = 5;
 	int cpucount = 0;
-	//sw.restart();
-	//while(sw.getTime() < maxTime){
-
-
+	sw.restart();
+	while(sw.getTime() < maxTime){
 	//here is the original smoothing algorithm. This is what I need programmed in OpenCL
 		for(int i2 = 1; i2 < n1; ++i2)
 		{
@@ -270,24 +268,18 @@ int main (int argc, const char * argv[])
 				s[i2  ][i1-1] -= sb-rs;
 				s[i2-1][i1  ] += sb+rs;
 				s[i2-1][i1-1] -= sa-rs;
-				//s[i2  ][i1  ] += e12+e11;
-				//s[i2  ][i1-1] -= rs;
-				//s[i2-1][i1  ] += rs;
-				//s[i2-1][i1-1] -= rs;
 
 			}
 		}
 
 
 		cpucount++;
-	//}
+	}
 
-	//sw.stop();
+	sw.stop();
 	float cputime = sw.getTime();
 
 #pragma endregion
-
-
 
 	//This bit of code is the above main algorithm, but put into only four equations. I did this to try and get the code for the OpenCL kernel
 #pragma region Structure Oriented Smoothing CPU four Eqns
@@ -444,7 +436,7 @@ int main (int argc, const char * argv[])
 
 #pragma endregion
 
-#pragma region The main kernel I am playing with
+#pragma region Using the first SosSmoothing kernel
 
 	err = clSetKernelArg(kernel2, 0, sizeof(cl_mem), &d_r);
 	if(err != CL_SUCCESS){
@@ -506,12 +498,14 @@ int main (int argc, const char * argv[])
 
 	//Defining the local and global work group sizes and the launching the kernel on the GPU
 
-	int gpucount = 0;
-	//sw.restart();
-	//while(sw.getTime() < maxTime){
-		size_t local_group_size[3] = {32,32, 1};
-		size_t global_group_size_block[3] = {ceil((n1/local_group_size[0]) + 1) * local_group_size[0], ceil((n2/local_group_size[1]) + 1) * local_group_size[1], 1}; //this needs to be changed for both the x and the y dimensions
-		size_t global_group_size_norm[2]  = {1, 1};
+	size_t local_group_size[2] = {32,32};
+	size_t global_group_size_block[2] = {ceil((n1/local_group_size[0]) + 1) * local_group_size[0], ceil((n2/local_group_size[1]) + 1) * local_group_size[1]}; //this needs to be changed for both the x and the y dimensions
+	size_t global_group_size_norm[2]  = {1, 1};
+
+
+	/*int gpucount = 0;
+	sw.restart();
+	while(sw.getTime() < maxTime){
 		err = clEnqueueNDRangeKernel(queue, kernel2, 3, NULL, global_group_size_block, local_group_size, 0, NULL, NULL);
 		if(err != CL_SUCCESS){
 			std::cout << "Error: Could not execute the kernel." << std::endl;
@@ -520,18 +514,16 @@ int main (int argc, const char * argv[])
 			exit(1);
 		}
 
-		//clFinish(queue);
+		clFinish(queue);
 
 		gpucount++;
-	//}
-	//sw.stop();
-	float gputime = sw.getTime();
-
-	//Copying the data back from the gpu
+	}
+	sw.stop();
+	float gputime = sw.getTime();*/
 
 #pragma endregion
 
-#pragma region A kernel that I started to test
+#pragma region The other kernel that is more readable
 
 	err = clSetKernelArg(kernel3, 0, sizeof(cl_mem), &d_r);
 	if(err != CL_SUCCESS){
@@ -569,7 +561,7 @@ int main (int argc, const char * argv[])
 		exit(1);
 	}
 
-	err = clSetKernelArg(kernel3, 5, sizeof(int), &alpha);
+	err = clSetKernelArg(kernel3, 5, sizeof(float), &alpha);
 	if(err != CL_SUCCESS){
 		std::cout << "Error: Could not set the kernel argument." << std::endl;
 		std::cout << "OpenCL error code: " << err << std::endl;
@@ -591,13 +583,22 @@ int main (int argc, const char * argv[])
 		exit(1);
 	}
 
-	//err = clEnqueueNDRangeKernel(queue, kernel3, 2, NULL, global_group_size_block, local_group_size, 0, NULL, NULL);
-	if(err != CL_SUCCESS){
-		std::cout << "Error: Could not execute the kernel." << std::endl;
-		std::cout << "OpenCL error code: " << err << std::endl;
-		system("pause");
-		exit(1);
+	int gpucount = 0;
+	sw.restart();
+	while(sw.getTime() < maxTime){
+		err = clEnqueueNDRangeKernel(queue, kernel3, 2, NULL, global_group_size_block, local_group_size, 0, NULL, NULL);
+		if(err != CL_SUCCESS){
+			std::cout << "Error: Could not execute the kernel." << std::endl;
+			std::cout << "OpenCL error code: " << err << std::endl;
+			system("pause");
+			exit(1);
+		}
+
+	
+		gpucount++;
 	}
+	sw.stop();
+	float gputime = sw.getTime();
 
 #pragma endregion
 
@@ -660,11 +661,11 @@ int main (int argc, const char * argv[])
 			else
 			{
 				check = false;
-				printf("Check failed at array element (%d, %d)\n", i, j);
-				printf("CPU Value: %f\n", s[i][j]);
-				printf("GPU Value: %f\n", h_s[i][j]);
+				//printf("Check failed at array element (%d, %d)\n", i, j);
+				//printf("CPU Value: %f\n", s[i][j]);
+				//printf("GPU Value: %f\n", h_s[i][j]);
 				//printf("Percent Difference: %.5f Percent\n", s[i][j]/h_s[i][j]*100.f);
-				system("pause");
+				//system("pause");
 				//exit(1);
 			}
 		}
@@ -716,12 +717,20 @@ int main (int argc, const char * argv[])
 
 #pragma region Display Results
 
-	float countf = float(cpucount);
+	float cpucountf = float(cpucount);
+	float gpucountf = float(gpucount);
 	float numflops = 27.0f;
 
-	float cpumflops = countf * numflops * n1 * n2 * 1.0e-6/sw.getTime(); //I dont believe this is correct and I need to be more rigorous with this. Determine this with a very small matrix 2x2 first.
+	float cpumflops = cpucountf * numflops * n1 * n2 * 1.0e-6/cputime; //I dont believe this is correct and I need to be more rigorous with this. Determine this with a very small matrix 2x2 first.
+	float gpumflops = gpucountf * numflops * n1 * n2 * 1.0e-6/gputime;
+
+	std::cout << "CPU Benchmark: " << cpumflops << " MFLOPS" << std::endl;
+	std::cout << "GPU Benchmark: " << gpumflops << " MFLOPS" << std::endl;
+	system("pause");
 
 #pragma endregion
+
+	//Potentially here I could call my python script to display the images
 
 #pragma region Freeing up memory
 

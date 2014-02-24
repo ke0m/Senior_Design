@@ -1,0 +1,25 @@
+﻿  Refined_SOS_Rand_Nums.cpp
+Refined_SOS_Rand_Nums.cpp(10): warning C4005: 'RAND_MAX' : macro redefinition
+          C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\include\stdlib.h(154) : see previous definition of 'RAND_MAX'
+Refined_SOS_Rand_Nums.cpp(168): warning C4068: unknown pragma
+Refined_SOS_Rand_Nums.cpp(514): warning C4244: 'initializing' : conversion from 'double' to 'size_t', possible loss of data
+Refined_SOS_Rand_Nums.cpp(515): warning C4244: 'initializing' : conversion from 'double' to 'size_t', possible loss of data
+Refined_SOS_Rand_Nums.cpp(782): warning C4244: 'initializing' : conversion from 'long' to 'float', possible loss of data
+Refined_SOS_Rand_Nums.cpp(902): warning C4244: 'initializing' : conversion from 'double' to 'size_t', possible loss of data
+Refined_SOS_Rand_Nums.cpp(903): warning C4244: 'initializing' : conversion from 'double' to 'size_t', possible loss of data
+Refined_SOS_Rand_Nums.cpp(1001): warning C4244: 'initializing' : conversion from 'long' to 'float', possible loss of data
+Refined_SOS_Rand_Nums.cpp(1039): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+Refined_SOS_Rand_Nums.cpp(1040): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+Refined_SOS_Rand_Nums.cpp(1178): warning C4244: 'initializing' : conversion from 'long' to 'float', possible loss of data
+Refined_SOS_Rand_Nums.cpp(1354): warning C4244: 'initializing' : conversion from 'double' to 'size_t', possible loss of data
+Refined_SOS_Rand_Nums.cpp(1355): warning C4244: 'initializing' : conversion from 'double' to 'size_t', possible loss of data
+Refined_SOS_Rand_Nums.cpp(1453): warning C4244: 'initializing' : conversion from 'long' to 'float', possible loss of data
+Refined_SOS_Rand_Nums.cpp(1491): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+Refined_SOS_Rand_Nums.cpp(1492): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+Refined_SOS_Rand_Nums.cpp(66): warning C4101: 'program_buffer' : unreferenced local variable
+Refined_SOS_Rand_Nums.cpp(63): warning C4101: 'kernelName' : unreferenced local variable
+Refined_SOS_Rand_Nums.cpp(67): warning C4101: 'program_size' : unreferenced local variable
+Refined_SOS_Rand_Nums.cpp(65): warning C4101: 'program_handle' : unreferenced local variable
+  Generating code
+  Finished generating code
+  Refined_SOS_Random_Numbers.vcxproj -> C:\Users\Dave\Documents\Visual Studio 2012\Projects\Senior_Design\Release\Refined_SOS_Random_Numbers.exe
