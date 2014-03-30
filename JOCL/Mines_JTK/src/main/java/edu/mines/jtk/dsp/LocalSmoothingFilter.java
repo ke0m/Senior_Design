@@ -12,9 +12,12 @@ import java.util.logging.Logger;
 
 import org.jocl.*;
 
+import static org.jocl.CL.*;
 import edu.mines.jtk.mosaic.PixelsView;
 import edu.mines.jtk.mosaic.PlotFrame;
 import edu.mines.jtk.mosaic.PlotPanel;
+import edu.mines.jtk.mosaic.SimplePlot;
+import edu.mines.jtk.util.CLUtil;
 import edu.mines.jtk.util.Parallel;
 import static edu.mines.jtk.util.ArrayMath.*;
 import edu.mines.jtk.util.Stopwatch;
@@ -97,24 +100,54 @@ public class LocalSmoothingFilter {
 		}
 		
 		
-		smooth_cpu.apply(20, r, sc);
+		smooth_cpu.apply(320, r, sc);
 		smooth_cpu.applySmoothS(sc,sc);
-		smooth_gpu.apply(20, r, sg);
+		smooth_gpu.applyGPU(320, r, sg);
 		smooth_gpu.applySmoothS(sg, sg);
 		
 		
 		diff = sub(sg,sc);
 		
-//		int maxTime = 2;
-//		int gpucount = 0;
-//		sw.restart();
-//		while(sw.time() < maxTime)
-//		{
-//			smooth_gpu.apply(r, sg);
-//			gpucount++;
-//		}
+		int maxTime = 2;
+		int cpucount = 0;
+		sw.restart();
+		while(sw.time() < maxTime)
+		{
+			smooth_cpu.apply(320, r, sc);
+			smooth_cpu.applySmoothS(sc,sc);
+			cpucount++;
+		}
+		sw.stop();
+		double cputime = sw.time();
 		
-		//System.out.println(gpucount);
+		int gpucount = 0;
+		sw.restart();
+		while(sw.time() < maxTime)
+		{
+			smooth_gpu.applyGPU(320, r, sg);
+			smooth_gpu.applySmoothS(sg, sg);
+			gpucount++;
+		}
+		sw.stop();
+		double gputime = sw.time();
+		
+		System.out.println("CPU: " + cpucount/cputime);
+		System.out.println("GPU: " + gpucount/gputime);
+		
+		sw.restart();
+		smooth_cpu.apply(320, r, sc);
+		smooth_cpu.applySmoothS(sc,sc);
+		sw.stop();
+		cputime = sw.time();
+		
+		sw.restart();
+		smooth_gpu.applyGPU(320, r, sg);
+		smooth_gpu.applySmoothS(sg, sg);
+		sw.stop();
+		gputime = sw.time();
+		
+		System.out.println("CPU: " + cputime);
+		System.out.println("GPU: " + gputime);
 		
 		PixelsView pix1 = panel1.addPixels(r);
 		panel1.addTitle("Input Image");
@@ -262,6 +295,17 @@ public class LocalSmoothingFilter {
     apply(null,1.0f,null,x,y);
   }
 
+  
+  public void applyGPU(float[][] x, float[][] y) 
+  {
+    applyGPU(null,1.0f,null,x,y);
+  }
+  
+  public void applyGPU(Tensors2 d, float c, float[][] x, float[][] y) {
+	    applyGPU(d,c,null,x,y);
+	  }
+
+  
   /**
    * Applies this filter for identity tensors and specified scale factor.
    * @param c constant scale factor.
@@ -272,6 +316,9 @@ public class LocalSmoothingFilter {
     apply(null,c,null,x,y);
   }
 
+  public void applyGPU(float c, float[][] x, float[][] y) {
+	    applyGPU(null,c,null,x,y);
+	  }
   /**
    * Applies this filter for identity tensors and specified scale factors.
    * @param c constant scale factor.
@@ -325,10 +372,59 @@ public class LocalSmoothingFilter {
       solve(a,x,y); 
     }
   }
+  
+  
+  public void applyGPU(
+	Tensors2 d, float c, float[][] s, float[][] x, float[][] y)
+  {
+	  int n1 = x.length;
+	  int n2 = x[0].length;
+	  int size = n1*n2;
+	  int size_y = (n1+1)*(n2+1);
+	  float[] x1 = new float[size];
+	  float[] y1 = new float[size_y];
+	  float[] s1 = new float[size];
+	  float[] d11 = new float[size];
+	  float[] d12 = new float[size];
+	  float[] d22 = new float[size];
+	  float c1 = 0.25f*c;
+	  String[] kernelNames = {"soSmoothingNew"};
+	  CLUtil.clInit(sourceStr, kernelNames);
+	  CLUtil.packArray(n1, n2, x, x1);  //where do I unpack
+	  CLUtil.packArray(n1, n2, s, s1);
+	  scopy(x1,y1);
+	  CLUtil.unPackTensor(n1, n2, d, d11, d12, d22);
+	  cl_mem d_x = CLUtil.createGPUBuffer(size, "r");
+	  cl_mem d_d11 = CLUtil.createGPUBuffer(size, "r");
+	  cl_mem d_d12 = CLUtil.createGPUBuffer(size, "r");
+	  cl_mem d_d22 = CLUtil.createGPUBuffer(size, "r");
+	  cl_mem d_y = CLUtil.createGPUBuffer(size_y, "rw");
+	  CLUtil.copyToBuffer(d11, d_d11, size);
+	  CLUtil.copyToBuffer(d12, d_d12, size);
+	  CLUtil.copyToBuffer(d22, d_d22, size);
+	  CLUtil.setKernelArg(CLUtil.kernels[0], d_x, 0);
+	  CLUtil.setKernelArg(CLUtil.kernels[0], d_d11, 1);
+	  CLUtil.setKernelArg(CLUtil.kernels[0], d_d12, 2);
+	  CLUtil.setKernelArg(CLUtil.kernels[0], d_d22, 3);
+	  CLUtil.setKernelArg(CLUtil.kernels[0], d_y, 4);
+	  CLUtil.setKernelArg(CLUtil.kernels[0], c1, 5);
+	  CLUtil.setKernelArg(CLUtil.kernels[0], n1, 6);
+	  CLUtil.setKernelArg(CLUtil.kernels[0], n2, 7);
+	  Operator2G a = new A2G(_ldk,d11,d12,d22,c,s1);
+	  solveG(a,n1,n2,x1,y1,d_x,d_y);
+	  clReleaseMemObject(d_x);
+	  clReleaseMemObject(d_y);
+	  clReleaseMemObject(d_d11);
+	  clReleaseMemObject(d_d12);
+	  clReleaseMemObject(d_d22);
+	  CLUtil.clRelease();
+	  CLUtil.unPackArray(n1, n2, y1, y);
+	  
+  }
 
   /**
    * Applies this filter for identity tensors.
-   * @param x input array.
+   * @param x input array.	
    * @param y output array.
    */
   public void apply(float[][][] x, float[][][] y) 
@@ -456,12 +552,64 @@ public class LocalSmoothingFilter {
   private LocalDiffusionKernel _ldk; // computes y += (I+G'DG)x
   private BandPassFilter _lpf; // lowpass filter, null until applied
   private double _kmax; // maximum wavenumber for lowpass filter
+  
+  String sourceStr =
+	  	  "__kernel void soSmoothingNew(__global const float* restrict d_r," + "\n" +
+	  	  "                                                   __global const float* restrict d_d11," + "\n" +
+	  	  "                                                   __global const float* restrict d_d12," + "\n" +
+	  	  "                                                   __global const float* restrict d_d22," + "\n" +
+	  	  "                                                   __global float* restrict d_s," + "\n" +
+	  	  "                                                   float alpha," + "\n" +
+	  	  "                                                   int n1," + "\n" +
+	  	  "                                                   int n2," + "\n" +
+	  	  "                                                   int offsetx," + "\n" +
+	  	  "                                                   int offsety)" + "\n" +
+	  	  "{" + "\n" +
+	  	  "     int g1 = get_global_id(0);" + "\n" +
+	  	  "     int g0 = get_global_id(1);" + "\n" +
+	  	  "" + "\n" +
+	  	  "		int i1 = g1 * 2 + 1 + offsetx;" + "\n" +
+	  	  "		int i2 = g0 * 2 + 1 + offsety;" + "\n" +
+	  	  "" + "\n" +
+	  	  "     if (i1 >= n2) return;" + "\n" +
+	  	  "     if (i2 >= n1) return;" + "\n" +
+	  	  "" + "\n" + 
+	  	  "		float e11, e12, e22, r00, r01, r10, r11, rs, ra, rb, r1, r2, s_1, s_2, s_a, s_b;" + "\n" +
+	  	  "" + "\n" + 
+	  	  "		e11 = alpha * d_d11[i2*n2 + i1];" + "\n" +
+	  	  "		e12 = alpha * d_d12[i2*n2 + i1];" + "\n" +
+	  	  "		e22 = alpha * d_d22[i2*n2 + i1];" + "\n" +
+	  	  "		r00 = d_r[i2*n2+i1];" + "\n" + 
+	  	  "		r01 = d_r[i2*n2+(i1-1)];" + "\n" + 
+	  	  "		r10 = d_r[(i2-1)*n2 + i1];" + "\n" +
+	  	  "		r11 = d_r[(i2-1)*n2 + (i1-1)];" + "\n" +
+	  	  "		rs = 0.25f*(r00+r01+r10+r11);" + "\n" +
+	  	  "		ra = r00-r11;" + "\n" +
+	  	  "		rb = r01-r10;" + "\n" +
+	  	  "		r1 = ra-rb;" + "\n" +
+	  	  "		r2 = ra+rb;" + "\n" +
+	  	  "		s_1 = e11*r1+e12*r2;" + "\n" +
+	  	  "		s_2 = e12*r1+e22*r2;" + "\n" +
+	  	  "		s_a = s_1+s_2;" + "\n" +
+	  	  "		s_b = s_1-s_2;" + "\n" +
+	  	  "		d_s[i2*n2 + i1] += s_a;" + "\n" +
+	  	  "		d_s[i2*n2 + (i1 -1)] -= s_b;" + "\n" +
+	  	  "		d_s[(i2-1)*n2 + i1] += s_b;" + "\n" +
+	  	  "		d_s[(i2-1)*n2 + (i1-1)] -= s_a;" + "\n" +
+	  	  "" + "\n" +
+	  	  "" + "\n" + 
+	  	  "}";
 
   /*
    * A symmetric positive-definite operator.
    */
+
   private static interface Operator2 {
     public void apply(float[][] x, float[][] y);
+
+  }
+  private static interface Operator2G {
+	  public void applyGPU(int n1, int n2, float[] x, float[] y, cl_mem d_x, cl_mem d_y);
   }
   private static interface Operator3 {
     public void apply(float[][][] x, float[][][] y);
@@ -475,7 +623,7 @@ public class LocalSmoothingFilter {
       _s = s;
     }
     public void apply(float[][] x, float[][] y) {
-      scopy(x,y); //or here I could copy to the GPU?????
+      scopy(x,y);
       _ldk.apply(_d,_c,_s,x,y);
     }
     private LocalDiffusionKernel _ldk;
@@ -516,6 +664,33 @@ public class LocalSmoothingFilter {
       sxy(_p,x,y);
     }
     private float[][] _p;
+  }
+  
+  private static class A2G implements Operator2G {
+	  A2G(LocalDiffusionKernel ldk, float[] d11, float[] d12, float[] d22, float c, float[] s) {
+		 _ldk = ldk;
+		 _d11 = d11;
+		 _d12 = d12;
+		 _d22 = d22;
+		 _c = c;
+		 _s = s;
+		  
+	  }
+	  
+	  public void applyGPU(int n1, int n2, float[] x, float[] y, cl_mem d_x, cl_mem d_y)
+	  {
+		  wscopy(n1, n2, x,y);
+		  //scopy(x,y);
+		  _ldk.applyGPU(n1, n2, x, y, d_x, d_y);
+
+	  }
+	  
+	  private LocalDiffusionKernel _ldk;
+	  private float[] _d11;
+	  private float[] _d12;
+	  private float[] _d22;
+	  private float _c;
+	  private float[] _s;
   }
 
   private static class A3 implements Operator3 {
@@ -704,9 +879,6 @@ public class LocalSmoothingFilter {
     float[][] q = new float[n2][n1];
     float[][] r = new float[n2][n1];
     scopy(b,r);
-    //Initialize GPU 	
-    //Allocate Memory on GPU
-    // copy d tensors and other values
     a.apply(x,q); //this is where I need to put in my kernel. This is where the action happens! How many FLOPS for CPU and GPU
     saxpy(-1.0f,q,r); // r = b-Ax  //Flops
     scopy(r,d); // d = r
@@ -733,6 +905,38 @@ public class LocalSmoothingFilter {
     //free everything
     log.fine("  iter="+iter+" rnorm="+rnorm+" ratio="+rnorm/rnormBegin);
   }
+  
+  private void solveG(Operator2G a, int n1, int n2, float[] b, float[] x, cl_mem d_x, cl_mem d_y) {
+	    float[] d = new float[n2*n1];
+	    float[] q = new float[n2*n1];
+	    float[] r = new float[n2*n1];
+	    scopy(b,r);
+	    a.applyGPU(n1,n2,x,q,d_x,d_y); //this is where I need to put in my kernel. This is where the action happens!
+	    saxpy1(n1,n2,-1.0f,q,r); // r = b-Ax  //Flops
+	    scopy(r,d); // d = r
+	    float delta = sdot1(n1,n2,r,r); // delta = r'r //Flops
+	    float bnorm = sqrt(sdot1(n1,n2,b,b)); // 1 flop + 
+	    float rnorm = sqrt(delta); // 1 flop
+	    float rnormBegin = rnorm;
+	    float rnormSmall = bnorm*_small; // 1 FLOP
+	    int iter;
+	    log.fine("solve: bnorm="+bnorm+" rnorm="+rnorm);
+	    for (iter=0; iter<_niter && rnorm>rnormSmall; ++iter) {
+	      log.finer("  iter="+iter+" rnorm="+rnorm+" ratio="+rnorm/rnormBegin);
+	      a.applyGPU(n1,n2,d,q,d_x,d_y); // q = Ad 
+	      float dq = sdot1(n1,n2,d,q); // d'q = d'Ad
+	      float alpha = delta/dq; // alpha = r'r/d'Ad
+	      saxpy1(n1,n2, alpha,d,x); // x = x+alpha*d 
+	      saxpy1(n1,n2,-alpha,q,r); // r = r-alpha*q 
+	      float deltaOld = delta;
+	      delta = sdot1(n1,n2,r,r); // delta = r'r 
+	      float beta = delta/deltaOld; 
+	      sxpay1(n1,n2,beta,r,d); // d = r+beta*d
+	      rnorm = sqrt(delta); 
+	    }
+	    //free everything
+	    log.fine("  iter="+iter+" rnorm="+rnorm+" ratio="+rnorm/rnormBegin);
+	  }
   private void solve(Operator3 a, float[][][] b, float[][][] x) {
     int n1 = b[0][0].length;
     int n2 = b[0].length;
@@ -863,6 +1067,12 @@ public class LocalSmoothingFilter {
   private static void scopy(float[] x, float[] y) {
     copy(x,y);
   }
+  
+  private static void wscopy(int n1, int n2, float[] x, float[] y) {
+	  for(int i = 0; i < n1*n2; i++)
+		  y[i] = x[i];
+  }
+  
   private static void scopy(float[][] x, float[][] y) {
     copy(x,y);
   }
@@ -874,7 +1084,17 @@ public class LocalSmoothingFilter {
       }
     });
   }
-
+  
+  
+  
+  public static float sdot1(int n1, int n2, float[] x, float[]y){
+	  int n = n1*n2;
+	  float d = 0.0f;
+	  for(int i = 0; i < n; ++i) {
+		  d += x[i]*y[i];
+	  }
+	  return d;
+  }
   // Returns the dot product x'y.
   private static float sdot(float[][] x, float[][] y) {
     int n1 = x[0].length;
@@ -902,6 +1122,13 @@ public class LocalSmoothingFilter {
     return d;
   }
 
+  
+	public static void saxpy1(int n1, int n2, float a, float[] x, float[] y) {
+		for(int i = 0; i < n1*n2; ++i) {
+			y[i] += a*x[i];
+		}
+		  
+	  }
   // Computes y = y + a*x.
   private static void saxpy(float a, float[][] x, float[][] y) {
     int n1 = x[0].length;
@@ -923,8 +1150,17 @@ public class LocalSmoothingFilter {
       }
     });
   }
+  
+  
+  
+  private static void sxpay1(int n1, int n2, float a, float[] x, float[]y) {
+	  for(int i = 0; i< n1*n2; ++i) {
+		  y[i] = a*y[i] + x[i];
+	  }
+  }
 
   // Computes y = x + a*y.
+  //TODO: Write for 1D arrays
   private static void sxpay(float a, float[][] x, float[][] y) {
     int n1 = x[0].length;
     int n2 = x.length;

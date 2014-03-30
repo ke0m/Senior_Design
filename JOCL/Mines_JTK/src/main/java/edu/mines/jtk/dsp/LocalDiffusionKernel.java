@@ -210,8 +210,6 @@ public class LocalDiffusionKernel {
       } else if (_stencil==Stencil.D22) {
         //apply22(d,c,s,x,y);
         apply22MyCPU(d,c,s,x,y);
-      } else if(_stencil==Stencil.D22CL){
-    	apply22CL(d,c,s,x,y, clInit);
       } else if (_stencil==Stencil.D24) {
         apply24(d,c,s,x,y);
       } else if (_stencil==Stencil.D33) {
@@ -222,6 +220,20 @@ public class LocalDiffusionKernel {
         apply91(d,c,s,x,y);
       }
     }
+  }
+ 
+  public void applyGPU(
+	int n1, int n2, float[] x, float[] y, cl_mem d_x, cl_mem d_y)
+  {
+	  for(int ipass=0; ipass<_npass; ++ipass) {
+		  if(ipass>0)
+			  x = copy(y);
+		  if(_stencil==Stencil.D22CL) {
+			  apply22CL(n1,n2,x,y,d_x,d_y);
+		  }
+		  
+	  }
+ 
   }
 
   /**
@@ -328,7 +340,7 @@ public class LocalDiffusionKernel {
   };
 
   private static Tensors3 IDENTITY_TENSORS3 = new Tensors3() {
-    public void getTensor(int i1, int i2, int i3, float[] d) {
+    public void getTensor(int i1, int i2, int i3, float[] d) {	
       d[0] = 1.0f;
       d[1] = 0.0f;
       d[2] = 0.0f;
@@ -541,255 +553,27 @@ public class LocalDiffusionKernel {
 
   
   
-  private void apply22CL(Tensors2 d, float c, float[][] s, float[][] x, float[][] y, CLUtil clInit)
+  private void apply22CL(int n1, int n2, float[] x, float[] y, cl_mem d_x, cl_mem d_y)
   {
 	  
-	  //keep the OpenCL initialization stuff into one method. The constructor perhaps. This will make things easier.
+	  long[] local_group_size = new long[]{32, 32};
+	  long[] mapped_n1 = new long[]{n2/2};
+	  long[] mapped_n2 = new long[]{n1/2};
+	  long[] global_group_size_block = new long[]{(long)Math.ceil(mapped_n1[0]/local_group_size[0] + 1)*local_group_size[0], (long)Math.ceil(mapped_n2[0]/local_group_size[0] + 1) * local_group_size[1]};
 	  
-
-	    int[] value =  new int[1];
-	    value[0] = 0;
-	    
-	    int n1 = x.length;  //these are the rows
-	    int n2 = x[0].length;
-	    int[] n1p = new int[1];
-	    n1p[0] = n1;
-	    int[] n2p = new int[1];
-	    n2p[0] = n2;
-	    int[] dims = new int[1];
-	    dims[0] = n1*n2;
-	    float[] cCL = new float[1];
-	    cCL[0] = 0.25f*c;
-	  
-		int err;
-		int errM[] = new int[1];
-		
-		//packing arrays
-		
-		//eventually I will want to take this out I think but I am not sure....
-
-		float[] x_1 = new float[dims[0]];
-		float[] y_1 = new float[(n1+1)*(n2+1)];
-		float[] d11 = new float[n1*n2];
-		float[] d12 = new float[n1*n2];
-		float[] d22 = new float[n1*n2];
-		float[] di = new float[3];
-		
-		for(int i = 0; i < n1; i++)
-		{
-			for(int j = 0; j < n2; j++)
-			{
-				x_1[i*n2 + j]   = x[i][j];
-				y_1[i*n2 + j]   = y[i][j];
-				if(j >=1 && i >= 1)
-				{
-				  d.getTensor(j, i, di);
-				  d11[i*n2 + j] = di[0];
-				  d12[i*n2 + j] = di[1];
-				  d22[i*n2 + j] = di[2];
-				}
-			}
-		}
-		
-		
-		cl_mem d_s, d_r, d_d11, d_d12, d_d22;
-		
-		d_r = clCreateBuffer(clInit.context, CL_MEM_READ_ONLY, Sizeof.cl_float*(dims[0]), null, errM);
-		if(errM[0] != CL.CL_SUCCESS){
-			System.out.println("Error: Could not create the buffer.");
-			System.out.println("OpenCL Error Code: " + errM[0]);
-			System.exit(1);
-		}
-		
-		d_d11 = clCreateBuffer(clInit.context, CL_MEM_READ_ONLY, Sizeof.cl_float*(dims[0]), null, errM);
-		if(errM[0] != CL.CL_SUCCESS){
-			System.out.println("Error: Could not create the buffer.");
-			System.out.println("OpenCL Error Code: " + errM[0]);
-			System.exit(1);
-		}
-		
-		d_d12 = clCreateBuffer(clInit.context, CL_MEM_READ_ONLY, Sizeof.cl_float*(dims[0]), null, errM);
-		if(errM[0] != CL.CL_SUCCESS){
-			System.out.println("Error: Could not create the buffer.");
-			System.out.println("OpenCL Error Code: " + errM[0]);
-			System.exit(1);
-		}
-		
-		d_d22 = clCreateBuffer(clInit.context, CL_MEM_READ_ONLY, Sizeof.cl_float*(dims[0]), null, errM);
-		if(errM[0] != CL.CL_SUCCESS){
-			System.out.println("Error: Could not create the buffer.");
-			System.out.println("OpenCL Error Code: " + errM[0]);
-			System.exit(1);
-		}
-		
-		
-		d_s = clCreateBuffer(clInit.context, CL_MEM_READ_WRITE, Sizeof.cl_float*(n1+1)*(n2+1), null, errM);
-		if(errM[0] != CL.CL_SUCCESS){
-			System.out.println("Error: Could not create the buffer.");
-			System.out.println("OpenCL Error Code: " + errM[0]);
-			System.exit(1);
-		}
-		
-		//Copy the data to the GPU
-		
-		err = clEnqueueWriteBuffer(clInit.queue, d_r, CL_FALSE, 0, Sizeof.cl_float*dims[0], Pointer.to(x_1), 0, null, null);
-		if(err != CL.CL_SUCCESS){
-			System.out.println("Error: Could not write data to buffer");
-			System.out.println("OpenCL Error Code: " + err);
-			System.exit(1);
-		}	
-		
-		
-		err = clEnqueueWriteBuffer(clInit.queue, d_s, CL_FALSE, 0, Sizeof.cl_float*dims[0], Pointer.to(y_1), 0, null, null);
-		if(err != CL.CL_SUCCESS){
-			System.out.println("Error: Could not write data to buffer");
-			System.out.println("OpenCL Error Code: " + err);
-			System.exit(1);
-		}	
-		
-		err = clEnqueueWriteBuffer(clInit.queue, d_d11, CL_FALSE, 0, Sizeof.cl_float*dims[0], Pointer.to(d11), 0, null, null);
-		if(err != CL.CL_SUCCESS){
-			System.out.println("Error: Could not write data to buffer");
-			System.out.println("OpenCL Error Code: " + err);
-			System.exit(1);
-		}	
-		
-		err = clEnqueueWriteBuffer(clInit.queue, d_d12, CL_FALSE, 0, Sizeof.cl_float*dims[0], Pointer.to(d12), 0, null, null);
-		if(err != CL.CL_SUCCESS){
-			System.out.println("Error: Could not write data to buffer");
-			System.out.println("OpenCL Error Code: " + err);
-			System.exit(1);
-		}	
-		
-		err = clEnqueueWriteBuffer(clInit.queue, d_d22, CL_FALSE, 0, Sizeof.cl_float*dims[0], Pointer.to(d22), 0, null, null);
-		if(err != CL.CL_SUCCESS){
-			System.out.println("Error: Could not write data to buffer");
-			System.out.println("OpenCL Error Code: " + err);
-			System.exit(1);
-		}	
-		
-		long[] local_group_size = new long[]{32, 32};
-		long[] mapped_n1 = new long[]{n2/2};
-		long[] mapped_n2 = new long[]{n1/2};
-		long[] global_group_size_block = new long[]{(long)Math.ceil(mapped_n1[0]/local_group_size[0] + 1)*local_group_size[0], (long)Math.ceil(mapped_n2[0]/local_group_size[0] + 1) * local_group_size[1]};
-		
-		err = clSetKernelArg(clInit.kernel, 0, Sizeof.cl_mem, Pointer.to(d_r));
-		if(err != CL.CL_SUCCESS){
-			System.out.println("Error: Could not set kernel argument.");
-			System.out.println("OpenCL error code: " + err);
-			System.exit(1);	
-		}
-		
-		err = clSetKernelArg(clInit.kernel, 1, Sizeof.cl_mem, Pointer.to(d_d11));
-		if(err != CL.CL_SUCCESS){
-			System.out.println("Error: Could not set kernel argument.");
-			System.out.println("OpenCL error code: " + err);
-			System.exit(1);	
-		}
-		
-		err = clSetKernelArg(clInit.kernel, 2, Sizeof.cl_mem, Pointer.to(d_d12));
-		if(err != CL.CL_SUCCESS){
-			System.out.println("Error: Could not set kernel argument.");
-			System.out.println("OpenCL error code: " + err);
-			System.exit(1);	
-		}
-		
-		err = clSetKernelArg(clInit.kernel, 3, Sizeof.cl_mem, Pointer.to(d_d22));
-		if(err != CL.CL_SUCCESS){
-			System.out.println("Error: Could not set kernel argument.");
-			System.out.println("OpenCL error code: " + err);
-			System.exit(1);	
-		}
-		
-		err = clSetKernelArg(clInit.kernel, 4, Sizeof.cl_mem, Pointer.to(d_s));
-		if(err != CL.CL_SUCCESS){
-			System.out.println("Error: Could not set kernel argument.");
-			System.out.println("OpenCL error code: " + err);
-			System.exit(1);	
-		}
-		
-		err = clSetKernelArg(clInit.kernel, 5, Sizeof.cl_float, Pointer.to(cCL));
-		if(err != CL.CL_SUCCESS){
-			System.out.println("Error: Could not set kernel argument.");
-			System.out.println("OpenCL error code: " + err);
-			System.exit(1);	
-		}
-		
-		err = clSetKernelArg(clInit.kernel, 6, Sizeof.cl_float, Pointer.to(n1p));
-		if(err != CL.CL_SUCCESS){
-			System.out.println("Error: Could not set kernel argument.");
-			System.out.println("OpenCL error code: " + err);
-			System.exit(1);	
-		}
-		
-		err = clSetKernelArg(clInit.kernel, 7, Sizeof.cl_float, Pointer.to(n2p));
-		if(err != CL.CL_SUCCESS){
-			System.out.println("Error: Could not set kernel argument.");
-			System.out.println("OpenCL error code: " + err);
-			System.exit(1);	
-		}
-		
+	  CLUtil.copyToBuffer(x, d_x, n1*n2);
+	  CLUtil.copyToBuffer(y, d_y, n1*n2);
 		for(int offsetx = 0; offsetx < 2; ++offsetx)
 		{
 			for(int offsety = 0; offsety < 2; ++offsety)
 			{
-				int[] offsetxp = new int[1];
-				offsetxp[0] = offsetx;
-				err = clSetKernelArg(clInit.kernel, 8, Sizeof.cl_float, Pointer.to(offsetxp));
-				if(err != CL.CL_SUCCESS){
-					System.out.println("Error: Could not set kernel argument.");
-					System.out.println("OpenCL error code: " + err);
-					System.exit(1);	
-				}
-				
-				int[] offsetyp = new int[1];
-				offsetyp[0] = offsety;
-				err = clSetKernelArg(clInit.kernel, 9, Sizeof.cl_float, Pointer.to(offsetyp));
-				if(err != CL.CL_SUCCESS){
-					System.out.println("Error: Could not set kernel argument.");
-					System.out.println("OpenCL error code: " + err);
-					System.exit(1);	
-				}
-				
-				err = clEnqueueNDRangeKernel(clInit.queue, clInit.kernel, 2, null, global_group_size_block, local_group_size, 0, null, null);
-				if(err != CL.CL_SUCCESS){
-					System.out.println("Error: Could not execute the kernel");
-					System.out.println("OpenCL error code: " + err);
-					System.exit(1);
-				}
-				
+				CLUtil.setKernelArg(CLUtil.kernels[0], offsetx, 8);
+				CLUtil.setKernelArg(CLUtil.kernels[0], offsety, 9);
+				CLUtil.executeKernel(CLUtil.kernels[0], 2, global_group_size_block, local_group_size);
 			}
 		}
 		
-		
-		err = clEnqueueReadBuffer(clInit.queue, d_s, CL_TRUE, 0, Sizeof.cl_float*(n1+1)*(n2+1), Pointer.to(y_1), 0, null, null);
-		if(err != CL.CL_SUCCESS){
-			System.out.println("Error: Could not read the data from the kernel.");
-			System.out.println("OpenCL error code: " + err);
-			System.exit(1);
-		}
-		
-		clReleaseMemObject(d_r);
-		clReleaseMemObject(d_s);
-	    clReleaseMemObject(d_d11);
-	    clReleaseMemObject(d_d12);
-	    clReleaseMemObject(d_d22);
-//		clReleaseKernel(clInit.kernel);
-//		clReleaseCommandQueue(clInit.queue);
-//		clReleaseProgram(clInit.program);
-//		clReleaseContext(clInit.context);
-		
-		//k = 0;
-		for (int i = 0; i < n1; i++)
-		{
-			for (int j = 0; j < n2; j++)
-			{
-				y[i][j] = y_1[i*n2 + j];
-				//k++;
-	
-			}
-		}
-		
+		CLUtil.readFromBuffer(d_y, y, n1*n2);
 		
   }
   
