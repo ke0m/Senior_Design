@@ -60,7 +60,7 @@ def goTensors():
         plot = plots[i]
         pref = prefs[i]
         g,s1,s2 = read()
-        plot(g,s1,s2,png=pref)
+        plot("",g,s1,s2,png=pref)
         lof = LocalOrientFilter(4.0)
         s = lof.applyForTensors(g)
         d00 = EigenTensors2(s); d00.invertStructure(0.0,0.0)
@@ -70,32 +70,34 @@ def goTensors():
         d11 = EigenTensors2(s); d11.invertStructure(1.0,1.0)
         d12 = EigenTensors2(s); d12.invertStructure(1.0,2.0)
         d14 = EigenTensors2(s); d14.invertStructure(1.0,4.0)
-        plot(g,s1,s2,png=pref)
-        plot(g,s1,s2,d00,dscale=1,png=pref+"00")
-        plot(g,s1,s2,d01,dscale=1,png=pref+"01")
-        plot(g,s1,s2,d02,dscale=1,png=pref+"02")
-        plot(g,s1,s2,d04,dscale=1,png=pref+"04")
-        plot(g,s1,s2,d11,dscale=2,png=pref+"11")
-        plot(g,s1,s2,d12,dscale=2,png=pref+"12")
-        plot(g,s1,s2,d14,dscale=2,png=pref+"14")
+        #plot("",g,s1,s2,png=pref)
+        plot("D00",g,s1,s2,d00,dscale=1,png=pref+"00")
+        plot("D01",g,s1,s2,d01,dscale=1,png=pref+"01")
+        plot("D02",g,s1,s2,d02,dscale=1,png=pref+"02")
+        plot("D04",g,s1,s2,d04,dscale=1,png=pref+"04")
+        plot("D11",g,s1,s2,d11,dscale=2,png=pref+"11")
+        plot("D12",g,s1,s2,d12,dscale=2,png=pref+"12")
+        plot("D14",g,s1,s2,d14,dscale=2,png=pref+"14")
 
 #############################################################################
 # plotting
 
-#pngDir = "../../png/" # where to put PNG images of plots
-pngDir = None # for no PNG images
+pngDir = "../../png/" # where to put PNG images of plots
+#pngDir = None # for no PNG images
 
 backgroundColor = Color(0xfd,0xfe,0xff) # easy to make transparent
 
-def plotPnz(g,s1,s2,d=None,dscale=1,cmin=0,cmax=0,png=None):
+def plotPnz(title,g,s1,s2,d=None,dscale=1,cmin=0,cmax=0,png=None):
     sp = SimplePlot(SimplePlot.Origin.UPPER_LEFT)
     sp.setBackground(backgroundColor)
     sp.setHLabel("Inline (km)")
     sp.setVLabel("Crossline (km)")
+    sp.setTitle(title)
     sp.setHInterval(2.0)
     sp.setVInterval(2.0)
-    #sp.setFontSizeForPrint(8,240)
-    sp.setFontSizeForSlide(1.0,0.9)
+    sp.addColorBar()
+    sp.setFontSizeForPrint(8,240)
+    #sp.setFontSizeForSlide(1.0,0.9)
     sp.setSize(710,750)
     pv = sp.addPixels(s1,s2,g)
     pv.setColorModel(ColorMap.GRAY)
