@@ -75,7 +75,7 @@ public class LocalSmoothingFilter {
 	
 		
 		int n1 = 512;
-		int n2 = n1+2;
+		int n2 = 512;
 		int dims = n1*n2;
 		
 		LocalDiffusionKernel cl_kernel = new LocalDiffusionKernel(LocalDiffusionKernel.Stencil.D22CL);
@@ -97,13 +97,14 @@ public class LocalSmoothingFilter {
 				sg[i][j] = 0.0f;
 				
 			}
-		}
+		}	
 		
 		
 		smooth_cpu.apply(320, r, sc);
 		smooth_cpu.applySmoothS(sc,sc);
 		smooth_gpu.applyGPU(320, r, sg);
 		smooth_gpu.applySmoothS(sg, sg);
+		
 		
 		
 		diff = sub(sg,sc);
@@ -148,6 +149,8 @@ public class LocalSmoothingFilter {
 		
 		System.out.println("CPU: " + cputime);
 		System.out.println("GPU: " + gputime);
+		
+		
 		
 		PixelsView pix1 = panel1.addPixels(r);
 		panel1.addTitle("Input Image");
@@ -381,6 +384,7 @@ public class LocalSmoothingFilter {
 	  int n2 = x[0].length;
 	  int size = n1*n2;
 	  int size_y = (n1+1)*(n2+1);
+	  int num_groups = size/1024/4; //I need to change this so that it works for all GPUS
 	  float[] x1 = new float[size];
 	  float[] y1 = new float[size_y];
 	  float[] s1 = new float[size];
@@ -388,7 +392,7 @@ public class LocalSmoothingFilter {
 	  float[] d12 = new float[size];
 	  float[] d22 = new float[size];
 	  float c1 = 0.25f*c;
-	  String[] kernelNames = {"soSmoothingNew"};
+	  String[] kernelNames = {"clcopy","soSmoothingNew","clsaxpy","cldot","clsxpay"};
 	  CLUtil.clInit(sourceStr, kernelNames);
 	  CLUtil.packArray(n1, n2, x, x1);  //where do I unpack
 	  CLUtil.packArray(n1, n2, s, s1);
@@ -399,21 +403,27 @@ public class LocalSmoothingFilter {
 	  cl_mem d_d12 = CLUtil.createGPUBuffer(size, "r");
 	  cl_mem d_d22 = CLUtil.createGPUBuffer(size, "r");
 	  cl_mem d_y = CLUtil.createGPUBuffer(size_y, "rw");
+	  cl_mem d_d = CLUtil.createGPUBuffer(size, "rw");
+	  cl_mem d_r = CLUtil.createGPUBuffer(size, "rw");
+	  cl_mem d_q = CLUtil.createGPUBuffer(size, "rw");
+	  cl_mem d_delta = CLUtil.createGPUBuffer(num_groups, "rw");
 	  CLUtil.copyToBuffer(d11, d_d11, size);
 	  CLUtil.copyToBuffer(d12, d_d12, size);
 	  CLUtil.copyToBuffer(d22, d_d22, size);
-	  CLUtil.setKernelArg(CLUtil.kernels[0], d_x, 0);
-	  CLUtil.setKernelArg(CLUtil.kernels[0], d_d11, 1);
-	  CLUtil.setKernelArg(CLUtil.kernels[0], d_d12, 2);
-	  CLUtil.setKernelArg(CLUtil.kernels[0], d_d22, 3);
-	  CLUtil.setKernelArg(CLUtil.kernels[0], d_y, 4);
-	  CLUtil.setKernelArg(CLUtil.kernels[0], c1, 5);
-	  CLUtil.setKernelArg(CLUtil.kernels[0], n1, 6);
-	  CLUtil.setKernelArg(CLUtil.kernels[0], n2, 7);
+	  CLUtil.copyToBuffer(x1, d_x, size);
+	  CLUtil.copyToBuffer(y1, d_y, size_y);
+	  CLUtil.setKernelArg(CLUtil.kernels[1], d_d11, 1);
+	  CLUtil.setKernelArg(CLUtil.kernels[1], d_d12, 2);
+	  CLUtil.setKernelArg(CLUtil.kernels[1], d_d22, 3);
+	  CLUtil.setKernelArg(CLUtil.kernels[1], c1, 5); //should I be worried about this c1 value??? Not sure.
 	  Operator2G a = new A2G(_ldk,d11,d12,d22,c,s1);
-	  solveG(a,n1,n2,x1,y1,d_x,d_y);
+	  solveG(a,n1,n2,d_x,d_y,d_d,d_q,d_r,d_delta);
+	  CLUtil.readFromBuffer(d_y, y1, size_y);
 	  clReleaseMemObject(d_x);
 	  clReleaseMemObject(d_y);
+	  clReleaseMemObject(d_d);
+	  clReleaseMemObject(d_r);
+	  clReleaseMemObject(d_q);
 	  clReleaseMemObject(d_d11);
 	  clReleaseMemObject(d_d12);
 	  clReleaseMemObject(d_d22);
@@ -552,8 +562,15 @@ public class LocalSmoothingFilter {
   private LocalDiffusionKernel _ldk; // computes y += (I+G'DG)x
   private BandPassFilter _lpf; // lowpass filter, null until applied
   private double _kmax; // maximum wavenumber for lowpass filter
-  
+    
   String sourceStr =
+		  "__kernel void clcopy(int n1, int n2, __global const float* restrict d_x, __global float* restrict d_y)" +"\n" +
+		  "{" + "\n" +
+		  "    int i  = get_global_id(0);" + "\n" +
+		  "    if(i > n1*n2) return;" + "\n" +
+		  "    d_y[i] = d_x[i];" + "\n" +
+		  "}" + "\n" +
+		  "" +"\n" +
 	  	  "__kernel void soSmoothingNew(__global const float* restrict d_r," + "\n" +
 	  	  "                                                   __global const float* restrict d_d11," + "\n" +
 	  	  "                                                   __global const float* restrict d_d12," + "\n" +
@@ -598,7 +615,46 @@ public class LocalSmoothingFilter {
 	  	  "		d_s[(i2-1)*n2 + (i1-1)] -= s_a;" + "\n" +
 	  	  "" + "\n" +
 	  	  "" + "\n" + 
-	  	  "}";
+	  	  "}" + "\n" +
+	  	  "" + "\n" +
+	  	  "__kernel void clsaxpy(int n1, int n2, float a, __global const float* restrict d_x, __global float* restrict d_y)" + "\n" +
+	  	  "{" + "\n" +
+	  	  "     int i = get_global_id(0);" + "\n" +
+	  	  "     if(i > n1*n2) return;" + "\n" +
+	  	  "     d_y[i] += a*d_x[i];" + "\n" +
+	  	  "}" + "\n" +
+	  	  "" + "\n" +
+	  	  "__kernel void cldot(int n1, int n2, __global float4* a_vec, __global float4* b_vec, __global float* output, __local float4* partial_dot) { " +"\n" +
+ 		  "" + "\n" +
+		  "    int gid = get_global_id(0);" + "\n" +
+          "    int lid = get_local_id(0);" + "\n" +
+          "    int group_size = get_local_size(0);" + "\n" + 
+          "    if(gid > n1*n2) return;" + "\n" +
+          "" + "\n" +
+          "    /* Place product of global values into local memory */" + "\n" +
+          "    partial_dot[lid] = a_vec[gid] * b_vec[gid];" + "\n" +
+          "    barrier(CLK_LOCAL_MEM_FENCE);" + "\n" +
+          "" + "\n" +
+          "    /* Repeatedly add values in local memory */" + "\n" +
+          "    for(int i = group_size/2; i>0; i >>= 1) {" + "\n" +
+          "       if(lid < i) {" + "\n" +
+          "           partial_dot[lid] += partial_dot[lid + i];" + "\n" +
+          "        }" + "\n" +
+          "    barrier(CLK_LOCAL_MEM_FENCE);" + "\n" +
+          "    }" + "\n" +
+          "" + "\n" +
+          "/* Transfer final result to global memory */" + "\n" +
+          "   if(lid == 0) {" + "\n" +
+          "       output[get_group_id(0)] = dot(partial_dot[0], (float4)(1.0f));" + "\n" +
+          "   }" + "\n" +
+          "}" + "\n" +
+          "__kernel void clsxpay(int n1, int n2, float a, __global const float* restrict x, __global float* restrict y)" + "\n" +
+          "{" + "\n" +
+          "   int i = get_global_id(0);" + "\n" +
+          "   if(i > n1*n2) return;" + "\n" +
+          "" + "\n" +
+          "   y[i] = a*y[i] + x[i];" + "\n" +
+          "}";
 
   /*
    * A symmetric positive-definite operator.
@@ -609,7 +665,7 @@ public class LocalSmoothingFilter {
 
   }
   private static interface Operator2G {
-	  public void applyGPU(int n1, int n2, float[] x, float[] y, cl_mem d_x, cl_mem d_y);
+	  public void applyGPU(int n1, int n2, cl_mem d_x, cl_mem d_y);
   }
   private static interface Operator3 {
     public void apply(float[][][] x, float[][][] y);
@@ -677,11 +733,17 @@ public class LocalSmoothingFilter {
 		  
 	  }
 	  
-	  public void applyGPU(int n1, int n2, float[] x, float[] y, cl_mem d_x, cl_mem d_y)
+	  public void applyGPU(int n1, int n2, cl_mem d_x, cl_mem d_y)
 	  {
-		  wscopy(n1, n2, x,y);
+		  //wscopy(n1, n2, x,y);
 		  //scopy(x,y);
-		  _ldk.applyGPU(n1, n2, x, y, d_x, d_y);
+		  long[] global_work_group_size = {n1*n2};
+		  CLUtil.setKernelArg(CLUtil.kernels[0], n1, 0);
+		  CLUtil.setKernelArg(CLUtil.kernels[0], n2, 1);
+		  CLUtil.setKernelArg(CLUtil.kernels[0], d_x, 2);
+		  CLUtil.setKernelArg(CLUtil.kernels[0], d_y, 3);
+		  CLUtil.executeKernel(CLUtil.kernels[0], 1, global_work_group_size);
+		  _ldk.applyGPU(n1, n2);
 
 	  }
 	  
@@ -879,64 +941,173 @@ public class LocalSmoothingFilter {
     float[][] q = new float[n2][n1];
     float[][] r = new float[n2][n1];
     scopy(b,r);
+//  dump(r);
     a.apply(x,q); //this is where I need to put in my kernel. This is where the action happens! How many FLOPS for CPU and GPU
+//  dump(q);
     saxpy(-1.0f,q,r); // r = b-Ax  //Flops
+//  dump(r);
     scopy(r,d); // d = r
+//  dump(d);
+//  dump(r);
     float delta = sdot(r,r); // delta = r'r //Flops
-    float bnorm = sqrt(sdot(b,b)); // 1 flop + 
-    float rnorm = sqrt(delta); // 1 flop
-    float rnormBegin = rnorm;
-    float rnormSmall = bnorm*_small; // 1 FLOP
+//  System.out.println(delta);
+//  float bnorm = sqrt(sdot(b,b)); // 1 flop + 
+//  float rnorm = sqrt(delta); // 1 flop
+//  float rnormBegin = rnorm;
+//  float rnormSmall = bnorm*_small; // 1 FLOP
     int iter;
-    log.fine("solve: bnorm="+bnorm+" rnorm="+rnorm);
-    for (iter=0; iter<_niter && rnorm>rnormSmall; ++iter) {
-      log.finer("  iter="+iter+" rnorm="+rnorm+" ratio="+rnorm/rnormBegin);
-      a.apply(d,q); // q = Ad //FLOPS
-      float dq = sdot(d,q); // d'q = d'Ad FLOPS
-      float alpha = delta/dq; // alpha = r'r/d'Ad 1 FLOP
-      saxpy( alpha,d,x); // x = x+alpha*d //FLOPS
-      saxpy(-alpha,q,r); // r = r-alpha*q //FLOPS
-      float deltaOld = delta;
-      delta = sdot(r,r); // delta = r'r FLOPS
-      float beta = delta/deltaOld; // 1FLOP
-      sxpay(beta,r,d); // d = r+beta*d
-      rnorm = sqrt(delta); 
+//  log.fine("solve: bnorm="+bnorm+" rnorm="+rnorm);
+    for (iter=0; iter<_niter; ++iter) {
+//      log.finer("  iter="+iter+" rnorm="+rnorm+" ratio="+rnorm/rnormBegin);
+    	a.apply(d,q); // q = Ad //FLOPS
+//    	dump(q);
+        float dq = sdot(d,q); // d'q = d'Ad FLOPS
+//      System.out.println("CPU Iter: " + dq);
+        float alpha = delta/dq; // alpha = r'r/d'Ad 1 FLOP
+        saxpy( alpha,d,x); // x = x+alpha*d //FLOPS
+//      dump(x);
+        saxpy(-alpha,q,r); // r = r-alpha*q //FLOPS
+//      dump(r);
+        float deltaOld = delta;
+        delta = sdot(r,r); // delta = r'r FLOPS
+//      System.out.println("CPU Iter: " + delta);
+        float beta = delta/deltaOld; // 1FLOP
+        sxpay(beta,r,d); // d = r+beta*d
+//      dump(d);
+//      SimplePlot.asPixels(d);
+//      rnorm = sqrt(delta); 
     }
-    //free everything
-    log.fine("  iter="+iter+" rnorm="+rnorm+" ratio="+rnorm/rnormBegin);
+//    //free everything
+//    log.fine("  iter="+iter+" rnorm="+rnorm+" ratio="+rnorm/rnormBegin);
   }
   
-  private void solveG(Operator2G a, int n1, int n2, float[] b, float[] x, cl_mem d_x, cl_mem d_y) {
-	    float[] d = new float[n2*n1];
-	    float[] q = new float[n2*n1];
-	    float[] r = new float[n2*n1];
-	    scopy(b,r);
-	    a.applyGPU(n1,n2,x,q,d_x,d_y); //this is where I need to put in my kernel. This is where the action happens!
-	    saxpy1(n1,n2,-1.0f,q,r); // r = b-Ax  //Flops
-	    scopy(r,d); // d = r
-	    float delta = sdot1(n1,n2,r,r); // delta = r'r //Flops
-	    float bnorm = sqrt(sdot1(n1,n2,b,b)); // 1 flop + 
-	    float rnorm = sqrt(delta); // 1 flop
-	    float rnormBegin = rnorm;
-	    float rnormSmall = bnorm*_small; // 1 FLOP
+  private void solveG(Operator2G a, int n1, int n2, cl_mem d_x, cl_mem d_y, cl_mem d_d, cl_mem d_q, cl_mem d_r, cl_mem d_delta) {
+	  	//b is the x input
+	  	// x is the y output
+	  	int size = n1*n2;
+	    float[] p_delta = new float[size/1024/4];
+	    long[] local_work_size_vec = {1024};
+	    long[] global_work_size_oned = {size};
+	    long[] global_work_size_vec = {((long)Math.ceil(size/local_work_size_vec[0]/4)+1)*local_work_size_vec[0]};
+	    CLUtil.setKernelArg(CLUtil.kernels[0], n1, 0);
+	    CLUtil.setKernelArg(CLUtil.kernels[0], n2, 1);
+	    CLUtil.setKernelArg(CLUtil.kernels[0], d_x, 2);
+	    CLUtil.setKernelArg(CLUtil.kernels[0], d_r, 3);
+	    CLUtil.executeKernel(CLUtil.kernels[0], 1, global_work_size_oned);
+	    //CLUtil.readFromBuffer(d_r, r, size);
+	    //dump(r);
+	    //scopy(b,r);
+	    CLUtil.setKernelArg(CLUtil.kernels[1], d_y, 0);
+	    CLUtil.setKernelArg(CLUtil.kernels[1], d_q, 4);
+	    CLUtil.setKernelArg(CLUtil.kernels[1], n1, 6);
+	    CLUtil.setKernelArg(CLUtil.kernels[1], n2, 7);
+	    a.applyGPU(n1,n2,d_x,d_q); //this is where I need to put in my kernel. This is where the action happens!
+	    //CLUtil.readFromBuffer(d_q, q, size);
+	    //dump(q);
+	    CLUtil.setKernelArg(CLUtil.kernels[2], n1, 0);
+	    CLUtil.setKernelArg(CLUtil.kernels[2], n2, 1);
+	    CLUtil.setKernelArg(CLUtil.kernels[2], -1.0f, 2);
+	    CLUtil.setKernelArg(CLUtil.kernels[2], d_q, 3);
+	    CLUtil.setKernelArg(CLUtil.kernels[2], d_r, 4);
+	    CLUtil.executeKernel(CLUtil.kernels[2], 1, global_work_size_oned);
+//	    CLUtil.readFromBuffer(d_r, r, size);
+//	    dump(r);
+//	    saxpy1(n1,n2,-1.0f,q,r); // r = b-Ax  //Flops
+	    CLUtil.setKernelArg(CLUtil.kernels[0], n1, 0);
+	    CLUtil.setKernelArg(CLUtil.kernels[0], n2, 1);
+	    CLUtil.setKernelArg(CLUtil.kernels[0], d_r, 2);
+	    CLUtil.setKernelArg(CLUtil.kernels[0], d_d, 3);
+	    CLUtil.executeKernel(CLUtil.kernels[0], 1, global_work_size_oned);
+//	    CLUtil.readFromBuffer(d_d, d, size);
+//	    dump(d);
+//	    scopy(r,d); // d = r
+	    CLUtil.setKernelArg(CLUtil.kernels[3], n1, 0);
+	    CLUtil.setKernelArg(CLUtil.kernels[3], n2, 1);
+	    CLUtil.setKernelArg(CLUtil.kernels[3], d_r, 2);
+	    CLUtil.setKernelArg(CLUtil.kernels[3], d_r, 3);
+	    CLUtil.setKernelArg(CLUtil.kernels[3], d_delta, 4);
+	    CLUtil.setLocalKernelArg(CLUtil.kernels[3], 1024*4, 5);
+	    CLUtil.executeKernel(CLUtil.kernels[3], 1, global_work_size_vec, local_work_size_vec);
+	    CLUtil.readFromBuffer(d_delta, p_delta, size/1024/4);
+	    float delta = sum(p_delta);
+//	    System.out.println(delta);
+//	    float delta = sdot1(n1,n2,r,r); // delta = r'r I need to compute this.
+//	    float bnorm = sqrt(sdot1(n1,n2,b,b)); // 1 flop + 
+//	    float rnorm = sqrt(delta); // 1 flop
+//	    float rnormBegin = rnorm;
+//	    float rnormSmall = bnorm*_small; // 1 FLOP
 	    int iter;
-	    log.fine("solve: bnorm="+bnorm+" rnorm="+rnorm);
-	    for (iter=0; iter<_niter && rnorm>rnormSmall; ++iter) {
-	      log.finer("  iter="+iter+" rnorm="+rnorm+" ratio="+rnorm/rnormBegin);
-	      a.applyGPU(n1,n2,d,q,d_x,d_y); // q = Ad 
-	      float dq = sdot1(n1,n2,d,q); // d'q = d'Ad
+//	    log.fine("solve: bnorm="+bnorm+" rnorm="+rnorm);
+	    for (iter=0; iter<_niter; ++iter) {
+//	      log.finer("  iter="+iter+" rnorm="+rnorm+" ratio="+rnorm/rnormBegin);
+	      CLUtil.setKernelArg(CLUtil.kernels[1], d_d, 0);
+	      CLUtil.setKernelArg(CLUtil.kernels[1], d_q, 4);
+	      CLUtil.setKernelArg(CLUtil.kernels[1], n1, 6);
+	      CLUtil.setKernelArg(CLUtil.kernels[1], n2, 7);
+	      a.applyGPU(n1,n2,d_d,d_q); // q = Ad 
+	      //CLUtil.readFromBuffer(d_q, q, size);
+	      //dump(q);
+	      CLUtil.setKernelArg(CLUtil.kernels[3], n1, 0);
+	      CLUtil.setKernelArg(CLUtil.kernels[3], n2, 1);
+	      CLUtil.setKernelArg(CLUtil.kernels[3], d_d, 2);
+	      CLUtil.setKernelArg(CLUtil.kernels[3], d_q, 3);
+	      CLUtil.setKernelArg(CLUtil.kernels[3], d_delta, 4);
+	      CLUtil.setLocalKernelArg(CLUtil.kernels[3], 1024*4, 5);
+	      CLUtil.executeKernel(CLUtil.kernels[3], 1, global_work_size_vec, local_work_size_vec);
+	      CLUtil.readFromBuffer(d_delta, p_delta, size/1024/4);
+	      float dq = sum(p_delta);
+//	      System.out.println("GPU Iter: " +dq);
+//	      float dq = sdot1(n1,n2,d,q); // d'q = d'Ad //I need to compute this
 	      float alpha = delta/dq; // alpha = r'r/d'Ad
-	      saxpy1(n1,n2, alpha,d,x); // x = x+alpha*d 
-	      saxpy1(n1,n2,-alpha,q,r); // r = r-alpha*q 
+		  CLUtil.setKernelArg(CLUtil.kernels[2], n1, 0);
+		  CLUtil.setKernelArg(CLUtil.kernels[2], n2, 1);
+		  CLUtil.setKernelArg(CLUtil.kernels[2], alpha, 2);
+		  CLUtil.setKernelArg(CLUtil.kernels[2], d_d, 3);
+		  CLUtil.setKernelArg(CLUtil.kernels[2], d_y, 4);
+		  CLUtil.executeKernel(CLUtil.kernels[2], 1, global_work_size_oned);
+//		  CLUtil.readFromBuffer(d_x, x, size);
+//		  dump(x);
+//	      saxpy1(n1,n2, alpha,d,x); // x = x+alpha*d 
+		  CLUtil.setKernelArg(CLUtil.kernels[2], n1, 0);
+		  CLUtil.setKernelArg(CLUtil.kernels[2], n2, 1);
+		  CLUtil.setKernelArg(CLUtil.kernels[2], -alpha, 2);
+		  CLUtil.setKernelArg(CLUtil.kernels[2], d_q, 3);
+		  CLUtil.setKernelArg(CLUtil.kernels[2], d_r, 4);
+		  CLUtil.executeKernel(CLUtil.kernels[2], 1, global_work_size_oned);
+//		  CLUtil.readFromBuffer(d_r, r, size);
+//		  dump(r);
+//	      saxpy1(n1,n2,-alpha,q,r); // r = r-alpha*q 
 	      float deltaOld = delta;
-	      delta = sdot1(n1,n2,r,r); // delta = r'r 
-	      float beta = delta/deltaOld; 
-	      sxpay1(n1,n2,beta,r,d); // d = r+beta*d
-	      rnorm = sqrt(delta); 
+		  CLUtil.setKernelArg(CLUtil.kernels[3], n1, 0);
+		  CLUtil.setKernelArg(CLUtil.kernels[3], n2, 1);
+		  CLUtil.setKernelArg(CLUtil.kernels[3], d_r, 2);
+		  CLUtil.setKernelArg(CLUtil.kernels[3], d_r, 3);
+		  CLUtil.setKernelArg(CLUtil.kernels[3], d_delta, 4);
+		  CLUtil.setLocalKernelArg(CLUtil.kernels[3], 1024*4, 5);
+		  CLUtil.executeKernel(CLUtil.kernels[3], 1, global_work_size_vec, local_work_size_vec);
+		  CLUtil.readFromBuffer(d_delta, p_delta, size/1024/4);
+		  delta = sum(p_delta);
+//		  System.out.println("GPU Iter: " + delta);
+//	      delta = sdot1(n1,n2,r,r); // delta = r'r I need to compute this
+	      float beta = delta/deltaOld; //I need to compute this
+	      CLUtil.setKernelArg(CLUtil.kernels[4], n1, 0);
+	      CLUtil.setKernelArg(CLUtil.kernels[4], n2, 1);
+	      CLUtil.setKernelArg(CLUtil.kernels[4], beta, 2);
+	      CLUtil.setKernelArg(CLUtil.kernels[4], d_r, 3);
+	      CLUtil.setKernelArg(CLUtil.kernels[4], d_d, 4);
+	      CLUtil.executeKernel(CLUtil.kernels[4], 1, global_work_size_oned);
+//	      CLUtil.readFromBuffer(d_d, d, size);
+//	      CLUtil.unPackArray(n1, n2, d, d2);
+//	      SimplePlot.asPixels(d2);
+//	      dump(d);
+//	      sxpay1(n1,n2,beta,r,d); // d = r+beta*d
+//	      rnorm = sqrt(delta); 
 	    }
-	    //free everything
-	    log.fine("  iter="+iter+" rnorm="+rnorm+" ratio="+rnorm/rnormBegin);
+//	    //free everything
+//	    log.fine("  iter="+iter+" rnorm="+rnorm+" ratio="+rnorm/rnormBegin);
 	  }
+  
+  
   private void solve(Operator3 a, float[][][] b, float[][][] x) {
     int n1 = b[0][0].length;
     int n2 = b[0].length;
@@ -1064,16 +1235,16 @@ public class LocalSmoothingFilter {
   }
 
   // Copys array x to array y.
-  private static void scopy(float[] x, float[] y) {
+  public static void scopy(float[] x, float[] y) {
     copy(x,y);
   }
   
-  private static void wscopy(int n1, int n2, float[] x, float[] y) {
+  public static void wscopy(int n1, int n2, float[] x, float[] y) {
 	  for(int i = 0; i < n1*n2; i++)
 		  y[i] = x[i];
   }
   
-  private static void scopy(float[][] x, float[][] y) {
+  public static void scopy(float[][] x, float[][] y) {
     copy(x,y);
   }
   private static void scopy(final float[][][] x, final float[][][] y) {
@@ -1096,7 +1267,7 @@ public class LocalSmoothingFilter {
 	  return d;
   }
   // Returns the dot product x'y.
-  private static float sdot(float[][] x, float[][] y) {
+  public static float sdot(float[][] x, float[][] y) {
     int n1 = x[0].length;
     int n2 = x.length;
     float d = 0.0f;
@@ -1130,7 +1301,7 @@ public class LocalSmoothingFilter {
 		  
 	  }
   // Computes y = y + a*x.
-  private static void saxpy(float a, float[][] x, float[][] y) {
+  public static void saxpy(float a, float[][] x, float[][] y) {
     int n1 = x[0].length;
     int n2 = x.length;
     for (int i2=0; i2<n2; ++i2) {
@@ -1153,7 +1324,7 @@ public class LocalSmoothingFilter {
   
   
   
-  private static void sxpay1(int n1, int n2, float a, float[] x, float[]y) {
+  public static void sxpay1(int n1, int n2, float a, float[] x, float[]y) {
 	  for(int i = 0; i< n1*n2; ++i) {
 		  y[i] = a*y[i] + x[i];
 	  }
@@ -1161,7 +1332,7 @@ public class LocalSmoothingFilter {
 
   // Computes y = x + a*y.
   //TODO: Write for 1D arrays
-  private static void sxpay(float a, float[][] x, float[][] y) {
+ public static void sxpay(float a, float[][] x, float[][] y) {
     int n1 = x[0].length;
     int n2 = x.length;
     for (int i2=0; i2<n2; ++i2) {

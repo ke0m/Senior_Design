@@ -208,8 +208,8 @@ public class LocalDiffusionKernel {
       if (_stencil==Stencil.D21) {
         apply21(c,s,x,y);
       } else if (_stencil==Stencil.D22) {
-        //apply22(d,c,s,x,y);
-        apply22MyCPU(d,c,s,x,y);
+        apply22(d,c,s,x,y);
+        //apply22MyCPU(d,c,s,x,y);
       } else if (_stencil==Stencil.D24) {
         apply24(d,c,s,x,y);
       } else if (_stencil==Stencil.D33) {
@@ -223,13 +223,14 @@ public class LocalDiffusionKernel {
   }
  
   public void applyGPU(
-	int n1, int n2, float[] x, float[] y, cl_mem d_x, cl_mem d_y)
+	int n1, int n2)
   {
 	  for(int ipass=0; ipass<_npass; ++ipass) {
 		  if(ipass>0)
-			  x = copy(y);
+			  System.out.println("Test");
+			  //x = copy(y);
 		  if(_stencil==Stencil.D22CL) {
-			  apply22CL(n1,n2,x,y,d_x,d_y);
+			  apply22CL(n1,n2);
 		  }
 		  
 	  }
@@ -553,7 +554,7 @@ public class LocalDiffusionKernel {
 
   
   
-  private void apply22CL(int n1, int n2, float[] x, float[] y, cl_mem d_x, cl_mem d_y)
+  private void apply22CL(int n1, int n2)
   {
 	  
 	  long[] local_group_size = new long[]{32, 32};
@@ -561,19 +562,16 @@ public class LocalDiffusionKernel {
 	  long[] mapped_n2 = new long[]{n1/2};
 	  long[] global_group_size_block = new long[]{(long)Math.ceil(mapped_n1[0]/local_group_size[0] + 1)*local_group_size[0], (long)Math.ceil(mapped_n2[0]/local_group_size[0] + 1) * local_group_size[1]};
 	  
-	  CLUtil.copyToBuffer(x, d_x, n1*n2);
-	  CLUtil.copyToBuffer(y, d_y, n1*n2);
 		for(int offsetx = 0; offsetx < 2; ++offsetx)
 		{
 			for(int offsety = 0; offsety < 2; ++offsety)
 			{
-				CLUtil.setKernelArg(CLUtil.kernels[0], offsetx, 8);
-				CLUtil.setKernelArg(CLUtil.kernels[0], offsety, 9);
-				CLUtil.executeKernel(CLUtil.kernels[0], 2, global_group_size_block, local_group_size);
+				CLUtil.setKernelArg(CLUtil.kernels[1], offsetx, 8);
+				CLUtil.setKernelArg(CLUtil.kernels[1], offsety, 9);
+				CLUtil.executeKernel(CLUtil.kernels[1], 2, global_group_size_block, local_group_size);
 			}
 		}
 		
-		CLUtil.readFromBuffer(d_y, y, n1*n2);
 		
   }
   

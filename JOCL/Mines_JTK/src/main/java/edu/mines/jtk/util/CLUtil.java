@@ -173,7 +173,7 @@ public class CLUtil {
 				System.exit(1);	
 			}
 	  }
-
+	  
 	  public static void setKernelArg(cl_kernel kernel, float x, int argNum)
 	  {
 		  float[] xp = new float[1];
@@ -197,6 +197,17 @@ public class CLUtil {
 				System.exit(1);	
 			}
 		  
+	  }
+	  
+	  
+	  public static void setLocalKernelArg(cl_kernel kernel, int sizeOfData, int argNum)
+	  {
+		  err = clSetKernelArg(kernel, argNum, sizeOfData * Sizeof.cl_float, null);
+			if(err != CL.CL_SUCCESS){
+				System.out.println("Error: Could not set kernel argument.");
+				System.out.println("OpenCL error code: " + err);
+				System.exit(1);	
+			}
 	  }
 	  
 	  public static void executeKernel(cl_kernel kernel, int dataDims, long[] global_group_size, long[] local_group_size)
