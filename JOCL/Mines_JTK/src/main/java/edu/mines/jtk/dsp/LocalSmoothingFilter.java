@@ -951,13 +951,13 @@ public class LocalSmoothingFilter {
 //  dump(r);
     float delta = sdot(r,r); // delta = r'r //Flops
 //  System.out.println(delta);
-//  float bnorm = sqrt(sdot(b,b)); // 1 flop + 
-//  float rnorm = sqrt(delta); // 1 flop
-//  float rnormBegin = rnorm;
-//  float rnormSmall = bnorm*_small; // 1 FLOP
+    float bnorm = sqrt(sdot(b,b)); // 1 flop + 
+    float rnorm = sqrt(delta); // 1 flop
+    float rnormBegin = rnorm;
+    float rnormSmall = bnorm*_small; // 1 FLOP
     int iter;
 //  log.fine("solve: bnorm="+bnorm+" rnorm="+rnorm);
-    for (iter=0; iter<_niter; ++iter) {
+    for (iter=0; iter<_niter && rnorm>rnormSmall; ++iter) {
 //      log.finer("  iter="+iter+" rnorm="+rnorm+" ratio="+rnorm/rnormBegin);
     	a.apply(d,q); // q = Ad //FLOPS
 //    	dump(q);
@@ -975,7 +975,7 @@ public class LocalSmoothingFilter {
         sxpay(beta,r,d); // d = r+beta*d
 //      dump(d);
 //      SimplePlot.asPixels(d);
-//      rnorm = sqrt(delta); 
+      rnorm = sqrt(delta); 
     }
 //    //free everything
 //    log.fine("  iter="+iter+" rnorm="+rnorm+" ratio="+rnorm/rnormBegin);
@@ -1032,13 +1032,22 @@ public class LocalSmoothingFilter {
 	    float delta = sum(p_delta);
 //	    System.out.println(delta);
 //	    float delta = sdot1(n1,n2,r,r); // delta = r'r I need to compute this.
-//	    float bnorm = sqrt(sdot1(n1,n2,b,b)); // 1 flop + 
-//	    float rnorm = sqrt(delta); // 1 flop
-//	    float rnormBegin = rnorm;
-//	    float rnormSmall = bnorm*_small; // 1 FLOP
+	    CLUtil.setKernelArg(CLUtil.kernels[3], n1, 0);
+	    CLUtil.setKernelArg(CLUtil.kernels[3], n2, 1);
+	    CLUtil.setKernelArg(CLUtil.kernels[3], d_x, 2);
+	    CLUtil.setKernelArg(CLUtil.kernels[3], d_x, 3);
+	    CLUtil.setKernelArg(CLUtil.kernels[3], d_delta, 4);
+	    CLUtil.setLocalKernelArg(CLUtil.kernels[3], 1024*4, 5);
+	    CLUtil.executeKernel(CLUtil.kernels[3], 1, global_work_size_vec, local_work_size_vec);
+	    CLUtil.readFromBuffer(d_delta, p_delta, size/1024/4);
+	    float bnorm = sqrt(sum(p_delta));
+//	    float bnorm = sqrt(sdot1(n1,n2,b,b)); 
+	    float rnorm = sqrt(delta); 
+	    float rnormBegin = rnorm;
+	    float rnormSmall = bnorm*_small; 
 	    int iter;
 //	    log.fine("solve: bnorm="+bnorm+" rnorm="+rnorm);
-	    for (iter=0; iter<_niter; ++iter) {
+	    for (iter=0; iter<_niter && rnorm>rnormSmall; ++iter) {
 //	      log.finer("  iter="+iter+" rnorm="+rnorm+" ratio="+rnorm/rnormBegin);
 	      CLUtil.setKernelArg(CLUtil.kernels[1], d_d, 0);
 	      CLUtil.setKernelArg(CLUtil.kernels[1], d_q, 4);
@@ -1101,7 +1110,7 @@ public class LocalSmoothingFilter {
 //	      SimplePlot.asPixels(d2);
 //	      dump(d);
 //	      sxpay1(n1,n2,beta,r,d); // d = r+beta*d
-//	      rnorm = sqrt(delta); 
+	      rnorm = sqrt(delta); 
 	    }
 //	    //free everything
 //	    log.fine("  iter="+iter+" rnorm="+rnorm+" ratio="+rnorm/rnormBegin);
