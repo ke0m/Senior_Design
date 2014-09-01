@@ -1,0 +1,635 @@
+/****************************************************************************
+Copyright (c) 2012, Colorado School of Mines and others. All rights reserved.
+This program and accompanying materials are made available under the terms of
+the Common Public License - v1.0, which accompanies this distribution, and is 
+available at http://www.eclipse.org/legal/cpl-v10.html
+****************************************************************************/
+package interp;
+
+import edu.mines.jtk.dsp.*;
+import edu.mines.jtk.interp.*;
+import edu.mines.jtk.lapack.*;
+import edu.mines.jtk.util.Check;
+import static edu.mines.jtk.util.ArrayMath.*;
+
+import dnp.*;
+
+/**
+ * Gridding in 2D by tensor-guided simple kriging.
+ * Gridding is interpolation onto a uniformly sampled grid of a set 
+ * of specified scattered sample values. Here that interpolation is 
+ * performed by simple kriging.
+ * <p>
+ * More precisely, let d denote a data vector with elements equal to
+ * the scattered known sample values, and let m denote a model vector
+ * computed by gridding according to the following equation:
+ * <pre>
+ * m = m0 + Cm K' inv(K Cm K' + Cd) (d - K m0). 
+ * </pre>
+ * Here, m0 denotes an a priori model, K is a matrix that samples the
+ * gridded model space at locations where scattered data are specified, 
+ * and Cm and Cd are model and covariance matrices.
+ * <p>
+ * If specified, the tensor field that guides the interpolation is
+ * used to implement the model covariance matrix Cm. If a non-constant
+ * tensor field is specified, then the covariance model must have an
+ * apply method that implements a tensor-guided multiplication by Cm.
+ * <p>
+ * The data covariance matrix Cd is diagonal, with variances that
+ * may be specified by one constant standard deviation or by an 
+ * array of standard deviations, one for each sample of data.
+ * 
+ * @author Dave Hale, Colorado School of Mines
+ * @version 2013.07.25
+ */
+public class KrigingGridder2 implements Gridder2 {
+
+  /**
+   * Constructs a gridder for default isotropic constant tensors.
+   */
+  public KrigingGridder2() {
+    this(null);
+  }
+
+  /**
+   * Constructs a gridder for specified samples.
+   * The specified arrays are referenced; not copied.
+   * @param f array of sample values f(x1,x2).
+   * @param x1 array of sample x1 coordinates.
+   * @param x2 array of sample x2 coordinates.
+   */
+  public KrigingGridder2(float[] f, float[] x1, float[] x2) {
+    setTensor(1.0,0.0,1.0);
+    setScattered(f,x1,x2);
+  }
+
+  /**
+   * Constructs a gridder for the specified tensors.
+   * @param tensors the tensors.
+   */
+  public KrigingGridder2(Tensors2 tensors) {
+    setTensors(tensors);
+  }
+
+  /**
+   * Constructs a gridder for the specified tensors and samples.
+   * The specified arrays are referenced; not copied.
+   * @param tensors the tensors.
+   * @param f array of sample values f(x1,x2).
+   * @param x1 array of sample x1 coordinates.
+   * @param x2 array of sample x2 coordinates.
+   */
+  public KrigingGridder2(
+    Tensors2 tensors, float[] f, float[] x1, float[] x2) 
+  {
+    setTensors(tensors);
+    setScattered(f,x1,x2);
+  }
+
+  /**
+   * Sets the constant tensor D used by this gridder.
+   * @param d11 tensor element D(1,1). 
+   * @param d12 tensor element D(1,2). 
+   * @param d22 tensor element D(2,2). 
+   */
+  public void setTensor(double d11, double d12, double d22) {
+    Check.argument(d11*d22>d12*d12,"tensor must be positive-definite");
+    _d11 = d11;
+    _d12 = d12;
+    _d22 = d22;
+    _tensors = null;
+  }
+
+  /**
+   * Sets the variable tensor field used to compute distances.
+   * The default is a constant isotropic tensor.
+   * @param tensors the tensors; null for default tensors.
+   */
+  public void setTensors(Tensors2 tensors) {
+    _tensors = tensors;
+    if (_tensors==null) {
+      _d11 = 1.0f;
+      _d12 = 0.0f;
+      _d22 = 1.0f;
+    }
+  }
+
+  /**
+   * Forces use of Paciorek's (2003) approximation for variable tensors.
+   * This option is relevant only if a variable tensor field has been
+   * specified. The default is false, so that this approximation will be 
+   * used only if the model covariance does not have an apply method that
+   * implements tensor-guided multiplication by Cm.
+   * @param p true, to force Paciorek's approximation; false, otherwise.
+   */
+  public void setPaciorek(boolean p) {
+    _paciorek = p;
+  }
+
+  /**
+   * Sets the model covariance function of distance.
+   * The default is a smooth covariance function with 
+   * parameters shape = sigma = range = 1.
+   * @param cm the model covariance function.
+   */
+  public void setModelCovariance(Covariance model) {
+    _cm = model;
+  }
+
+  /**
+   * Sets a constant standard deviation for all data errors.
+   * Data errors are assumed to be uncorrelated.
+   * @param sd the standard deviation = sqrt(variance).
+   */
+  public void setDataError(double sd) {
+    _sdConstant = sd;
+  }
+
+  /**
+   * Sets standard deviations for data errors.
+   * Data errors are assumed to be uncorrelated.
+   * @param sd array of standard deviations = sqrt(variance).
+   */
+  public void setDataError(float[] sd) {
+    _sd = copy(sd);
+  }
+
+  /**
+   * Sets the order of the polynomial trend to be fit to sample values.
+   * This trend is removed before kriging and restored after kriging.
+   * The default order is -1, so that no trend is removed.
+   * @param order the order of the polynomial fit; must be -1, 0, 1, or 2.
+   */
+  public void setPolyTrend(int order) {
+    Check.argument(-1<=order,"-1<=order");
+    Check.argument(order<=2,"order<=2");
+    if (_trend!=null) {
+      _trend.restore(_f,_x1,_x2);
+      _trend = null;
+    }
+    if (order!=-1) {
+      _trend = new PolyTrend2(order,_f,_x1,_x2);
+      _trend.detrend(_f,_x1,_x2);
+    }
+  }
+
+  ///////////////////////////////////////////////////////////////////////////
+  // interface Gridder2
+
+  public void setScattered(float[] f, float[] x1, float[] x2) {
+    _f = copy(f);
+    _x1 = copy(x1);
+    _x2 = copy(x2);
+  }
+
+  public float[][] grid(Sampling s1, Sampling s2) {
+    checkSamplings(s1,s2);
+    checkScattered();
+    ensureModelCovariance();
+    ensureDataErrors();
+    float[][] q = null;
+    if (_tensors!=null) {
+      if (_paciorek || !(_cm instanceof SmoothCovariance)) {
+        q = gridForVariableTensorsP(s1,s2);
+      } else {
+        q = gridForVariableTensors(s1,s2);
+      }
+    } else {
+      q = gridForConstantTensors(s1,s2);
+    }
+    if (_trend!=null)
+      _trend.restore(q,s1,s2);
+    return q;
+  }
+
+  ///////////////////////////////////////////////////////////////////////////
+  // private
+
+  private Tensors2 _tensors; // variable tensors D; null for constant D
+  private boolean _paciorek; // true, if using Paciorek's approximation
+  private double _d11,_d12,_d22; // elements of constant tensor D
+  private float[] _f,_x1,_x2; // scattered data
+  private float[] _sd; // array of std devs for data errors
+  private double _sdConstant = 0.0;  // std dev for data errors, if constant
+  private Covariance _cm; // model covariance
+  private PolyTrend2 _trend; // polynomial trend; null, if none
+  private int _order = -1; // order of poly trend; -1, if none
+
+  /**
+   * If no model covariance has been specified, this method makes a default.
+   */
+  private void ensureModelCovariance() {
+    if (_cm==null)
+      _cm = new SmoothCovariance(1.0,1.0,1.0,2);
+  }
+
+  /**
+   * If we do not yet have the array of data errors (std devs), make it.
+   */
+  private void ensureDataErrors() {
+    if (_sd==null || _sd.length!=_f.length)
+      _sd = fillfloat((float)_sdConstant,_f.length);
+  }
+
+  /**
+   * Simple kriging for a constant tensor field, which may be anisotropic.
+   * This method can be used with any valid model covariance. Other gridding
+   * methods can be used only with tensor-guided model covariances.
+   */
+  private float[][] gridForConstantTensors(Sampling s1, Sampling s2) {
+    int n1 = s1.getCount();
+    int n2 = s2.getCount();
+    int n = _f.length;
+    DMatrix cf = new DMatrix(n,1);
+    DMatrix cm = new DMatrix(n,n);
+    double det = _d11*_d22-_d12*_d12;
+    double t11 =  _d22/det;
+    double t12 = -_d12/det;
+    double t22 =  _d11/det;
+    for (int i=0; i<n; ++i) {
+      double x1i = _x1[i];
+      double x2i = _x2[i];
+      for (int j=0; j<n; ++j) {
+        double x1j = _x1[j];
+        double x2j = _x2[j];
+        double r = distance(t11,t12,t22,x1i,x2i,x1j,x2j);
+        cm.set(i,j,_cm.evaluate(r));
+      }
+      cm.set(i,i,cm.get(i,i)+_sd[i]*_sd[i]);
+      cf.set(i,0,_f[i]);
+    }
+    DMatrix cw = cm.solve(cf);
+    float[][] q = new float[n2][n1];
+    for (int i2=0; i2<n2; ++i2) {
+      double x2i = s2.getValue(i2);
+      for (int i1=0; i1<n1; ++i1) {
+        double x1i = s1.getValue(i1);
+        double qi = 0.0f;
+        for (int j=0; j<n; ++j) {
+          double x1j = _x1[j];
+          double x2j = _x2[j];
+          double r = distance(t11,t12,t22,x1i,x2i,x1j,x2j);
+          qi += cw.get(j,0)*_cm.evaluate(r);
+        }
+        q[i2][i1] = (float)qi;
+      }
+    }
+    return q;
+  }
+
+  /**
+   * Returns non-euclidean distance for specified tensor T = inv(D).
+   */
+  private static double distance(
+    double t11, double t12, double t22,
+    double x1a, double x2a, 
+    double x1b, double x2b) 
+  {
+    double dx1 = x1a-x1b;
+    double dx2 = x2a-x2b;
+    return sqrt(dx1*(t11*dx1+t12*dx2)+dx2*(t12*dx1+t22*dx2));
+  }
+
+  /**
+   * Evaluates the Paciorek approximation for two points indexed by i and j.
+   * Tensor coefficients for the point i are passed as parameters to this
+   * method. These parameters are assumed to be computed once and then
+   * reused in calls to this method within some inner loop over index j.
+   */
+  private static double evaluatePaciorek(
+    Sampling s1, Sampling s2, Tensors2 tensors, Covariance cm,
+    double d11i, double d12i, double d22i, double deti, float[] d,
+    double x1i, double x2i, double x1j, double x2j)
+  {
+    int j1 = s1.indexOfNearest(x1j);
+    int j2 = s2.indexOfNearest(x2j);
+    tensors.getTensor(j1,j2,d);
+    double d11j = d[0], d12j = d[1], d22j = d[2];
+    double detj = d11j*d22j-d12j*d12j;
+    double d11 = 0.5*(d11i+d11j);
+    double d12 = 0.5*(d12i+d12j);
+    double d22 = 0.5*(d22i+d22j);
+    double det = d11*d22-d12*d12;
+    double t11 =  d22/det;
+    double t12 = -d12/det;
+    double t22 =  d11/det;
+    double s = sqrt(sqrt(deti*detj)/det);
+    double r = distance(t11,t12,t22,x1i,x2i,x1j,x2j);
+    return s*cm.evaluate(r);
+  }
+
+  /**
+   * Returns kriging weights w computed using Paciorek's approximation.
+   */
+  private static float[] computePaciorekWeights(
+    Sampling s1, Sampling s2, Tensors2 tensors, Covariance cm,
+    float[] f, float[] x1, float[] x2, float[] sd)
+  {
+    int n = f.length;
+    DMatrix fm = new DMatrix(n,1);
+    DMatrix am = new DMatrix(n,n);
+    float[] d = new float[3];
+    for (int i=0; i<n; ++i) {
+      double x1i = x1[i];
+      double x2i = x2[i];
+      int i1 = s1.indexOfNearest(x1i);
+      int i2 = s2.indexOfNearest(x2i);
+      tensors.getTensor(i1,i2,d);
+      double d11i = d[0], d12i = d[1], d22i = d[2];
+      double deti = d11i*d22i-d12i*d12i;
+      for (int j=0; j<n; ++j) {
+        double x1j = x1[j];
+        double x2j = x2[j];
+        double cij = evaluatePaciorek(s1,s2,tensors,cm,
+                                      d11i,d12i,d22i,deti,d,
+                                      x1i,x2i,x1j,x2j);
+        am.set(i,j,cij);
+      }
+      am.set(i,i,am.get(i,i)+sd[i]*sd[i]);
+      fm.set(i,0,f[i]);
+    }
+    trace("Paciorek's KCmK'+Cd: cond="+am.cond());
+    DMatrix wm = am.solve(fm);
+    float[] w = new float[n];
+    for (int i=0; i<n; ++i)
+      w[i] = (float)wm.get(i,0);
+    return w;
+  }
+
+  /**
+   * Gridding with kriging weights w computed via Paciorek's approximation.
+   */
+  private static void gridWithPaciorekWeights(
+    Sampling s1, Sampling s2, Tensors2 tensors, Covariance cm,
+    float[] w, float[] x1, float[] x2, float[][] q)
+  {
+    int n = w.length;
+    int n1 = q[0].length;
+    int n2 = q.length;
+    float[] d = new float[3];
+    for (int i2=0; i2<n2; ++i2) {
+      double x2i = s2.getValue(i2);
+      for (int i1=0; i1<n1; ++i1) {
+        double x1i = s1.getValue(i1);
+        tensors.getTensor(i1,i2,d);
+        double d11i = d[0], d12i = d[1], d22i = d[2];
+        double deti = d11i*d22i-d12i*d12i;
+        double qi = 0.0f;
+        for (int j=0; j<n; ++j) {
+          double x1j = x1[j];
+          double x2j = x2[j];
+          double cij = evaluatePaciorek(s1,s2,tensors,cm,
+                                        d11i,d12i,d22i,deti,d,
+                                        x1i,x2i,x1j,x2j);
+          qi += cij*w[j];
+        }
+        q[i2][i1] = (float)qi;
+      }
+    }
+  }
+
+  /**
+   * Paciorek's approximation to tensor-guided kriging.
+   */
+  private float[][] gridForVariableTensorsP(Sampling s1, Sampling s2) {
+    int n1 = s1.getCount();
+    int n2 = s2.getCount();
+    float[][] fxs = SimpleGridder2.samplesOnGrid(s1,s2,_f,_x1,_x2,_sd);
+    float[] f = fxs[0], x1 = fxs[1], x2 = fxs[2], sd = fxs[3];
+    float[] w = computePaciorekWeights(s1,s2,_tensors,_cm,f,x1,x2,sd);
+    float[][] q = new float[n2][n1];
+    gridWithPaciorekWeights(s1,s2,_tensors,_cm,w,x1,x2,q);
+    return q;
+  }
+
+  /**
+   * Tensor-guided kriging for the smooth model covariance.
+   * Uses Paciorek's approximation as a preconditioner in
+   * an iterative CG computation of the kriging weights.
+   */
+  private float[][] gridForVariableTensors(Sampling s1, Sampling s2) {
+    Check.state(_cm instanceof SmoothCovariance,
+      "model covariance is a SmoothCovariance");
+    SmoothCovariance scm = (SmoothCovariance)_cm;
+    int n1 = s1.getCount();
+    int n2 = s2.getCount();
+    float[][] fxs = SimpleGridder2.samplesOnGrid(s1,s2,_f,_x1,_x2,_sd);
+    float[] f = fxs[0];
+    float[] x1 = fxs[1];
+    float[] x2 = fxs[2];
+    float[] sd = fxs[3];
+    int n = f.length;
+    float[] af = f;
+    float[] az = new float[n];
+    VecArrayFloat1 vf = new VecArrayFloat1(af);
+    VecArrayFloat1 vz = new VecArrayFloat1(az);
+    SmoothA a = new SmoothA(x1,x2,s1,s2,_tensors,scm,sd);
+    SmoothM m = new SmoothM(x1,x2,s1,s2,_tensors,scm,sd);
+    CgSolver cgs = new CgSolver(1.0e-2,100);
+    CgSolver.Info info = cgs.solve(a,m,vf,vz);
+    //CgSolver.Info info = cgs.solve(a,vf,vz); # may not converge!
+    cgs = null;
+    float[][] q = scm.apply(s1,s2,_tensors,x1,x2,az);
+    return q;
+  }
+
+  /**
+   * Tensor-guided kriging for the smooth model covariance.
+   * Uses inverse of covariance instead of covariance. For small Cd,
+   * this method converges very slowly because we have no preconditioner.
+   * Another problem is that this method requires Cd != 0 (sigmaD != 0); 
+   * must have some data error, so cannot exactly interpolate data.
+   */
+  private float[][] gridForVariableTensorsI(Sampling s1, Sampling s2) {
+    Check.state(_cm instanceof SmoothCovariance,
+      "model covariance is a SmoothCovariance");
+    SmoothCovariance scm = (SmoothCovariance)_cm;
+    int n1 = s1.getCount();
+    int n2 = s2.getCount();
+    float[][] ap = new float[n2][n1];
+    float[][] aq = new float[n2][n1];
+    float[][] fxs = SimpleGridder2.samplesOnGrid(s1,s2,_f,_x1,_x2,_sd);
+    float[] f = fxs[0];
+    float[] x1 = fxs[1];
+    float[] x2 = fxs[2];
+    float[] sd = fxs[3];
+    int n = f.length;
+    for (int i=0; i<n; ++i) {
+      int i1 = s1.indexOfNearest(x1[i]);
+      int i2 = s2.indexOfNearest(x2[i]);
+      ap[i2][i1] = f[i]/(sd[i]*sd[i]);
+    }
+    VecArrayFloat2 vp = new VecArrayFloat2(ap);
+    VecArrayFloat2 vq = new VecArrayFloat2(aq);
+    SmoothAI sai = new SmoothAI(x1,x2,s1,s2,_tensors,scm,sd);
+    CgSolver cgs = new CgSolver(1e-4,10000);
+    CgSolver.Info info = cgs.solve(sai,vp,vq);
+    return aq;
+  }
+
+  /**
+   * Applies the operator KCmK' + Cd.
+   */
+  private static class SmoothA implements CgSolver.A {
+
+    SmoothA(float[] x1, float[] x2, 
+      Sampling s1, Sampling s2, Tensors2 t,
+      SmoothCovariance cm, float[] sd) 
+    {
+      int n = x1.length;
+      int n1 = s1.getCount();
+      int n2 = s2.getCount();
+      _k1 = new int[n];
+      _k2 = new int[n];
+      for (int i=0; i<n; ++i) {
+        _k1[i] = s1.indexOfNearest(x1[i]);
+        _k2[i] = s2.indexOfNearest(x2[i]);
+      }
+      _bx = new float[n2][n1];
+      _s1 = s1;
+      _s2 = s2;
+      _t = t;
+      _cm = cm;
+      _sd = sd;
+    }
+
+    public void apply(Vec x, Vec y) {
+      float[] ax = ((VecArrayFloat1)x).getArray();
+      float[] ay = ((VecArrayFloat1)y).getArray();
+      int n = ax.length;
+      zero(_bx);
+      for (int i=0; i<n; ++i)
+        _bx[_k2[i]][_k1[i]] = ax[i];
+      _cm.apply(_s1,_s2,_t,_bx);
+      for (int i=0; i<n; ++i)
+        ay[i] = _bx[_k2[i]][_k1[i]]+_sd[i]*_sd[i]*ax[i];
+    }
+
+    private int[] _k1,_k2;
+    private float[][] _bx;
+    private Sampling _s1,_s2;
+    private Tensors2 _t;
+    private SmoothCovariance _cm;
+    private float[] _sd;
+  }
+
+  /**
+   * Applies the preconditioner M; approximates inverse of SmoothA above.
+   */
+  private static class SmoothM implements CgSolver.A {
+
+    SmoothM(float[] x1, float[] x2, 
+      Sampling s1, Sampling s2, Tensors2 t,
+      SmoothCovariance cm, float[] sd) 
+    {
+      int n1 = s1.getCount();
+      int n2 = s2.getCount();
+      int n = x1.length;
+      DMatrix am = new DMatrix(n,n);
+      float[] d = new float[3];
+      for (int i=0; i<n; ++i) {
+        double x1i = x1[i];
+        double x2i = x2[i];
+        int i1 = s1.indexOfNearest(x1i);
+        int i2 = s2.indexOfNearest(x2i);
+        t.getTensor(i1,i2,d);
+        double d11i = d[0], d12i = d[1], d22i = d[2];
+        double deti = d11i*d22i-d12i*d12i;
+        for (int j=0; j<n; ++j) {
+          double x1j = x1[j];
+          double x2j = x2[j];
+          double cij = evaluatePaciorek(s1,s2,t,cm,
+                                        d11i,d12i,d22i,deti,d,
+                                        x1i,x2i,x1j,x2j);
+          am.set(i,j,cij);
+        }
+        am.set(i,i,am.get(i,i)+sd[i]*sd[i]);
+      }
+      am = am.inverse();
+      _am = new float[n][n];
+      for (int i=0; i<n; ++i) {
+        for (int j=0; j<n; ++j) {
+          _am[i][j] = (float)am.get(i,j);
+        }
+      }
+    }
+
+    public void apply(Vec x, Vec y) {
+      float[] ax = ((VecArrayFloat1)x).getArray();
+      float[] ay = ((VecArrayFloat1)y).getArray();
+      int n = ax.length;
+      for (int i=0; i<n; ++i) {
+        float ayi = 0.0f;
+        for (int j=0; j<n; ++j)
+          ayi += _am[i][j]*ax[j];
+        ay[i] = ayi;
+      }
+    }
+
+    private float[][] _am;
+  }
+
+  /**
+   * Applies the operator inv(Cm) + K'inv(Cd)K. This operator is related
+   * to (but not equal to) the inverse of the operator SmoothA above.
+   * The main problems with this operator are that (1) Cd cannot be zero,
+   * and (2) we have no good preconditioner. It's biggest advantage is
+   * that it is fast, because inv(Cm) is sparse.
+   */
+  private static class SmoothAI implements CgSolver.A {
+
+    SmoothAI(float[] x1, float[] x2, 
+      Sampling s1, Sampling s2, Tensors2 t,
+      SmoothCovariance cm, float[] sd) 
+    {
+      int n = x1.length;
+      int n1 = s1.getCount();
+      int n2 = s2.getCount();
+      _s1 = s1;
+      _s2 = s2;
+      _t = t;
+      _cm = cm;
+      _sd = sd;
+      _k1 = new int[n];
+      _k2 = new int[n];
+      for (int i=0; i<n; ++i) {
+        _k1[i] = s1.indexOfNearest(x1[i]);
+        _k2[i] = s2.indexOfNearest(x2[i]);
+      }
+    }
+
+    public void apply(Vec x, Vec y) {
+      float[][] ax = ((VecArrayFloat2)x).getArray();
+      float[][] ay = ((VecArrayFloat2)y).getArray();
+      copy(ax,ay);
+      _cm.applyInverse(_s1,_s2,_t,ay);
+      int n = _k1.length;
+      for (int i=0; i<n; ++i) {
+        int i1 = _k1[i];
+        int i2 = _k2[i];
+        ay[i2][i1] += ax[i2][i1]/(_sd[i]*_sd[i]);
+      }
+    }
+
+    private Sampling _s1,_s2;
+    private Tensors2 _t;
+    private SmoothCovariance _cm;
+    private float[] _sd;
+    private int[] _k1,_k2;
+  }
+
+  private void checkSamplings(Sampling s1, Sampling s2) {
+    Check.argument(s1.isUniform(),"s1 is uniform");
+    Check.argument(s2.isUniform(),"s2 is uniform");
+  }
+
+  private void checkScattered() {
+    Check.state(_f!=null,"scattered samples have been set");
+    Check.state(_x1!=null,"scattered samples have been set"); 
+    Check.state(_x2!=null,"scattered samples have been set");
+  }
+
+  private static void trace(String s) {
+    System.out.println(s);
+  }
+}

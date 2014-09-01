@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+<fullyQualifiedTypeName name="org.jocl.cl_platform_id"/>
+<fullyQualifiedTypeName name="edu.mines.jtk.util.Stopwatch"/>
+<fullyQualifiedTypeName name="edu.mines.jtk.util.ArrayMath"/>
+<fullyQualifiedTypeName name="edu.mines.jtk.mosaic.MosaicTest"/>
+<fullyQualifiedTypeName name="edu.mines.jtk.mosaic.PixelsView"/>
+<fullyQualifiedTypeName name="edu.mines.jtk.dsp.LocalSmoothingFilter"/>
+<fullyQualifiedTypeName name="edu.mines.jtk.dsp.LocalDiffusionKernel.Stencil"/>
+<fullyQualifiedTypeName name="java.lang.System"/>
+<fullyQualifiedTypeName name="org.jocl.CL"/>
+<fullyQualifiedTypeName name="edu.mines.jtk.util.CLUtil"/>
+</qualifiedTypeNameHistroy>

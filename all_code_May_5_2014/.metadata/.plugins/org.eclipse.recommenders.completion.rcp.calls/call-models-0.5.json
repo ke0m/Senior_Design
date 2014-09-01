@@ -1,0 +1,22 @@
+{
+  "C:\\Users\\Dave\\Documents\\Senior_Design\\JOCL-0.1.9-bin\\JOCL-0.1.9.jar": {
+    "location": "C:\\Users\\Dave\\Documents\\Senior_Design\\JOCL-0.1.9-bin\\JOCL-0.1.9.jar",
+    "status": "UNRESOLVED",
+    "error": "No call model found for \u0027C:\\Users\\Dave\\Documents\\Senior_Design\\JOCL-0.1.9-bin\\JOCL-0.1.9.jar\u0027. Neither fingerprint \u0027e0ef09966507d23c2d33398215f268e3a9578fb8\u0027 nor symbolic name \u0027JOCL-0.1.9\u0027 are known."
+  },
+  "C:\\Program Files\\Java\\jre7\\lib\\rt.jar": {
+    "coordinate": "jre:jre:zip:call:1.0.0",
+    "location": "C:\\Program Files\\Java\\jre7\\lib\\rt.jar",
+    "status": "RESOLVED"
+  },
+  "C:\\Users\\Dave\\Documents\\Senior_Design\\Senior_Design\\JOCL\\ArraySumBenchmark\\lib\\edu_mines_jtk.jar": {
+    "location": "C:\\Users\\Dave\\Documents\\Senior_Design\\Senior_Design\\JOCL\\ArraySumBenchmark\\lib\\edu_mines_jtk.jar",
+    "status": "UNRESOLVED",
+    "error": "No call model found for \u0027C:\\Users\\Dave\\Documents\\Senior_Design\\Senior_Design\\JOCL\\ArraySumBenchmark\\lib\\edu_mines_jtk.jar\u0027. Neither fingerprint \u0027f1bc1d58b7d3de65dbc19eeacaefc31340df6181\u0027 nor symbolic name \u0027edu_mines_jtk\u0027 are known."
+  },
+  "C:\\Users\\Dave\\workspace\\Mines_JTK\\src\\main\\java": {
+    "location": "C:\\Users\\Dave\\workspace\\Mines_JTK\\src\\main\\java",
+    "status": "UNRESOLVED",
+    "error": "No class path info available for \u0027C:\\Users\\Dave\\workspace\\Mines_JTK\\src\\main\\java\u0027. Skipped."
+  }
+}

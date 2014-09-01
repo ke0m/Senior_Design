@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy element &apos;LocalSmoothingFilter.java&apos; to &apos;Real_SOS_Smoothing/src/(default package)&apos;&#x0D;&#x0A;- Original project: &apos;Mines_JTK&apos;&#x0D;&#x0A;- Destination element: &apos;Real_SOS_Smoothing/src/(default package)&apos;&#x0D;&#x0A;- Original element: &apos;edu.mines.jtk.dsp.LocalSmoothingFilter.java&apos;" description="Copy compilation unit" destination="=Real_SOS_Smoothing/src&lt;" element1="/src\/main\/java&lt;edu.mines.jtk.dsp{LocalSmoothingFilter.java" files="0" flags="589830" folders="0" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyResources" stamp="1395073308551" units="1" version="1.0"/>
+</session>

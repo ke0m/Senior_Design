@@ -1,0 +1,275 @@
+import edu.mines.jtk.dsp.LocalSmoothingFilter;
+import edu.mines.jtk.util.*;
+import static edu.mines.jtk.dsp.LocalSmoothingFilter.*;
+
+import org.jocl.*;
+
+import java.io.FileNotFoundException;
+import java.util.*;
+
+public class cgkernels {
+	
+	public static void main(String[] args) throws FileNotFoundException
+	{
+		Random rand = new Random();
+		Stopwatch sw = new Stopwatch();
+		boolean check = true;
+		
+		int n1 = 3;
+		int n2 = 3;
+		int dims = n1*n2;
+		
+		float[][] xc = new float[n1][n2];
+		float[][] yc = new float[n1][n2];
+		float[][] xg = new float[n1][n2];
+		float[][] yg = new float[n1][n2];
+		
+		float[] x1 = new float[dims];
+		float[] y1 = new float[dims];
+		
+		
+		
+		for(int i = 0; i < n1; ++i)
+		{
+			for(int j = 0; j < n2; ++j)
+			{
+				xc[i][j] = rand.nextFloat();
+				yc[i][j] = 0.0f;
+				yg[i][j] = 0.0f;
+			}
+
+		}
+		
+		CLUtil.packArray(n1, n2, xc, x1);
+		CLUtil.packArray(n1, n2, yg, y1);
+		
+		String sourceStr = CLUtil.readFile("cgkernels.cl");
+		String[] kernelNames = {"clcopy", "clsaxpy", "clsxpay", "cldot"};
+		
+		CLUtil.clInit(sourceStr, kernelNames);
+		
+		
+		//testing the scopy method
+		cl_mem d_x = CLUtil.createGPUBuffer(dims, "r");
+		cl_mem d_y = CLUtil.createGPUBuffer(dims, "rw");
+		
+		CLUtil.copyToBuffer(x1, d_x, dims);
+		
+		CLUtil.setKernelArg(CLUtil.kernels[0], n1, 0);
+		CLUtil.setKernelArg(CLUtil.kernels[0], n2, 1);
+		CLUtil.setKernelArg(CLUtil.kernels[0], d_x, 2);
+		CLUtil.setKernelArg(CLUtil.kernels[0], d_y, 3);
+		
+		long[] global_work_size_oned = {dims};
+		
+		CLUtil.executeKernel(CLUtil.kernels[0], 1, global_work_size_oned);
+		
+		CLUtil.readFromBuffer(d_y, y1, dims);
+		
+		CLUtil.unPackArray(n1, n2, y1, yg);
+		
+		
+		
+		LocalSmoothingFilter.scopy(xc, yc);
+		
+		for(int i = 0; i < n1; ++i)
+		{
+			for(int j = 0; j < n2; ++j)
+			{
+				if(yc[i][j] == yg[i][j])
+				{
+					continue;
+				}
+				else
+				{
+					System.out.println("Copy Failed at element:" + i + "," + j);
+					System.out.println("CPU Output: " + yc[i][j]);
+					System.out.println("GPU Output: " + yg[i][j]);
+					check = false;
+				}
+			}
+		}
+		
+		
+		if(check == false)
+			System.out.println("Copy Check Failed!");
+		else
+			System.out.println("Copy Check Passed!");
+		
+		
+		//testing the saxpy method
+		check = true;
+		
+		ArrayMath.zero(y1);
+		ArrayMath.zero(yc);
+		ArrayMath.zero(yg);
+		
+		CLUtil.copyToBuffer(y1, d_y, dims);
+		
+		float a = -1.0f;
+		
+		CLUtil.setKernelArg(CLUtil.kernels[1], n1, 0);
+		CLUtil.setKernelArg(CLUtil.kernels[1], n2, 1);
+		CLUtil.setKernelArg(CLUtil.kernels[1], a, 2);
+		CLUtil.setKernelArg(CLUtil.kernels[1], d_x, 3);
+		CLUtil.setKernelArg(CLUtil.kernels[1], d_y, 4);
+		
+		CLUtil.executeKernel(CLUtil.kernels[1], 1, global_work_size_oned);
+		
+		CLUtil.readFromBuffer(d_y, y1, dims);
+		
+		CLUtil.unPackArray(n1, n2, y1, yg);
+		
+		LocalSmoothingFilter.saxpy(a, xc, yc);
+		
+		for(int i = 0; i < n1; ++i)
+		{
+			for(int j = 0; j < n2; ++j)
+			{
+				if(yc[i][j] == yg[i][j])
+				{
+					continue;
+				}
+				else
+				{
+					System.out.println("Saxpy Check Failed at element:" + i + "," + j);
+					System.out.println("CPU Output: " + yc[i][j]);
+					System.out.println("GPU Output: " + yg[i][j]);
+					check = false;
+				}
+			}
+		}
+		
+		if(check == false)
+			System.out.println("Saxpy Check Failed!");
+		else
+			System.out.println("Saxpy Check Passed!");
+		
+		
+		//testing the sxpay method 
+		check = true;
+				
+		ArrayMath.zero(y1);
+		ArrayMath.zero(yc);
+		ArrayMath.zero(yg);
+		
+		CLUtil.copyToBuffer(y1, d_y, dims);
+		
+		float alpha = -2.0f;
+		
+		CLUtil.setKernelArg(CLUtil.kernels[2], n1, 0);
+		CLUtil.setKernelArg(CLUtil.kernels[2], n2, 1);
+		CLUtil.setKernelArg(CLUtil.kernels[2], alpha, 2);
+		CLUtil.setKernelArg(CLUtil.kernels[2], d_x, 3);
+		CLUtil.setKernelArg(CLUtil.kernels[2], d_y, 4);
+		
+		CLUtil.executeKernel(CLUtil.kernels[2], 1, global_work_size_oned);
+		
+		CLUtil.readFromBuffer(d_y, y1, dims);
+		
+		CLUtil.unPackArray(n1, n2, y1, yg);
+		
+		LocalSmoothingFilter.sxpay(alpha, xc, yc);
+		
+		for(int i = 0; i < n1; ++i)
+		{
+			for(int j = 0; j < n2; ++j)
+			{
+				if(yc[i][j] == yg[i][j])
+				{
+					continue;
+				}
+				else
+				{
+					System.out.println("Sxpay Check Failed at element:" + i + "," + j);
+					System.out.println("CPU Output: " + yc[i][j]);
+					System.out.println("GPU Output: " + yg[i][j]);
+					check = false;
+				}
+			}
+		}
+		
+		if(check == false)
+			System.out.println("Sxpay Check Failed!");
+		else
+			System.out.println("Sxpay Check Passed!");
+		
+		
+
+		int work_group_size = 32;
+		int num_groups = dims/work_group_size/4;
+		float[] delta = new float[num_groups];
+		float fdelta = 0.0f;
+		float cdelta = 0.0f;
+		cl_mem d_delta = CLUtil.createGPUBuffer(num_groups, "rw");
+		
+		
+		for(int i = 0; i < dims; i++)
+		{
+			x1[i] = i;//1000.0f*rand.nextFloat();
+			y1[i] = i;
+		}
+		
+		CLUtil.copyToBuffer(x1, d_x, dims);
+		CLUtil.copyToBuffer(y1, d_y, dims);
+		
+		
+		CLUtil.setKernelArg(CLUtil.kernels[3], n1, 0);
+		CLUtil.setKernelArg(CLUtil.kernels[3], n2, 1);
+		CLUtil.setKernelArg(CLUtil.kernels[3], d_x, 2);
+		CLUtil.setKernelArg(CLUtil.kernels[3], d_y, 3);
+		CLUtil.setKernelArg(CLUtil.kernels[3], d_delta, 4);
+		CLUtil.setLocalKernelArg(CLUtil.kernels[3], work_group_size*4, 5);
+		
+		long[] local_work_size_vec = {1024};
+		long[] global_work_size_vec = {((long)Math.ceil(dims/local_work_size_vec[0]/4)+1)*local_work_size_vec[0]}; 
+//		
+//		int maxTime = 2;
+//		int gpucount = 0;
+//		sw.restart();
+//		while(sw.time() < maxTime)
+//		{
+//			CLUtil.executeKernel(CLUtil.kernels[3], 1, global_work_size_vec, local_work_size_vec);
+//			CLUtil.readFromBuffer(d_delta, delta, num_groups);
+//			for(int i = 0; i < num_groups; i++)
+//				fdelta += delta[i];
+//			gpucount++;
+//		}
+//
+//		sw.stop();
+//		double gputime = sw.time();
+//		
+//		int cpucount = 0;
+//		sw.restart();
+//		while(sw.time() < maxTime)
+//		{
+//			cdelta = LocalSmoothingFilter.sdot1(n1, n2, x1, y1);
+//			cpucount++;
+//		}
+//		
+//		sw.stop();
+//		double cputime = sw.time();
+		
+//		
+//		System.out.println("GPU: " + (float)(gpucount*(dims-1)/gputime));
+//		System.out.println("CPU: " + (float)(cpucount*(dims-1)/cputime));
+//		
+		CLUtil.executeKernel(CLUtil.kernels[3], 1, global_work_size_vec, local_work_size_vec);
+		CLUtil.readFromBuffer(d_delta, delta, num_groups);
+		fdelta = ArrayMath.sum(delta);
+		
+		cdelta = LocalSmoothingFilter.sdot1(n1, n2, x1, y1);
+		
+		//FLOPS = iters*(dims-1)
+		
+		System.out.println("Delta GPU: " + fdelta);
+		System.out.println("Delta CPU: " + cdelta);
+		
+		CL.clReleaseMemObject(d_x);
+		CL.clReleaseMemObject(d_y);
+		CL.clReleaseMemObject(d_delta);
+		CLUtil.clRelease();
+				
+	}
+
+}

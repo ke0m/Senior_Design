@@ -1,0 +1,55 @@
+-- VERSION_4
+-- START DISKCACHE
+C:\Users\Dave\workspace\.metadata\.plugins\org.eclipse.core.resources\.projects\Real_Image_Smoothing_v1\com.python.pydev.analysis\v2_indexcache
+root.tensors|1395850762170|C:\Users\Dave\workspace\Real_Image_Smoothing_v1\src\root\tensors.py
+root.test_smooth|1397046084077|C:\Users\Dave\workspace\Real_Image_Smoothing_v1\src\root\test_smooth.py
+root.smooth_bench|1397054032566|C:\Users\Dave\workspace\Real_Image_Smoothing_v1\src\root\smooth_bench.py
+root.__init__|1395500522763|C:\Users\Dave\workspace\Real_Image_Smoothing_v1\src\root\__init__.py
+-- END DISKCACHE
+-- START DICTIONARY
+4
+2=root.tensors
+3=root.test_smooth
+1=root.smooth_bench
+4=RunMain
+-- END DICTIONARY
+-- START TREE 1
+33
+alp|1|alphas!11@
+bac|1|backgroundColor!19@
+c|1|c!11@
+cpu|3|cpudata!11@cputime!11@cpucount!11@
+d00|1|d00!11@
+d01|1|d01!11@
+d02|1|d02!11@
+d04|1|d04!11@
+d11|1|d11!11@
+d12|1|d12!11@
+d14|1|d14!11@
+dif|1|diff!11@
+end|1|endnum!11@
+gog|1|goGradients!18@
+got|1|goTensors!18@
+gpu|3|gpudata!11@gputime!11@gpucount!11@
+j|1|j!11@
+ker|1|kernel!11@
+lof|1|lof!11@
+mai|2|main!26@main!18@
+max|1|maxTime!11@
+plo|2|plotTp!18@plotPnz!18@
+png|1|pngDir!19@
+poi|2|poiv2!11@poiv1!11@
+rea|3|readImage!18@readPnzImage!18@readTpImage!18@
+run|1|RunMain!25@
+s|1|s!11@
+sim|2|simgg!11@simgc!11@
+smo|2|smooth_cpu!11@smooth_gpu!11@
+sp|1|sp!11@
+ste|1|step!11@
+sw|1|sw!11@
+wri|1|writeImage!18@
+-- END TREE
+-- START TREE 2
+1
+run|1|run!4&26@
+-- END TREE

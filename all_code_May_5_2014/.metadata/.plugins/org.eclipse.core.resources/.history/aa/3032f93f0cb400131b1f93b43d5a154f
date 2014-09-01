@@ -1,0 +1,84 @@
+'''
+Created on Mar 24, 2014
+
+@author: Joseph Jennings
+'''
+
+
+from java.awt import *
+from java.lang import *
+from java.nio import *
+from javax.swing import *
+from java.util import *
+
+
+from edu.mines.jtk.awt import *
+from edu.mines.jtk.dsp import *
+from edu.mines.jtk.io import *
+from edu.mines.jtk.mosaic import *
+from edu.mines.jtk.util.ArrayMath import *
+
+from tensors import *
+
+
+n1 = 501;
+n2 = n1;
+
+r = zerofloat(n1,n2)
+sc = zerofloat(n1,n2)
+sg = zerofloat(n1,n2)
+
+
+random = Random()
+
+for i in range(n1):
+    for j in range(n2):
+        r[i][j] = random.nextFloat();
+
+
+##### A Simple Smoothing test using Jython
+kernel = LocalDiffusionKernel(LocalDiffusionKernel.Stencil.D22CL)
+smooth_gpu = LocalSmoothingFilter(0.01, 100, kernel)
+smooth_cpu = LocalSmoothingFilter()
+
+
+smooth_gpu.apply(20,r, sg)
+smooth_gpu.applySmoothS(sg, sg)
+
+smooth_cpu.apply(20, r, sc) # The first argument of the method apply is the the Tensors2 variable
+smooth_cpu.applySmoothS(sc, sc)
+
+
+#####Now attepting to Smooth the proveid seismic image#####
+
+
+iimg, s1, s2 = readPnzImage()
+simgc = zerofloat(len(s1.getValues()), len(s2.getValues()));
+
+lof = LocalOrientFilter(4.0)
+s = lof.applyForTensors(iimg)
+d00 = EigenTensors2(s); d00.invertStructure(0.0,0.0)
+
+smooth_cpu.apply(20, iimg, simgc)
+smooth_cpu.applySmoothS(simgc, simgc);
+
+#######Plotting the smoothed images#######
+sin = SimplePlot()
+spc = SimplePlot()
+spg = SimplePlot()
+
+
+plotPnz(iimg, s1, s2, dscale=1)
+
+spg.addPixels(sg)
+spg.setTitle("Smoothed Image - GPU")
+spg.addColorBar()
+
+plotPnz(simgc, s1, s2, dscale=1)
+        
+        
+    
+    
+    
+    
+    

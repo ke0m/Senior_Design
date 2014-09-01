@@ -1,0 +1,105 @@
+-- VERSION_4
+-- START DISKCACHE
+C:\Users\Dave\workspace\.metadata\.plugins\org.eclipse.core.resources\.projects\Real_Image_Smoothing\com.python.pydev.analysis\v2_indexcache
+root.tensors|1399298780012|C:\Users\Dave\workspace\Real_Image_Smoothing\src\root\tensors.py
+root.jocl_smoother|1399270902928|C:\Users\Dave\workspace\Real_Image_Smoothing\src\root\jocl_smoother.py
+root.test_smooth|1399268480373|C:\Users\Dave\workspace\Real_Image_Smoothing\src\root\test_smooth.py
+root.amd_plot|1398688876860|C:\Users\Dave\workspace\Real_Image_Smoothing\src\root\amd_plot.py
+root.smooth_bench|1398687596374|C:\Users\Dave\workspace\Real_Image_Smoothing\src\root\smooth_bench.py
+root.java_smoother|1399270577114|C:\Users\Dave\workspace\Real_Image_Smoothing\src\root\java_smoother.py
+root.demo_test|1399261197255|C:\Users\Dave\workspace\Real_Image_Smoothing\src\root\demo_test.py
+root.__init__|1395500522763|C:\Users\Dave\workspace\Real_Image_Smoothing\src\root\__init__.py
+-- END DISKCACHE
+-- START DICTIONARY
+7
+3=root.tensors
+5=root.jocl_smoother
+6=root.test_smooth
+2=root.smooth_bench
+1=root.amd_plot
+7=RunMain
+4=root.java_smoother
+-- END DICTIONARY
+-- START TREE 1
+76
+!<m|0|
+af1|0|
+af2|0|
+alp|2|alphas!11@alphas!19@
+ax|0|
+bac|1|backgroundColor!27@
+box|0|
+c|1|c!19@
+cop|1|copydata!11@
+cpu|3|cputime!19@cpucount!19@cpudata!19@
+d00|1|d00!19@
+d01|1|d01!19@
+d02|1|d02!19@
+d04|1|d04!19@
+d11|1|d11!19@
+d12|1|d12!19@
+d14|1|d14!19@
+dif|1|diff!19@
+end|2|endnum!19@endnum!11@
+fgp|1|fgpudata!19@
+fil|2|file2!11@file1!11@
+gog|1|goGradients!26@
+got|1|goTensors!26@
+gpu|3|gputime!19@gpudata!19@gpucount!19@
+i|1|i!11@
+iim|1|iimg!19@
+ite|1|iterflops!19@
+j|1|j!19@
+jav|2|java_smoother!34@java_smoother!42@
+k|1|k!11@
+ker|1|kernel!19@
+leg|0|
+lin|2|line1!11@line!11@
+lof|1|lof!19@
+mai|2|main!26@main!50@
+max|1|maxTime!19@
+n1|1|n1!19@
+n2|1|n2!19@
+nam|0|
+par|0|
+per|0|
+pf|0|
+plo|2|plotPnz!26@plotTp!26@
+png|1|pngDir!27@
+poi|5|poiv1!19@poiv2!19@poiv3!19@poiv2!11@poiv1!11@
+pp|0|
+pv|0|
+pv1|0|
+pv2|0|
+r|0|
+ran|0|
+rea|4|realdata!11@readPnzImage!26@readImage!26@readTpImage!26@
+run|1|RunMain!49@
+s|1|s!19@
+s1|1|s1!19@
+s2|1|s2!19@
+sc|0|
+sg|0|
+sim|2|simgc!19@simgg!19@
+sin|0|
+siz|0|
+smo|2|smooth_gpu!19@smooth_cpu!19@
+sp|2|sp!11@sp!19@
+sp1|1|sp1!19@
+sp2|0|
+spa|1|spart!11@
+spc|0|
+spe|1|speedup!19@
+spg|0|
+sta|2|startnum!19@startnum!11@
+ste|2|step!11@step!19@
+sw|1|sw!19@
+tes|0|
+tot|1|totalnumflops!19@
+wri|1|writeImage!26@
+x|1|x!11@
+-- END TREE
+-- START TREE 2
+1
+run|1|run!7&50@
+-- END TREE
