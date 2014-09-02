@@ -11,7 +11,7 @@ is a small extension within the LocalSmoothingFilter class of the Mines JTK.
 It utilizes the [JOCL](http://www.jocl.org/) libraries (Java bindings for OpenCL) to multi-thread the 
 LocalSmoothingFilter kernel on a GPU (Graphics Processing Unit). 
 
-The remaining software consists mostly of toy JOCL and OpenCL programs to I used to familiarize 
+The remaining software consists mostly of toy JOCL and OpenCL programs I used to familiarize 
 myself with the OpenCL library.
 
 
