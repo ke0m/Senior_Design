@@ -15,6 +15,8 @@ int main(int argc, const char * argv[]) {
 
   std::ofstream inputData;
   std::ofstream cpuOutput;
+  cpuOutput.open("cpuoutput.txt");
+  inputData.open("inputData.txt");
 
   float ***h_r   =  new float**[n1];
   float ***s     =  new float**[n1];
@@ -24,7 +26,7 @@ int main(int argc, const char * argv[]) {
   float ***h_d22 =  new float**[n1];
   float ***h_d23 =  new float**[n1];
   float ***h_d33 =  new float**[n1];
-
+  
   for(int i=0; i<n1; i++) {
     h_r[i]   = new float*[n2];
     s[i]     = new float*[n2];
@@ -34,17 +36,24 @@ int main(int argc, const char * argv[]) {
     h_d22[i] = new float*[n2];
     h_d23[i] = new float*[n2];
     h_d33[i] = new float*[n2];
+  }
+
+  for(int i=0; i<n1; i++) {
+    for(int j=0; j<n2; j++) {
+      h_r[i][j]   = new float[n3];
+      s[i][j]     = new float[n3];
+      h_d11[i][j] = new float[n3];
+      h_d12[i][j] = new float[n3];
+      h_d13[i][j] = new float[n3];
+      h_d22[i][j] = new float[n3];
+      h_d23[i][j] = new float[n3];
+      h_d33[i][j] = new float[n3];
+    }
+  }
+
+  for(int i=0; i<n1; i++) {
     for(int j=0; j<n2; j++) {
       for(int k=0; k<n3; k++) {
-        h_r[j][k]   = new float[n3];
-        s[j][k]     = new float[n3];
-        h_d11[j][k] = new float[n3];
-        h_d12[j][k] = new float[n3];
-        h_d13[j][k] = new float[n3];
-        h_d22[j][k] = new float[n3];
-        h_d23[j][k] = new float[n3];
-        h_d33[j][k] = new float[n3];
-        /* Initializing the arrays */
         h_r[i][j][k]   = (float)rand()/(float)RAND_MAX;
         h_d11[i][j][k] = (float)rand()/(float)RAND_MAX;
         h_d12[i][j][k] = (float)rand()/(float)RAND_MAX;
@@ -53,11 +62,10 @@ int main(int argc, const char * argv[]) {
         h_d23[i][j][k] = (float)rand()/(float)RAND_MAX;
         h_d33[i][j][k] = (float)rand()/(float)RAND_MAX;
         s[i][j][k]     = 0.0f;
-        //printf("i=%d j=%d k=%d h_r=%f\n", i,j,k,h_r[i][j][k]);
       }
-      //printf("\n");
     }
   }
+
 
   float e11, e12, e13, e22, e23, e33;
   float r000, r001, r010, r011, r100, r101, r110, r111;
@@ -113,6 +121,23 @@ int main(int argc, const char * argv[]) {
     }
   }
 
+  //Writing out the computed values for plotting
+  for(int i=0; i<n1; i++) {
+    for(int j=0; j<n2; j++) {
+      for(int k=0; k<n3; k++) {
+        inputData << h_r[i][j][k] << " ";
+        cpuOutput << s[i][j][k]   << " ";
+      }
+      inputData << std::endl;
+      cpuOutput << std::endl;
+    }
+    inputData << std::endl << std::endl;
+    cpuOutput << std::endl << std::endl;
+  }
+
+  cpuOutput.close();
+  inputData.close();
+
   for(int i=0; i<n1; i++) {
     for(int j=0; j<n2; j++) {
       delete [] h_r[i][j]; 
@@ -143,10 +168,8 @@ int main(int argc, const char * argv[]) {
   delete [] h_d23; 
   delete [] h_d33; 
 
-
-  cpuOutput.close();
-  inputData.close();
-
+  system("python volume_slicer.py &");
+  system("python volume_slicer_cpu.py &");
 
   return 0;
 
