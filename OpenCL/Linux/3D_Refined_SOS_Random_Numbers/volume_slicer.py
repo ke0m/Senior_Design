@@ -53,18 +53,21 @@ from mayavi.core.ui.api import SceneEditor, MayaviScene, \
 #data = np.sin(3*x)/x + 0.05*z**2 + np.cos(3*y)
 #data = x*randrange(-10,10) + y*randrange(-10,10) + z*randrange(-10,10)
 #Creating a 3D numpy array
-dim = 128;
-data = np.empty((dim,dim,dim));
-for i in range(dim):
-    for j in range(dim):
-        for k in range(dim):
-            data[i,j,k] = randrange(-100,100);
+#dim = 128;
+#data = np.empty((dim,dim+2,dim+4));
+#for i in range(dim):
+#    for j in range(dim+2):
+#        for k in range(dim+4):
+#            data[i,j,k] = randrange(-100,100);
 
 ###############################################################################
 # Read data in from a file
 
+inputdata = np.loadtxt("inputData.txt");
 
-
+dim3 = len(inputdata[0]);
+inputdata3d = inputdata.reshape(dim3-4, dim3-2, dim3);
+inputdata3d.shape
 ################################################################################
 # The object implementing the dialog
 class VolumeSlicer(HasTraits):
@@ -234,5 +237,5 @@ class VolumeSlicer(HasTraits):
                 )
 
 
-m = VolumeSlicer(data=data)
+m = VolumeSlicer(data=inputdata3d)
 m.configure_traits()
