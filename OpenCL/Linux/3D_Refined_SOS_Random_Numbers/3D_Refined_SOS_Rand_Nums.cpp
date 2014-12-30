@@ -36,14 +36,6 @@ int convertToString(const char *filename, std::string& s)
   return 1;
 }
 
-/*
- * TODO- debug this code
- * 1. Copy the inputs to and from the GPU to determine if they are the same as CPU
- * 2. Write a prepare parallel for this code. Not all of the values will be the same, but it should mostly match.
- * 3. Do for very small constant valued input arrays
- * 4. Systematically go through kernel and check each line. Copy back values systematically.
- */ 
-
 int main(int argc, const char * argv[]) {
 
   const int n1   = 64;
@@ -58,8 +50,7 @@ int main(int argc, const char * argv[]) {
   size_t log_size;
   std::string programLog;
 
-
-  //OpenCL declataration and initialization
+  //OpenCL declaration and initialization
   cl_platform_id platform;
   cl_device_id device;
   cl_context context;
@@ -129,7 +120,7 @@ int main(int argc, const char * argv[]) {
     exit(1);
   }
 
-  kernel1 = clCreateKernel(program, "soSmoothingNew3d", &err);  //first kernel I wrote. It made sense to me to write it this way but it is hard to read
+  kernel1 = clCreateKernel(program, "soSmoothingNew3d", &err); 
   if(err != CL_SUCCESS){
     std::cout << "Error: Could not create the kernel." << std::endl;
     std::cout << "OpenCL error code: " << err << std::endl;
@@ -212,6 +203,7 @@ int main(int argc, const char * argv[]) {
   float *h_d22_1 = new float[dims];
   float *h_d23_1 = new float[dims];
   float *h_d33_1 = new float[dims];
+  float *test    = new float[dims];
 
   int idx = 0;
   for(int i=0; i<n1; i++) {
@@ -229,17 +221,6 @@ int main(int argc, const char * argv[]) {
       }
     }
   }
-
-  /*
-  //Testing 1D indexing into 3D
-  for(int i=0; i<n1; i++) {
-  for(int j=0; j<n2; j++) {
-  for(int k=0; k<n3; k++) {
-  printf("h_r=%f h_r1=%f\n", h_r[i][j][k], h_r1[i+j*n1+k*n1*n2]);
-  }
-  }
-  }
-  */
 
   float e11, e12, e13, e22, e23, e33;
   float r000, r001, r010, r011, r100, r101, r110, r111;
@@ -295,7 +276,6 @@ int main(int argc, const char * argv[]) {
       }
     }
   }
-
 
   cl_mem d_s, d_r, d_d11, d_d12, d_d13, d_d22, d_d23, d_d33;
 
@@ -444,7 +424,6 @@ int main(int argc, const char * argv[]) {
 
   //First kernel in the program: used in order to zero out the input s array
   size_t oned_global_work_size = dims;
-  //printf("dims=%d\n",dims);
   err = clEnqueueNDRangeKernel(queue, kernel0, 1, NULL, &oned_global_work_size, NULL, 0, NULL, NULL);
   if(err != CL_SUCCESS){
     std::cout << "Error: Could not execute the kernel." << std::endl;
@@ -583,17 +562,16 @@ int main(int argc, const char * argv[]) {
     std::cout << "OpenCL error code: " << std::endl;
     exit(1);
   }
-
+  
   //Unpacking the array
   for(int i=0; i<n1; i++) {
     for(int j=0; j<n2; j++) {
       for(int k=0; k<n3; k++) {
         h_s[i][j][k] = h_s1[i+j*n1+k*n1*n2];
-        //printf("h_s=%f\n", h_s[i][j][k]);
       }
     }
   }
-
+  
   //Verify the results
   bool check = true;
   int numfails = 0;
@@ -626,6 +604,7 @@ int main(int argc, const char * argv[]) {
     printf("Check Failed! Number of fails: %d\n\n", numfails);
   }
 
+  //Releasing allocated memory on the GPU
   clReleaseMemObject(d_r);
   clReleaseMemObject(d_s);
   clReleaseMemObject(d_d11);
@@ -702,11 +681,13 @@ int main(int argc, const char * argv[]) {
   delete [] h_d22_1;
   delete [] h_d23_1;
   delete [] h_d33_1;
+  delete [] test;
 
-
-  //system("python volume_slicer.py &");
-  //system("python volume_slicer_cpu.py &");
-  //system("python volume_slicer_gpu.py &");
+  //Plotting the results with python mayavi
+  system("python volume_slicer.py &");
+  system("python volume_slicer_cpu.py &");
+  system("python volume_slicer_gpu.py &");
+  system("python volume_slicer_diff.py &");
 
   return 0;
 
