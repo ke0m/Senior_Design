@@ -41,7 +41,10 @@ __kernel void soSmoothingNew3d(__global const float* restrict d_r,
 
 	e11  = alpha * d_d11[i2+i1*n1+i3*n1*n2]; //fill matrices here with random numbers
 	e12  = alpha * d_d12[i2+i1*n1+i3*n1*n2]; //fill D matrix with random numbers
-	e22  = alpha * d_d22[i2+i1*n1+i3*n1*n2];
+	e13  = alpha * d_d13[i2+i1*n1+i3*n1*n2];
+  e22  = alpha * d_d22[i2+i1*n1+i3*n1*n2];
+  e23  = alpha * d_d23[i2+i1*n1+i3*n1*n2];
+  e33  = alpha * d_d33[i2+i1*n1+i3*n1*n2];
 	r000 = d_r[i2+i1*n1+i3*n1*n2];
 	r001 = d_r[i2+i1*n1+(i3-1)*n1*n2];
 	r010 = d_r[i2+(i1-1)*n1+i3*n1*n2];
@@ -56,7 +59,7 @@ __kernel void soSmoothingNew3d(__global const float* restrict d_r,
   rc = r010-r101;
   rd = r100-r011;
 	r1 = ra-rb+rc+rd;
-	r2 = ra+rb+rc-rd;
+	r2 = ra+rb-rc+rd;
   r3 = ra+rb+rc-rd;
 	s_1 = e11*r1+e12*r2+e13*r3;
 	s_2 = e12*r1+e22*r2+e23*r3;
