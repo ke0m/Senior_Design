@@ -14,6 +14,121 @@
  * 3. Convert the data selction loops to a function
  */
 
+void soscpukernel3d(float ***r, float ***d11, float ***d12, float ***d13, float ***d22, float ***d23, float ***d33, float alpha, float ***s, int n1, int n2, int n3) {
+
+  float e11, e12, e13, e22, e23, e33;
+  float r000, r001, r010, r011, r100, r101, r110, r111;
+  float ra, rb, rc, rd, rs;
+  float sa, sb, sc, sd;
+  float r1, r2, r3;
+  float s1, s2, s3;
+
+  for (int i3=1; i3<n1; ++i3) {
+    for (int i2=1; i2<n2; ++i2) {
+      for (int i1=1; i1<n3; ++i1) {
+        e11 = alpha*d11[i3][i2][i1]; // smoothing
+        e12 = alpha*d12[i3][i2][i1]; // tensor
+        e13 = alpha*d13[i3][i2][i1]; // coefficients
+        e22 = alpha*d22[i3][i2][i1];
+        e23 = alpha*d23[i3][i2][i1];
+        e33 = alpha*d33[i3][i2][i1];
+        r000 = r[i3 ][i2 ][i1 ];
+        r001 = r[i3 ][i2 ][i1-1];
+        r010 = r[i3 ][i2-1][i1 ];
+        r011 = r[i3 ][i2-1][i1-1];
+        r100 = r[i3-1][i2 ][i1 ];
+        r101 = r[i3-1][i2 ][i1-1];
+        r110 = r[i3-1][i2-1][i1 ];
+        r111 = r[i3-1][i2-1][i1-1];
+        rs = 0.25f*(r000+r001+r010+r011+
+            r100+r101+r110+r111); // for B’B
+        ra = r000-r111;
+        rb = r001-r110;
+        rc = r010-r101;
+        rd = r100-r011;
+        r1 = ra-rb+rc+rd; // three
+        r2 = ra+rb-rc+rd; // components of
+        r3 = ra+rb+rc-rd; // gradient of r
+        s1 = e11*r1+e12*r2+e13*r3; // multiplied by
+        s2 = e12*r1+e22*r2+e23*r3; // the smoothing
+        s3 = e13*r1+e23*r2+e33*r3; // tensor
+        sa = s1+s2+s3;
+        sb = s1-s2+s3;
+        sc = s1+s2-s3;
+        sd = s1-s2-s3;
+        s[i3  ][i2  ][i1  ] += sa+rs;
+        s[i3  ][i2  ][i1-1] -= sd-rs;
+        s[i3  ][i2-1][i1  ] += sb+rs;
+        s[i3  ][i2-1][i1-1] -= sc-rs;
+        s[i3-1][i2  ][i1  ] += sc+rs;
+        s[i3-1][i2  ][i1-1] -= sb-rs;
+        s[i3-1][i2-1][i1  ] += sd+rs;
+        s[i3-1][i2-1][i1-1] -= sa-rs;
+      }
+    }
+  }
+}
+
+void data_carve_prep(float ***r, float ***ra, float ***d11, float ***d11a, float ***d12, float ***d12a, float ***d13, float ***d13a, float ***d22, float ***d22a, float ***d23, float ***d23a, float ***d33, float ***d33a, float ***s, float ***s_a, int istart, int jstart, int kstart, int n1, int n2, int n3) {
+
+  for(int i=istart; i<n1; i++) {
+    for(int j=jstart; j<n2; j++) {
+      for(int k=kstart; k<n3; k++) {
+        ra[i][j][k]   = r[i][j][k];
+        d11a[i][j][k] = d11[i][j][k];
+        d12a[i][j][k] = d12[i][j][k];
+        d13a[i][j][k] = d13[i][j][k];
+        d22a[i][j][k] = d22[i][j][k];
+        d23a[i][j][k] = d23[i][j][k];
+        d33a[i][j][k] = d33[i][j][k];
+        s_a[i][j][k]  = 0.0f;
+      }
+    }
+  }
+
+}
+
+//I need to offset here. I think I can check if istart, jstart, or kstart are not 0
+void data_carve_prep(float ***r, float ***ra, float ***d11, float ***d11a, float ***d12, float ***d12a, float ***d13, float ***d13a, float ***d22, float ***d22a, float ***d23, float ***d23a, float ***d33, float ***d33a, float ***s, float ***s_a, int istart, int jstart, int kstart, int n1, int n2, int n3, float ***st) {
+
+  for(int i=istart; i<n1; i++) {
+    for(int j=jstart; j<n2; j++) {
+      for(int k=kstart; k<n3; k++) {
+        if(istart != 0) {
+          ra[i-istart][j][k]   = r[i][j][k];
+          d11a[i-istart][j][k] = d11[i][j][k];
+          d12a[i-istart][j][k] = d12[i][j][k];
+          d13a[i-istart][j][k] = d13[i][j][k];
+          d22a[i-istart][j][k] = d22[i][j][k];
+          d23a[i-istart][j][k] = d23[i][j][k];
+          d33a[i-istart][j][k] = d33[i][j][k];
+          s_a[i-istart][j][k]  = 0.0f;
+        }
+        else if(jstart != 0) {
+          ra[i][j-jstart][k]   = r[i][j][k];
+          d11a[i][j-jstart][k] = d11[i][j][k];
+          d12a[i][j-jstart][k] = d12[i][j][k];
+          d13a[i][j-jstart][k] = d13[i][j][k];
+          d22a[i][j-jstart][k] = d22[i][j][k];
+          d23a[i][j-jstart][k] = d23[i][j][k];
+          d33a[i][j-jstart][k] = d33[i][j][k];
+          s_a[i][j-jstart][k]  = 0.0f;
+        }
+        else if(kstart != 0) {
+          ra[i][j][k-kstart]   = r[i][j][k];
+          d11a[i][j][k-kstart] = d11[i][j][k];
+          d12a[i][j][k-kstart] = d12[i][j][k];
+          d13a[i][j][k-kstart] = d13[i][j][k];
+          d22a[i][j][k-kstart] = d22[i][j][k];
+          d23a[i][j][k-kstart] = d23[i][j][k];
+          d33a[i][j][k-kstart] = d33[i][j][k];
+          s_a[i][j][k-kstart]  = 0.0f;
+        }
+      }
+    }
+  }
+}
+
 int main(int argc, const char * argv[]) {
 
   const int n1   = 16;
@@ -126,6 +241,11 @@ int main(int argc, const char * argv[]) {
     }
   }
 
+  float alpha = 18.0f;
+
+  //process entire dataset
+  soscpukernel3d(h_r, h_d11, h_d12, h_d13, h_d22, h_d23, h_d33, alpha, s, n1, n2, n3);
+
   //Copying the first pass to the fourthed arrays
   for(int i=0; i<n1a; i++) {
     for(int j=0; j<n2a; j++) {
@@ -142,110 +262,8 @@ int main(int argc, const char * argv[]) {
     }
   }
 
-
-  float e11, e12, e13, e22, e23, e33;
-  float r000, r001, r010, r011, r100, r101, r110, r111;
-  float ra, rb, rc, rd, rs;
-  float sa, sb, sc, sd;
-  float r1, r2, r3;
-  float s1, s2, s3;
-
-  float alpha = 18.0f;
-
-  //3D SOS kernel 
-  // Full process
-  for (int i3=1; i3<n1; ++i3) {
-    for (int i2=1; i2<n2; ++i2) {
-      for (int i1=1; i1<n3; ++i1) {
-        e11 = alpha*h_d11[i3][i2][i1]; // smoothing
-        e12 = alpha*h_d12[i3][i2][i1]; // tensor
-        e13 = alpha*h_d13[i3][i2][i1]; // coefficients
-        e22 = alpha*h_d22[i3][i2][i1];
-        e23 = alpha*h_d23[i3][i2][i1];
-        e33 = alpha*h_d33[i3][i2][i1];
-        r000 = h_r[i3 ][i2 ][i1 ];
-        r001 = h_r[i3 ][i2 ][i1-1];
-        r010 = h_r[i3 ][i2-1][i1 ];
-        r011 = h_r[i3 ][i2-1][i1-1];
-        r100 = h_r[i3-1][i2 ][i1 ];
-        r101 = h_r[i3-1][i2 ][i1-1];
-        r110 = h_r[i3-1][i2-1][i1 ];
-        r111 = h_r[i3-1][i2-1][i1-1];
-        rs = 0.25f*(r000+r001+r010+r011+
-            r100+r101+r110+r111); // for B’B
-        ra = r000-r111;
-        rb = r001-r110;
-        rc = r010-r101;
-        rd = r100-r011;
-        r1 = ra-rb+rc+rd; // three
-        r2 = ra+rb-rc+rd; // components of
-        r3 = ra+rb+rc-rd; // gradient of r
-        s1 = e11*r1+e12*r2+e13*r3; // multiplied by
-        s2 = e12*r1+e22*r2+e23*r3; // the smoothing
-        s3 = e13*r1+e23*r2+e33*r3; // tensor
-        sa = s1+s2+s3;
-        sb = s1-s2+s3;
-        sc = s1+s2-s3;
-        sd = s1-s2-s3;
-        s[i3  ][i2  ][i1  ] += sa+rs;
-        s[i3  ][i2  ][i1-1] -= sd-rs;
-        s[i3  ][i2-1][i1  ] += sb+rs;
-        s[i3  ][i2-1][i1-1] -= sc-rs;
-        s[i3-1][i2  ][i1  ] += sc+rs;
-        s[i3-1][i2  ][i1-1] -= sb-rs;
-        s[i3-1][i2-1][i1  ] += sd+rs;
-        s[i3-1][i2-1][i1-1] -= sa-rs;
-      }
-    }
-  }
-
-  //3D SOS kernel
-  // First pass
-  printf("Starting first pass!\n\n");
-  for (int i3=1; i3<n1a; ++i3) {
-    for (int i2=1; i2<n2a; ++i2) {
-      for (int i1=1; i1<n3a; ++i1) {
-        e11 = alpha*h_d11a[i3][i2][i1]; // smoothing
-        e12 = alpha*h_d12a[i3][i2][i1]; // tensor
-        e13 = alpha*h_d13a[i3][i2][i1]; // coefficients
-        e22 = alpha*h_d22a[i3][i2][i1];
-        e23 = alpha*h_d23a[i3][i2][i1];
-        e33 = alpha*h_d33a[i3][i2][i1];
-        r000 = h_ra[i3 ][i2 ][i1 ];
-        r001 = h_ra[i3 ][i2 ][i1-1];
-        r010 = h_ra[i3 ][i2-1][i1 ];
-        r011 = h_ra[i3 ][i2-1][i1-1];
-        r100 = h_ra[i3-1][i2 ][i1 ];
-        r101 = h_ra[i3-1][i2 ][i1-1];
-        r110 = h_ra[i3-1][i2-1][i1 ];
-        r111 = h_ra[i3-1][i2-1][i1-1];
-        rs = 0.25f*(r000+r001+r010+r011+
-            r100+r101+r110+r111); // for B’B
-        ra = r000-r111;
-        rb = r001-r110;
-        rc = r010-r101;
-        rd = r100-r011;
-        r1 = ra-rb+rc+rd; // three
-        r2 = ra+rb-rc+rd; // components of
-        r3 = ra+rb+rc-rd; // gradient of r
-        s1 = e11*r1+e12*r2+e13*r3; // multiplied by
-        s2 = e12*r1+e22*r2+e23*r3; // the smoothing
-        s3 = e13*r1+e23*r2+e33*r3; // tensor
-        sa = s1+s2+s3;
-        sb = s1-s2+s3;
-        sc = s1+s2-s3;
-        sd = s1-s2-s3;
-        s_a[i3  ][i2  ][i1  ] += sa+rs;
-        s_a[i3  ][i2  ][i1-1] -= sd-rs;
-        s_a[i3  ][i2-1][i1  ] += sb+rs;
-        s_a[i3  ][i2-1][i1-1] -= sc-rs;
-        s_a[i3-1][i2  ][i1  ] += sc+rs;
-        s_a[i3-1][i2  ][i1-1] -= sb-rs;
-        s_a[i3-1][i2-1][i1  ] += sd+rs;
-        s_a[i3-1][i2-1][i1-1] -= sa-rs;
-      }
-    }
-  }
+  //chunk 0,0,0
+  soscpukernel3d(h_ra, h_d11a, h_d12a, h_d13a, h_d22a, h_d23a, h_d33a, alpha, s_a, n1a, n2a, n3a);
 
   //Copy the remainder of the inputs
   //from the whole arrays to the 
@@ -254,7 +272,6 @@ int main(int argc, const char * argv[]) {
     for(int j=0; j<n2a; j++) {
       for(int k=0; k<n3a; k++) {
         st[i-n1a][j][k]     = s_a[i-n1a][j][k]; //copying the results to the total array
-//        printf("st: %f i: %d j:%d k:%d\n", st[i-n1a][j-n2a][k-n3a], i-n1a, j-n2a, k-n3a); 
         h_ra[i-n1a][j][k]   = h_r[i][j][k];
         h_d11a[i-n1a][j][k] = h_d11[i][j][k];
         h_d12a[i-n1a][j][k] = h_d12[i][j][k];
@@ -267,53 +284,8 @@ int main(int argc, const char * argv[]) {
     }
   }
 
-  //3D SOS kernel
-  //second pass
-  //printf("Starting second pass!\n\n");
-  for (int i3=1; i3<n1a; ++i3) {
-    for (int i2=1; i2<n2a; ++i2) {
-      for (int i1=1; i1<n3a; ++i1) {
-        e11 = alpha*h_d11a[i3][i2][i1]; // smoothing
-        e12 = alpha*h_d12a[i3][i2][i1]; // tensor
-        e13 = alpha*h_d13a[i3][i2][i1]; // coefficients
-        e22 = alpha*h_d22a[i3][i2][i1];
-        e23 = alpha*h_d23a[i3][i2][i1];
-        e33 = alpha*h_d33a[i3][i2][i1];
-        r000 = h_ra[i3 ][i2 ][i1 ];
-        r001 = h_ra[i3 ][i2 ][i1-1];
-        r010 = h_ra[i3 ][i2-1][i1 ];
-        r011 = h_ra[i3 ][i2-1][i1-1];
-        r100 = h_ra[i3-1][i2 ][i1 ];
-        r101 = h_ra[i3-1][i2 ][i1-1];
-        r110 = h_ra[i3-1][i2-1][i1 ];
-        r111 = h_ra[i3-1][i2-1][i1-1];
-        rs = 0.25f*(r000+r001+r010+r011+
-            r100+r101+r110+r111); // for B’B
-        ra = r000-r111;
-        rb = r001-r110;
-        rc = r010-r101;
-        rd = r100-r011;
-        r1 = ra-rb+rc+rd; // three
-        r2 = ra+rb-rc+rd; // components of
-        r3 = ra+rb+rc-rd; // gradient of r
-        s1 = e11*r1+e12*r2+e13*r3; // multiplied by
-        s2 = e12*r1+e22*r2+e23*r3; // the smoothing
-        s3 = e13*r1+e23*r2+e33*r3; // tensor
-        sa = s1+s2+s3;
-        sb = s1-s2+s3;
-        sc = s1+s2-s3;
-        sd = s1-s2-s3;
-        s_a[i3  ][i2  ][i1  ] += sa+rs;
-        s_a[i3  ][i2  ][i1-1] -= sd-rs;
-        s_a[i3  ][i2-1][i1  ] += sb+rs;
-        s_a[i3  ][i2-1][i1-1] -= sc-rs;
-        s_a[i3-1][i2  ][i1  ] += sc+rs;
-        s_a[i3-1][i2  ][i1-1] -= sb-rs;
-        s_a[i3-1][i2-1][i1  ] += sd+rs;
-        s_a[i3-1][i2-1][i1-1] -= sa-rs;
-      }
-    }
-  }
+  //chunk 1,0,0
+  soscpukernel3d(h_ra, h_d11a, h_d12a, h_d13a, h_d22a, h_d23a, h_d33a, alpha, s_a, n1a, n2a, n3a);
 
   //Copy the remainder of the inputs
   //from the whole arrays to the 
@@ -322,7 +294,6 @@ int main(int argc, const char * argv[]) {
     for(int j=n2a; j<n2; j++) {
       for(int k=0; k<n3a; k++) {
         st[i+n1a][j-n2a][k] = s_a[i][j-n2a][k]; //copying the results to the total array
-//        printf("st: %f i: %d j:%d k:%d\n", st[i-n1a][j-n2a][k-n3a], i-n1a, j-n2a, k-n3a); 
         h_ra[i][j-n2a][k]   = h_r[i][j][k];
         h_d11a[i][j-n2a][k] = h_d11[i][j][k];
         h_d12a[i][j-n2a][k] = h_d12[i][j][k];
@@ -335,61 +306,15 @@ int main(int argc, const char * argv[]) {
     }
   }
 
-  //3D SOS kernel
-  printf("Starting second pass!\n\n");
-  for (int i3=1; i3<n1a; ++i3) {
-    for (int i2=1; i2<n2a; ++i2) {
-      for (int i1=1; i1<n3a; ++i1) {
-        e11 = alpha*h_d11a[i3][i2][i1]; // smoothing
-        e12 = alpha*h_d12a[i3][i2][i1]; // tensor
-        e13 = alpha*h_d13a[i3][i2][i1]; // coefficients
-        e22 = alpha*h_d22a[i3][i2][i1];
-        e23 = alpha*h_d23a[i3][i2][i1];
-        e33 = alpha*h_d33a[i3][i2][i1];
-        r000 = h_ra[i3 ][i2 ][i1 ];
-        r001 = h_ra[i3 ][i2 ][i1-1];
-        r010 = h_ra[i3 ][i2-1][i1 ];
-        r011 = h_ra[i3 ][i2-1][i1-1];
-        r100 = h_ra[i3-1][i2 ][i1 ];
-        r101 = h_ra[i3-1][i2 ][i1-1];
-        r110 = h_ra[i3-1][i2-1][i1 ];
-        r111 = h_ra[i3-1][i2-1][i1-1];
-        rs = 0.25f*(r000+r001+r010+r011+
-            r100+r101+r110+r111); // for B’B
-        ra = r000-r111;
-        rb = r001-r110;
-        rc = r010-r101;
-        rd = r100-r011;
-        r1 = ra-rb+rc+rd; // three
-        r2 = ra+rb-rc+rd; // components of
-        r3 = ra+rb+rc-rd; // gradient of r
-        s1 = e11*r1+e12*r2+e13*r3; // multiplied by
-        s2 = e12*r1+e22*r2+e23*r3; // the smoothing
-        s3 = e13*r1+e23*r2+e33*r3; // tensor
-        sa = s1+s2+s3;
-        sb = s1-s2+s3;
-        sc = s1+s2-s3;
-        sd = s1-s2-s3;
-        s_a[i3  ][i2  ][i1  ] += sa+rs;
-        s_a[i3  ][i2  ][i1-1] -= sd-rs;
-        s_a[i3  ][i2-1][i1  ] += sb+rs;
-        s_a[i3  ][i2-1][i1-1] -= sc-rs;
-        s_a[i3-1][i2  ][i1  ] += sc+rs;
-        s_a[i3-1][i2  ][i1-1] -= sb-rs;
-        s_a[i3-1][i2-1][i1  ] += sd+rs;
-        s_a[i3-1][i2-1][i1-1] -= sa-rs;
-      }
-    }
-  }
+  //chunk 0,1,0
+  soscpukernel3d(h_ra, h_d11a, h_d12a, h_d13a, h_d22a, h_d23a, h_d33a, alpha, s_a, n1a, n2a, n3a);
 
-  //Copy the remainder of the inputs
   //from the whole arrays to the 
   //halved arrays
   for(int i=n1a; i<n1; i++) {
     for(int j=n2a; j<n2; j++) {
       for(int k=0; k<n3a; k++) {
         st[i-n1a][j][k]     = s_a[i-n1a][j-n2a][k]; //copying the results to the total array
-//        printf("st: %f i: %d j:%d k:%d\n", st[i-n1a][j-n2a][k-n3a], i-n1a, j-n2a, k-n3a); 
         h_ra[i-n1a][j-n2a][k]   = h_r[i][j][k];
         h_d11a[i-n1a][j-n2a][k] = h_d11[i][j][k];
         h_d12a[i-n1a][j-n2a][k] = h_d12[i][j][k];
@@ -402,57 +327,97 @@ int main(int argc, const char * argv[]) {
     }
   }
 
-  //3D SOS kernel
-  printf("Starting second pass!\n\n");
-  for (int i3=1; i3<n1a; ++i3) {
-    for (int i2=1; i2<n2a; ++i2) {
-      for (int i1=1; i1<n3a; ++i1) {
-        e11 = alpha*h_d11a[i3][i2][i1]; // smoothing
-        e12 = alpha*h_d12a[i3][i2][i1]; // tensor
-        e13 = alpha*h_d13a[i3][i2][i1]; // coefficients
-        e22 = alpha*h_d22a[i3][i2][i1];
-        e23 = alpha*h_d23a[i3][i2][i1];
-        e33 = alpha*h_d33a[i3][i2][i1];
-        r000 = h_ra[i3 ][i2 ][i1 ];
-        r001 = h_ra[i3 ][i2 ][i1-1];
-        r010 = h_ra[i3 ][i2-1][i1 ];
-        r011 = h_ra[i3 ][i2-1][i1-1];
-        r100 = h_ra[i3-1][i2 ][i1 ];
-        r101 = h_ra[i3-1][i2 ][i1-1];
-        r110 = h_ra[i3-1][i2-1][i1 ];
-        r111 = h_ra[i3-1][i2-1][i1-1];
-        rs = 0.25f*(r000+r001+r010+r011+
-            r100+r101+r110+r111); // for B’B
-        ra = r000-r111;
-        rb = r001-r110;
-        rc = r010-r101;
-        rd = r100-r011;
-        r1 = ra-rb+rc+rd; // three
-        r2 = ra+rb-rc+rd; // components of
-        r3 = ra+rb+rc-rd; // gradient of r
-        s1 = e11*r1+e12*r2+e13*r3; // multiplied by
-        s2 = e12*r1+e22*r2+e23*r3; // the smoothing
-        s3 = e13*r1+e23*r2+e33*r3; // tensor
-        sa = s1+s2+s3;
-        sb = s1-s2+s3;
-        sc = s1+s2-s3;
-        sd = s1-s2-s3;
-        s_a[i3  ][i2  ][i1  ] += sa+rs;
-        s_a[i3  ][i2  ][i1-1] -= sd-rs;
-        s_a[i3  ][i2-1][i1  ] += sb+rs;
-        s_a[i3  ][i2-1][i1-1] -= sc-rs;
-        s_a[i3-1][i2  ][i1  ] += sc+rs;
-        s_a[i3-1][i2  ][i1-1] -= sb-rs;
-        s_a[i3-1][i2-1][i1  ] += sd+rs;
-        s_a[i3-1][i2-1][i1-1] -= sa-rs;
+  //chunk 1,1,0
+  soscpukernel3d(h_ra, h_d11a, h_d12a, h_d13a, h_d22a, h_d23a, h_d33a, alpha, s_a, n1a, n2a, n3a);
+  
+  //from the whole arrays to the 
+  //halved arrays
+  for(int i=0; i<n1a; i++) {
+    for(int j=0; j<n2a; j++) {
+      for(int k=n3a; k<n3; k++) {
+        st[i+n1a][j+n2a][k-n3a] = s_a[i][j][k-n3a]; //copying the results to the total array
+        h_ra[i][j][k-n3a]       = h_r[i][j][k];
+        h_d11a[i][j][k-n3a]     = h_d11[i][j][k];
+        h_d12a[i][j][k-n3a]     = h_d12[i][j][k];
+        h_d13a[i][j][k-n3a]     = h_d13[i][j][k];
+        h_d22a[i][j][k-n3a]     = h_d22[i][j][k];
+        h_d23a[i][j][k-n3a]     = h_d23[i][j][k];
+        h_d33a[i][j][k-n3a]     = h_d33[i][j][k];
+        s_a[i][j][k-n3a]        = 0.0f; //zeroing out the new output array
       }
     }
   }
 
+  //chunk 0,0,1
+  soscpukernel3d(h_ra, h_d11a, h_d12a, h_d13a, h_d22a, h_d23a, h_d33a, alpha, s_a, n1a, n2a, n3a);
+
+  //from the whole arrays to the 
+  //halved arrays
+  for(int i=n1a; i<n1; i++) {
+    for(int j=0; j<n2a; j++) {
+      for(int k=n3a; k<n3; k++) {
+        st[i-n1a][j][k]         = s_a[i-n1a][j][k-n3a]; //copying the results to the total array
+        h_ra[i-n1a][j][k-n3a]   = h_r[i][j][k];
+        h_d11a[i-n1a][j][k-n3a] = h_d11[i][j][k];
+        h_d12a[i-n1a][j][k-n3a] = h_d12[i][j][k];
+        h_d13a[i-n1a][j][k-n3a] = h_d13[i][j][k];
+        h_d22a[i-n1a][j][k-n3a] = h_d22[i][j][k];
+        h_d23a[i-n1a][j][k-n3a] = h_d23[i][j][k];
+        h_d33a[i-n1a][j][k-n3a] = h_d33[i][j][k];
+        s_a[i-n1a][j][k-n3a]    = 0.0f; //zeroing out the new output array
+      }
+    }
+  }
+
+  //chunk 1,0,1
+  soscpukernel3d(h_ra, h_d11a, h_d12a, h_d13a, h_d22a, h_d23a, h_d33a, alpha, s_a, n1a, n2a, n3a);
+
+  //from the whole arrays to the 
+  //halved arrays
+  for(int i=0; i<n1a; i++) {
+    for(int j=n2a; j<n2; j++) {
+      for(int k=n3a; k<n3; k++) {
+        st[i+n1a][j-n2a][k]     = s_a[i][j-n2a][k-n3a]; //copying the results to the total array
+        h_ra[i][j-n2a][k-n3a]   = h_r[i][j][k];
+        h_d11a[i][j-n2a][k-n3a] = h_d11[i][j][k];
+        h_d12a[i][j-n2a][k-n3a] = h_d12[i][j][k];
+        h_d13a[i][j-n2a][k-n3a] = h_d13[i][j][k];
+        h_d22a[i][j-n2a][k-n3a] = h_d22[i][j][k];
+        h_d23a[i][j-n2a][k-n3a] = h_d23[i][j][k];
+        h_d33a[i][j-n2a][k-n3a] = h_d33[i][j][k];
+        s_a[i][j-n2a][k-n3a]    = 0.0f; //zeroing out the new output array
+      }
+    }
+  }
+
+  //chunk 0,1,1
+  soscpukernel3d(h_ra, h_d11a, h_d12a, h_d13a, h_d22a, h_d23a, h_d33a, alpha, s_a, n1a, n2a, n3a);
+
+  //from the whole arrays to the 
+  //halved arrays
   for(int i=n1a; i<n1; i++) {
     for(int j=n2a; j<n2; j++) {
-      for(int k=0; k<n3a; k++) {
-        st[i][j][k] = s_a[i-n1a][j-n2a][k]; //copying the results to the total array
+      for(int k=n3a; k<n3; k++) {
+        st[i-n1a][j][k]             = s_a[i-n1a][j-n2a][k-n3a]; //copying the results to the total array
+        h_ra[i-n1a][j-n2a][k-n3a]   = h_r[i][j][k];
+        h_d11a[i-n1a][j-n2a][k-n3a] = h_d11[i][j][k];
+        h_d12a[i-n1a][j-n2a][k-n3a] = h_d12[i][j][k];
+        h_d13a[i-n1a][j-n2a][k-n3a] = h_d13[i][j][k];
+        h_d22a[i-n1a][j-n2a][k-n3a] = h_d22[i][j][k];
+        h_d23a[i-n1a][j-n2a][k-n3a] = h_d23[i][j][k];
+        h_d33a[i-n1a][j-n2a][k-n3a] = h_d33[i][j][k];
+        s_a[i-n1a][j-n2a][k-n3a]    = 0.0f; //zeroing out the new output array
+      }
+    }
+  }
+
+  //chunk 1,1,1
+  soscpukernel3d(h_ra, h_d11a, h_d12a, h_d13a, h_d22a, h_d23a, h_d33a, alpha, s_a, n1a, n2a, n3a);
+
+  for(int i=n1a; i<n1; i++) {
+    for(int j=n2a; j<n2; j++) {
+      for(int k=n3a; k<n3; k++) {
+        st[i][j][k] = s_a[i-n1a][j-n2a][k-n3a]; //copying the results to the total array
         //printf("st: %f i: %d j: %d k: %d\n", st[i][j][k], i, j, k);
       }
     }
