@@ -271,8 +271,8 @@ int main(int argc, const char * argv[]) {
 
   //Here I should introduce some overlap
   for(int i=n1a; i<n1; i++) {
-    for(int j=0; j<n2a; j++) {
-      for(int k=0; k<n3a; k++) {
+    for(int j=0; j<n2a+overlap; j++) {
+      for(int k=0; k<n3a+overlap; k++) {
         st[i-n1a][j][k]     = s_a[i-n1a][j][k]; //copying the results to the total array
         h_ra[i-n1a][j][k]   = h_r[i][j][k];
         h_d11a[i-n1a][j][k] = h_d11[i][j][k];
@@ -287,7 +287,7 @@ int main(int argc, const char * argv[]) {
   }
 
   //chunk 1,0,0
-  soscpukernel3d(h_ra, h_d11a, h_d12a, h_d13a, h_d22a, h_d23a, h_d33a, alpha, s_a, n1a, n2a, n3a);
+  soscpukernel3d(h_ra, h_d11a, h_d12a, h_d13a, h_d22a, h_d23a, h_d33a, alpha, s_a, n1a+overlap, n2a+overlap, n3a+overlap);
 
   //Copy the remainder of the inputs
   //from the whole arrays to the 
