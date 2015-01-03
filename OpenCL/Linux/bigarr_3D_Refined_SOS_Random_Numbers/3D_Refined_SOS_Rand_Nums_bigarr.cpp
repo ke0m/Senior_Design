@@ -10,6 +10,7 @@
 /*
  * TODO-
  * 1. Give some overlap of two samples with each pass. This may help with edge effects.
+ *  a. To do this, I should start each new chunk overlapping the previous chunks
  * 2. Convert the 3D kernel into a function
  * 3. Convert the data selction loops to a function
  */
@@ -69,7 +70,7 @@ void soscpukernel3d(float ***r, float ***d11, float ***d12, float ***d13, float 
   }
 }
 
-void data_carve_prep(float ***r, float ***ra, float ***d11, float ***d11a, float ***d12, float ***d12a, float ***d13, float ***d13a, float ***d22, float ***d22a, float ***d23, float ***d23a, float ***d33, float ***d33a, float ***s, float ***s_a, int istart, int jstart, int kstart, int n1, int n2, int n3) {
+void data_carve_prep(float ***r, float ***ra, float ***d11, float ***d11a, float ***d12, float ***d12a, float ***d13, float ***d13a, float ***d22, float ***d22a, float ***d23, float ***d23a, float ***d33, float ***d33a, float ***s_a, int istart, int jstart, int kstart, int n1, int n2, int n3) {
 
   for(int i=istart; i<n1; i++) {
     for(int j=jstart; j<n2; j++) {
@@ -204,40 +205,43 @@ int main(int argc, const char * argv[]) {
     }
   }
 
-  //Halved arrays
-  float ***h_ra   = new float**[n1a];
-  float ***h_sa   = new float**[n1a];
-  float ***s_a    = new float**[n1a];
-  float ***h_d11a = new float**[n1a];
-  float ***h_d12a = new float**[n1a];
-  float ***h_d13a = new float**[n1a];
-  float ***h_d22a = new float**[n1a];
-  float ***h_d23a = new float**[n1a];
-  float ***h_d33a = new float**[n1a];
+  //Chunk arrays
+  //Make each array big enough to contain two
+  //extra samples in each dimension
+  int overlap = 2;
+  float ***h_ra   = new float**[n1a+overlap];
+  float ***h_sa   = new float**[n1a+overlap];
+  float ***s_a    = new float**[n1a+overlap];
+  float ***h_d11a = new float**[n1a+overlap];
+  float ***h_d12a = new float**[n1a+overlap];
+  float ***h_d13a = new float**[n1a+overlap];
+  float ***h_d22a = new float**[n1a+overlap];
+  float ***h_d23a = new float**[n1a+overlap];
+  float ***h_d33a = new float**[n1a+overlap];
 
-  for(int i=0; i<n1a; i++) {
-    h_ra[i]   = new float*[n2a];
-    h_sa[i]   = new float*[n2a];
-    s_a[i]     = new float*[n2a];
-    h_d11a[i] = new float*[n2a];
-    h_d12a[i] = new float*[n2a];
-    h_d13a[i] = new float*[n2a];
-    h_d22a[i] = new float*[n2a];
-    h_d23a[i] = new float*[n2a];
-    h_d33a[i] = new float*[n2a];
+  for(int i=0; i<n1a+overlap; i++) {
+    h_ra[i]   = new float*[n2a+overlap];
+    h_sa[i]   = new float*[n2a+overlap];
+    s_a[i]    = new float*[n2a+overlap];
+    h_d11a[i] = new float*[n2a+overlap];
+    h_d12a[i] = new float*[n2a+overlap];
+    h_d13a[i] = new float*[n2a+overlap];
+    h_d22a[i] = new float*[n2a+overlap];
+    h_d23a[i] = new float*[n2a+overlap];
+    h_d33a[i] = new float*[n2a+overlap];
   }
 
-  for(int i=0; i<n1a; i++) {
-    for(int j=0; j<n2a; j++) {
-      h_ra[i][j]   = new float[n3a];
-      h_sa[i][j]   = new float[n3a];
-      s_a[i][j]    = new float[n3a];
-      h_d11a[i][j] = new float[n3a];
-      h_d12a[i][j] = new float[n3a];
-      h_d13a[i][j] = new float[n3a];
-      h_d22a[i][j] = new float[n3a];
-      h_d23a[i][j] = new float[n3a];
-      h_d33a[i][j] = new float[n3a];
+  for(int i=0; i<n1a+overlap; i++) {
+    for(int j=0; j<n2a+overlap; j++) {
+      h_ra[i][j]   = new float[n3a+overlap];
+      h_sa[i][j]   = new float[n3a+overlap];
+      s_a[i][j]    = new float[n3a+overlap];
+      h_d11a[i][j] = new float[n3a+overlap];
+      h_d12a[i][j] = new float[n3a+overlap];
+      h_d13a[i][j] = new float[n3a+overlap];
+      h_d22a[i][j] = new float[n3a+overlap];
+      h_d23a[i][j] = new float[n3a+overlap];
+      h_d33a[i][j] = new float[n3a+overlap];
     }
   }
 
@@ -247,9 +251,9 @@ int main(int argc, const char * argv[]) {
   soscpukernel3d(h_r, h_d11, h_d12, h_d13, h_d22, h_d23, h_d33, alpha, s, n1, n2, n3);
 
   //Copying the first pass to the fourthed arrays
-  for(int i=0; i<n1a; i++) {
-    for(int j=0; j<n2a; j++) {
-      for(int k=0; k<n3a; k++) {
+  for(int i=0; i<n1a+overlap; i++) {
+    for(int j=0; j<n2a+overlap; j++) {
+      for(int k=0; k<n3a+overlap; k++) {
         h_ra[i][j][k]   = h_r[i][j][k];
         h_d11a[i][j][k] = h_d11[i][j][k];
         h_d12a[i][j][k] = h_d12[i][j][k];
@@ -263,11 +267,9 @@ int main(int argc, const char * argv[]) {
   }
 
   //chunk 0,0,0
-  soscpukernel3d(h_ra, h_d11a, h_d12a, h_d13a, h_d22a, h_d23a, h_d33a, alpha, s_a, n1a, n2a, n3a);
+  soscpukernel3d(h_ra, h_d11a, h_d12a, h_d13a, h_d22a, h_d23a, h_d33a, alpha, s_a, n1a+overlap, n2a+overlap, n3a+overlap);
 
-  //Copy the remainder of the inputs
-  //from the whole arrays to the 
-  //halved arrays
+  //Here I should introduce some overlap
   for(int i=n1a; i<n1; i++) {
     for(int j=0; j<n2a; j++) {
       for(int k=0; k<n3a; k++) {
@@ -515,9 +517,9 @@ int main(int argc, const char * argv[]) {
   delete [] h_d23;
   delete [] h_d33;
 
-  // Freeing halved 3D arrays
-  for(int i=0; i<n1a; i++) {
-    for(int j=0; j<n2a; j++) {
+  // Freeing chunk 3D arrays
+  for(int i=0; i<n1a+2; i++) {
+    for(int j=0; j<n2a+2; j++) {
       delete [] h_ra[i][j];
       delete [] h_sa[i][j];
       delete [] s_a[i][j];
